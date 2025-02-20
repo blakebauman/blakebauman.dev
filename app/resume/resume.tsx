@@ -1,7 +1,4 @@
-import logoDark from "./logo-dark.svg";
-import logoLight from "./logo-light.svg";
-
-export function Welcome({ message }: { message: string }) {
+export function Resume({ message }: { message: string }) {
   return (
     <main className="flex justify-left pt-16 p-8 max-w-screen-lg">
       <div className="flex-1 flex flex-col gap-8 min-h-0">
@@ -44,7 +41,7 @@ export function Welcome({ message }: { message: string }) {
                 <time className="mb-1 text-sm font-normal leading-none text-zinc-400 dark:text-zinc-600">
                   February 2022 - Present
                 </time>
-                <h3 className="text-lg font-semibold text-zinc-900 dark:text-white">
+                <h3 className="text-lg font-semibold text-zinc-900 dark:text-white mt-2">
                   Principal Technical Architect | Adobe
                 </h3>
                 <p className="mb-4 text-base font-normal text-zinc-500 dark:text-zinc-500">
@@ -62,7 +59,7 @@ export function Welcome({ message }: { message: string }) {
                 <time className="mb-1 text-sm font-normal leading-none text-zinc-400 dark:text-zinc-600">
                   April 2019 - February 2022
                 </time>
-                <h3 className="text-lg text-zinc-900 dark:text-white">
+                <h3 className="text-lg text-zinc-900 dark:text-white mt-2">
                   Technical Architect | Adobe
                 </h3>
                 <p className="text-base font-normal text-zinc-500 dark:text-zinc-500">
@@ -80,7 +77,7 @@ export function Welcome({ message }: { message: string }) {
                 <time className="mb-1 text-sm font-normal leading-none text-zinc-400 dark:text-zinc-600">
                   March 2017 - April 2019
                 </time>
-                <h3 className="text-lg text-zinc-900 dark:text-white">
+                <h3 className="text-lg text-zinc-900 dark:text-white mt-2">
                   Technical Architect | Lyons Consulting Group (Capgemini)
                 </h3>
                 <p className="text-base font-normal text-zinc-500 dark:text-zinc-500">
@@ -92,6 +89,12 @@ export function Welcome({ message }: { message: string }) {
                 </p>
               </li>
             </ol>
+            <a
+              href="https://www.linkedin.com/in/blakebauman"
+              className="text-red-400"
+            >
+              View more on my LinkedIn Profile
+            </a>
           </section>
           <hr className="border-t border-zinc-200 dark:border-zinc-700" />
           <section className="mb-4 p-8">
@@ -118,9 +121,23 @@ export function Welcome({ message }: { message: string }) {
           <hr className="border-t border-zinc-200 dark:border-zinc-700" />
           <section className="mb-4 p-8">
             <h2 className="text-2xl">Exploring</h2>
-            <p className="text-zinc-700 dark:text-zinc-200">
-              Here are some resources to help you get started.
+            <p className="text-zinc-700 dark:text-zinc-500 mb-4">
+              Here are some things I{"'"}m currently spending my freetime on.
             </p>
+            <div className="grid grid-cols-4 gap-4">
+              <div>AI</div>
+              <div>Desing Patterns</div>
+              <div>Cloudflare Workflows</div>
+              <div>Cloudflare D1</div>
+              <div>LLMs</div>
+              <div>Machine Learning</div>
+              <div>Redis</div>
+              <div>React</div>
+              <div>Edge Computing</div>
+              <div>Hono</div>
+              <div>RPC</div>
+              <div>React-Router</div>
+            </div>
           </section>
           <hr className="border-t border-zinc-200 dark:border-zinc-700" />
           <blockquote className="text-center text-2xl p-8 text-zinc-900 italic dark:text-white">

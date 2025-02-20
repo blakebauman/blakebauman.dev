@@ -1,5 +1,5 @@
 import type { Route } from "./+types/home";
-import { Welcome } from "../welcome/welcome";
+import { Resume } from "../resume/resume";
 
 export function meta({}: Route.MetaArgs) {
   return [
@@ -16,5 +16,5 @@ export function loader({ context }: Route.LoaderArgs) {
 }
 
 export default function Home({ loaderData }: Route.ComponentProps) {
-  return <Welcome message={loaderData.message} />;
+  return <Resume message={loaderData.message} />;
 }
