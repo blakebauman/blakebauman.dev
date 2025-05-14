@@ -1,0 +1,49 @@
+{
+  "name": "Blake Bauman",
+  "title": "Principal Software Architect",
+  "location": "Remote, Arizona",
+  "email": "blake.bauman@gmail.com",
+  "phone": "***REMOVED***",
+  "linkedin": "https://www.linkedin.com/in/blakebauman",
+  "github": "https://github.com/blakebauman",
+  "website": "https://blakebauman.dev",
+  "skills": [
+    "JavaScript",
+    "TypeScript",
+    "Cloudflare Workers",
+    "Machine Learning",
+    "React",
+    "PHP",
+    "Edge Computing",
+    "Postgres",
+    "Redis",
+    "Hono",
+    "Cloudflare R2",
+    "Cloudflare D1",
+    "Cloudflare KV",
+    "Cloudflare Queues",
+    "Magento Commerce",
+    "Adobe Commerce",
+    "AEM Edge Delivery Services"
+  ],
+  "experience": [
+    {
+      "company": "Adobe",
+      "role": "Principal Technical Architect",
+      "years": "2022-Present",
+      "description": "Contributed to the first production implementation of AEM Edge Delivery Services integrated with Adobe Commerce B2B Cloud for a Fortune 500 company. Led internal initiatives to drive adoption and support for new Adobe products and services, including hosting a webinar on Commerce with Edge Delivery. Additionally, mentored and trained team members, fostering expertise and collaboration."
+    },
+    {
+      "company": "Adobe",
+      "role": "Technical Architect",
+      "years": "2019-2022",
+      "description": "Successfully led the migration of a global Beverage company from Adobe Commerce on-prem to Adobe Commerce Cloud, ensuring a seamless transition with minimal disruption. Provided governance, best practices, and architectural reviews across multiple implementations. Additionally, mentored team members, fostering growth and knowledge sharing within the organization."
+    },
+    {
+      "company": "Lyons Consulting Group (Capgemini)",
+      "role": "Technical Architect",
+      "years": "2019-2022",
+      "description": "Led a team in the design and implementation of Adobe Commerce (Magento Commerce) for a leading Running Shoe and Activewear company. Spearheaded the integration of Adobe Scene7 to optimize product imagery across the customer experience, enhancing visual merchandising and performance."
+    }
+  ]
+}
