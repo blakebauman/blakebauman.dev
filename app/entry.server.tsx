@@ -12,6 +12,7 @@ export default async function handleRequest(
 ) {
   let shellRendered = false;
   const userAgent = request.headers.get("user-agent");
+  let statusCode = responseStatusCode;
 
   // Add security headers
   responseHeaders.set("X-Content-Type-Options", "nosniff");
@@ -19,12 +20,17 @@ export default async function handleRequest(
   responseHeaders.set("X-XSS-Protection", "1; mode=block");
   responseHeaders.set("Referrer-Policy", "strict-origin-when-cross-origin");
   responseHeaders.set("Permissions-Policy", "camera=(), microphone=(), geolocation=()");
+  
+  // Add performance headers
+  responseHeaders.set("Cache-Control", "public, max-age=31536000, immutable");
+  responseHeaders.set("Accept-Ranges", "bytes");
+  responseHeaders.set("Vary", "Accept-Encoding");
 
   const body = await renderToReadableStream(
     <ServerRouter context={routerContext} url={request.url} />,
     {
       onError(error: unknown) {
-        responseStatusCode = 500;
+        statusCode = 500;
         // Log streaming rendering errors from inside the shell.  Don't log
         // errors encountered during initial shell rendering since they'll
         // reject and get logged in handleDocumentRequest.
@@ -34,6 +40,8 @@ export default async function handleRequest(
       },
       bootstrapScripts: ["/build/entry.client.js"],
       bootstrapModules: [],
+      // Enable streaming for faster initial page load
+      signal: AbortSignal.timeout(5000), // 5 second timeout
     }
   );
   shellRendered = true;
@@ -47,6 +55,6 @@ export default async function handleRequest(
   responseHeaders.set("Content-Type", "text/html");
   return new Response(body, {
     headers: responseHeaders,
-    status: responseStatusCode,
+    status: statusCode,
   });
 }
