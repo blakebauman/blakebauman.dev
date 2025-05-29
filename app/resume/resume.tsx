@@ -153,11 +153,11 @@ export function Resume({ message }: { message: string }) {
               <div>React-Router</div>
             </div>
           </section>
-          {/* <hr className="border-t border-zinc-200 dark:border-zinc-700" />
+          <hr className="border-t border-zinc-200 dark:border-zinc-700" />
           <section className="mb-4 md:p-8">
             <h2 className="text-2xl mb-4">AI Agent</h2>
             <Chatbot />
-          </section> */}
+          </section>
           <hr className="border-t border-zinc-200 dark:border-zinc-700" />
           <section className="mb-4 md:p-8">
             <h2 className="text-2xl">Contact</h2>

@@ -36,6 +36,10 @@ export function Layout({ children }: { children: React.ReactNode }) {
       <head>
         <meta charSet="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)" />
+        <meta name="theme-color" content="#18181b" media="(prefers-color-scheme: dark)" />
+        <meta name="description" content="Blake Bauman - Software Engineer/Principal Technical Architect @ Adobe" />
+        <link rel="preload" as="script" href="/build/entry.client.js" />
         <Meta />
         <Links />
       </head>
