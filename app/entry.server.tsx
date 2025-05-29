@@ -13,6 +13,13 @@ export default async function handleRequest(
   let shellRendered = false;
   const userAgent = request.headers.get("user-agent");
 
+  // Add security headers
+  responseHeaders.set("X-Content-Type-Options", "nosniff");
+  responseHeaders.set("X-Frame-Options", "DENY");
+  responseHeaders.set("X-XSS-Protection", "1; mode=block");
+  responseHeaders.set("Referrer-Policy", "strict-origin-when-cross-origin");
+  responseHeaders.set("Permissions-Policy", "camera=(), microphone=(), geolocation=()");
+
   const body = await renderToReadableStream(
     <ServerRouter context={routerContext} url={request.url} />,
     {
@@ -25,6 +32,8 @@ export default async function handleRequest(
           console.error(error);
         }
       },
+      bootstrapScripts: ["/build/entry.client.js"],
+      bootstrapModules: [],
     }
   );
   shellRendered = true;
