@@ -140,7 +140,7 @@ export function Resume({ message }: { message: string }) {
             </p>
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
               <div>AI</div>
-              <div>Desing Patterns</div>
+              <div>Design Patterns</div>
               <div>Cloudflare Workflows</div>
               <div>Cloudflare D1</div>
               <div>LLMs</div>
@@ -155,7 +155,7 @@ export function Resume({ message }: { message: string }) {
           </section>
           <hr className="border-t border-zinc-200 dark:border-zinc-700" />
           <section className="mb-4 md:p-8">
-            <h2 className="text-2xl mb-4">Agentic AI</h2>
+            <h2 className="text-2xl mb-4">AI Agent</h2>
             <Chatbot />
           </section>
           <hr className="border-t border-zinc-200 dark:border-zinc-700" />
@@ -204,7 +204,7 @@ export function Resume({ message }: { message: string }) {
                   @blakebauman.dev
                 </a>
               </div>
-              <div>TBD</div>
+              <div>&nbsp;</div>
             </div>
           </section>
         </div>
