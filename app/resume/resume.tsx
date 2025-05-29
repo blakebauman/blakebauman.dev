@@ -161,13 +161,13 @@ export function Resume({ message }: ResumeProps) {
                 <div>React-Router</div>
               </div>
             </section>
-            <hr className="border-t border-zinc-200 dark:border-zinc-700" />
+            {/* <hr className="border-t border-zinc-200 dark:border-zinc-700" />
             <section className="mb-4 md:p-8">
               <h2 className="text-2xl mb-4">AI Agent</h2>
               <Suspense fallback={<div className="h-64 animate-pulse bg-zinc-100 dark:bg-zinc-800" />}>
                 <Chatbot />
               </Suspense>
-            </section>
+            </section> */}
             <hr className="border-t border-zinc-200 dark:border-zinc-700" />
             <section className="mb-4 md:p-8">
               <h2 className="text-2xl">Contact</h2>
