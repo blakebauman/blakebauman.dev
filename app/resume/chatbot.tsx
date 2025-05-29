@@ -29,6 +29,7 @@ export default function Chatbot() {
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const messagesContainerRef = useRef<HTMLDivElement>(null);
   const messagesContentRef = useRef<HTMLDivElement>(null);
+  const inputRef = useRef<HTMLInputElement>(null);
 
   const scrollToBottom = useCallback(() => {
     if (messagesContainerRef.current) {
@@ -49,6 +50,18 @@ export default function Chatbot() {
 
     return () => observer.disconnect();
   }, [scrollToBottom]);
+
+  // Focus input on mount
+  useEffect(() => {
+    inputRef.current?.focus();
+  }, []);
+
+  // Focus input after messages update
+  useEffect(() => {
+    if (!isLoading) {
+      inputRef.current?.focus();
+    }
+  }, [isLoading]);
 
   const sendMessage = async () => {
     if (!input.trim() || isLoading) return;
@@ -94,6 +107,7 @@ export default function Chatbot() {
       console.error("Chat error:", err);
     } finally {
       setIsLoading(false);
+      inputRef.current?.focus();
     }
   };
 
@@ -143,6 +157,7 @@ export default function Chatbot() {
       </div>
       <div className="flex mt-4 gap-2 px-0">
         <input
+          ref={inputRef}
           className="flex-1 p-2 bg-transparent border border-zinc-200 dark:border-zinc-700 text-zinc-900 dark:text-white focus:outline-none focus:border-red-500 disabled:opacity-50"
           value={input}
           onChange={(e) => setInput(e.target.value)}
