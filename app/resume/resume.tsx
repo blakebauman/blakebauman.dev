@@ -1,8 +1,9 @@
-import { lazy, Suspense } from "react";
-import type { ResumeProps } from "./types";
+import { lazy, Suspense } from 'react';
+import type { ResumeProps } from './types';
+import resumeData from '../chat/resume.json';
 
 // Lazy load the chatbot since it's not part of the initial viewport
-const Chatbot = lazy(() => import("./chatbot"));
+const Chatbot = lazy(() => import('./chatbot'));
 
 export function Resume({ message }: ResumeProps) {
   return (
@@ -15,9 +16,7 @@ export function Resume({ message }: ResumeProps) {
             <p className="text-2xl text-zinc-700 dark:text-zinc-400 mb-2">
               Software Engineer/Principal Technical Architect @ Adobe
             </p>
-            <p className="text-lg text-zinc-700 dark:text-zinc-500">
-              Remote Arizona
-            </p>
+            <p className="text-lg text-zinc-700 dark:text-zinc-500">Remote Arizona</p>
           </div>
         </header>
         <div className="w-full space-y-6">
@@ -25,24 +24,21 @@ export function Resume({ message }: ResumeProps) {
           <section className="mb-8 md:p-8">
             <h2 className="text-2xl">Who?</h2>
             <p className="text-zinc-700 dark:text-zinc-400 mt-8">
-              Innovative and results-driven software engineer with a strong
-              background in enterprise e-commerce, cloud architecture, and
-              scalable software solutions. Proven experience leading complex
-              Adobe Commerce implementations, integrating cutting-edge
-              technologies, and mentoring high-performing teams.
+              Innovative and results-driven software engineer with a strong background in enterprise
+              e-commerce, cloud architecture, and scalable software solutions. Proven experience
+              leading complex Adobe Commerce implementations, integrating cutting-edge technologies,
+              and mentoring high-performing teams.
             </p>
             <p className="text-zinc-700 dark:text-zinc-400 mt-8">
-              Now seeking to transition from consulting to product development,
-              with a focus on AI, machine learning, and large language models
-              (LLMs). Eager to apply my expertise in building scalable systems
-              while deepening my knowledge in AI-driven product innovation.
-              Looking for an opportunity to contribute to the full product
-              lifecycle, drive technical excellence, and help shape intelligent,
-              data-driven solutions.
+              Now seeking to transition from consulting to product development, with a focus on AI,
+              machine learning, and large language models (LLMs). Eager to apply my expertise in
+              building scalable systems while deepening my knowledge in AI-driven product
+              innovation. Looking for an opportunity to contribute to the full product lifecycle,
+              drive technical excellence, and help shape intelligent, data-driven solutions.
             </p>
           </section>
           <hr className="border-t border-zinc-200 dark:border-zinc-700" />
-          
+
           {/* Defer loading of content below the fold */}
           <Suspense fallback={<div className="h-64 animate-pulse bg-zinc-100 dark:bg-zinc-800" />}>
             <section className="mb-4 md:p-8">
@@ -57,13 +53,11 @@ export function Resume({ message }: ResumeProps) {
                     Principal Technical Architect | Adobe
                   </h3>
                   <p className="mb-4 text-base font-normal text-zinc-500 dark:text-zinc-400">
-                    Contributed to the first production implementation of AEM Edge
-                    Delivery Services integrated with Adobe Commerce B2B Cloud for
-                    a Fortune 500 company. Led internal initiatives to drive
-                    adoption and support for new Adobe products and services,
-                    including hosting a webinar on Commerce with Edge Delivery.
-                    Additionally, mentored and trained team members, fostering
-                    expertise and collaboration.
+                    Contributed to the first production implementation of AEM Edge Delivery Services
+                    integrated with Adobe Commerce B2B Cloud for a Fortune 500 company. Led internal
+                    initiatives to drive adoption and support for new Adobe products and services,
+                    including hosting a webinar on Commerce with Edge Delivery. Additionally,
+                    mentored and trained team members, fostering expertise and collaboration.
                   </p>
                 </li>
                 <li className="mb-10 ms-4">
@@ -75,13 +69,11 @@ export function Resume({ message }: ResumeProps) {
                     Technical Architect | Adobe
                   </h3>
                   <p className="text-base font-normal text-zinc-500 dark:text-zinc-500">
-                    Successfully led the migration of a global Beverage company
-                    from Adobe Commerce on-prem to Adobe Commerce Cloud, ensuring
-                    a seamless transition with minimal disruption. Provided
-                    governance, best practices, and architectural reviews across
-                    multiple implementations. Additionally, mentored team members,
-                    fostering growth and knowledge sharing within the
-                    organization.
+                    Successfully led the migration of a global Beverage company from Adobe Commerce
+                    on-prem to Adobe Commerce Cloud, ensuring a seamless transition with minimal
+                    disruption. Provided governance, best practices, and architectural reviews
+                    across multiple implementations. Additionally, mentored team members, fostering
+                    growth and knowledge sharing within the organization.
                   </p>
                 </li>
                 <li className="ms-4">
@@ -93,18 +85,14 @@ export function Resume({ message }: ResumeProps) {
                     Technical Architect | Lyons Consulting Group (Capgemini)
                   </h3>
                   <p className="text-base font-normal text-zinc-500 dark:text-zinc-500">
-                    Led a team in the design and implementation of Adobe Commerce
-                    (Magento Commerce) for a leading Running Shoe and Activewear
-                    company. Spearheaded the integration of Adobe Scene7 to
-                    optimize product imagery across the customer experience,
+                    Led a team in the design and implementation of Adobe Commerce (Magento Commerce)
+                    for a leading Running Shoe and Activewear company. Spearheaded the integration
+                    of Adobe Scene7 to optimize product imagery across the customer experience,
                     enhancing visual merchandising and performance.
                   </p>
                 </li>
               </ol>
-              <a
-                href="https://www.linkedin.com/in/blakebauman"
-                className="text-red-400"
-              >
+              <a href="https://www.linkedin.com/in/blakebauman" className="text-red-400">
                 View more on my LinkedIn Profile
               </a>
             </section>
@@ -112,31 +100,19 @@ export function Resume({ message }: ResumeProps) {
             <section className="mb-4 md:p-8">
               <h2 className="text-2xl">Tools</h2>
               <p className="text-zinc-700 dark:text-zinc-500 mb-8">
-                I appreciate all things. Here are some things I{"'"}m currently
-                using.
+                I appreciate all things. Here are some things I{"'"}m currently using.
               </p>
               <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                <div>JavaScript</div>
-                <div>TypeScript</div>
-                <div>PHP</div>
-                <div>Edge Computing</div>
-                <div>Cloudflare Workers</div>
-                <div>Postgres</div>
-                <div>Redis</div>
-                <div>React</div>
-                <div>Edge Computing</div>
-                <div>Hono</div>
-                <div>RPC</div>
-                <div>React-Router</div>
+                {resumeData.tools.map(tool => (
+                  <div key={tool}>{tool}</div>
+                ))}
               </div>
             </section>
             <hr className="border-t border-zinc-200 dark:border-zinc-700" />
             <blockquote className="text-center text-2xl md:p-8 text-zinc-900 italic dark:text-white">
               I{"'"}m able to adapt fast and learn
               <span className="relative inline-block before:absolute before:-inset-1 before:block before:-skew-y-3 before:bg-red-500 mx-2">
-                <span className="relative text-white dark:text-zinc-950">
-                  whatever
-                </span>
+                <span className="relative text-white dark:text-zinc-950">whatever</span>
               </span>
               is needed to deliver success.
             </blockquote>
@@ -147,27 +123,52 @@ export function Resume({ message }: ResumeProps) {
                 Here are some things my curiosity is leading me to explore.
               </p>
               <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                <div>AI</div>
-                <div>Design Patterns</div>
-                <div>Cloudflare Workflows</div>
-                <div>Cloudflare D1</div>
-                <div>LLMs</div>
-                <div>Machine Learning</div>
-                <div>Redis</div>
-                <div>React</div>
-                <div>Edge Computing</div>
-                <div>Hono</div>
-                <div>RPC</div>
-                <div>React-Router</div>
+                {resumeData.exploring.map(item => (
+                  <div key={item}>{item}</div>
+                ))}
               </div>
             </section>
-            {/* <hr className="border-t border-zinc-200 dark:border-zinc-700" />
+            <hr className="border-t border-zinc-200 dark:border-zinc-700" />
+            <section className="mb-4 md:p-8">
+              <h2 className="text-2xl">Projects</h2>
+              <p className="text-zinc-700 dark:text-zinc-500 mb-8">
+                Open source projects and experiments.
+              </p>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                {resumeData.projects.map(project => (
+                  <a
+                    key={project.name}
+                    href={project.github}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="block p-4 border border-zinc-200 dark:border-zinc-700 hover:border-red-400 transition-colors"
+                  >
+                    <h3 className="text-lg font-semibold text-zinc-900 dark:text-white mb-2">
+                      {project.name}
+                    </h3>
+                    <p className="text-sm text-zinc-600 dark:text-zinc-400 mb-3">
+                      {project.description}
+                    </p>
+                    <div className="flex flex-wrap gap-2">
+                      {project.tech.map(t => (
+                        <span key={t} className="text-xs px-2 py-1 bg-zinc-100 dark:bg-zinc-800">
+                          {t}
+                        </span>
+                      ))}
+                    </div>
+                  </a>
+                ))}
+              </div>
+            </section>
+            <hr className="border-t border-zinc-200 dark:border-zinc-700" />
             <section className="mb-4 md:p-8">
               <h2 className="text-2xl mb-4">AI Agent</h2>
-              <Suspense fallback={<div className="h-64 animate-pulse bg-zinc-100 dark:bg-zinc-800" />}>
+              <Suspense
+                fallback={<div className="h-64 animate-pulse bg-zinc-100 dark:bg-zinc-800" />}
+              >
                 <Chatbot />
               </Suspense>
-            </section> */}
+            </section>
             <hr className="border-t border-zinc-200 dark:border-zinc-700" />
             <section className="mb-4 md:p-8">
               <h2 className="text-2xl">Contact</h2>
@@ -176,41 +177,32 @@ export function Resume({ message }: ResumeProps) {
               </p>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
-                  Email:{" "}
-                  <a
-                    href="mailto:blake.bauman@gmail.com"
-                    className="text-red-400"
-                  >
+                  Email:{' '}
+                  <a href="mailto:blake.bauman@gmail.com" className="text-red-400">
                     blake.bauman@gmail.com
                   </a>
                 </div>
                 <div>
-                  Phone:{" "}
+                  Phone:{' '}
                   <a href="tel:+14148075866" className="text-red-400">
                     +1 414 807 5866
                   </a>
                 </div>
                 <div>
-                  Web:{" "}
+                  Web:{' '}
                   <a href="https://blakebauman.dev" className="text-red-400">
                     blakebauman.dev
                   </a>
                 </div>
                 <div>
-                  Github:{" "}
-                  <a
-                    href="https://github.com/blakebauman"
-                    className="text-red-400"
-                  >
+                  Github:{' '}
+                  <a href="https://github.com/blakebauman" className="text-red-400">
                     blakebauman
                   </a>
                 </div>
                 <div>
-                  Bluesky:{" "}
-                  <a
-                    href="https://bsky.app/profile/blakebauman.dev"
-                    className="text-red-400"
-                  >
+                  Bluesky:{' '}
+                  <a href="https://bsky.app/profile/blakebauman.dev" className="text-red-400">
                     @blakebauman.dev
                   </a>
                 </div>
