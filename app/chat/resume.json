@@ -7,6 +7,21 @@
   "linkedin": "https://www.linkedin.com/in/blakebauman",
   "github": "https://github.com/blakebauman",
   "website": "https://blakebauman.dev",
+  "bluesky": "https://bsky.app/profile/blakebauman.dev",
+  "summary": [
+    "Principal Technical Architect with 8+ years building and shipping enterprise-scale e-commerce and cloud systems. At Adobe, I've led some of the first production implementations of next-generation Adobe products — working at the intersection of architecture, client strategy, and hands-on engineering. I know how large systems fail, how to migrate them without breaking things, and how to build organizations around them.",
+    "Outside of client work, I build. I'm developing production applications on Cloudflare's edge platform — Workers, D1, Durable Objects, Workflows — and working deeply with LLMs and AI agent architectures. I'm looking for roles where technical depth and direct impact aren't mutually exclusive: forward-deployed engineering, technical product work, or founding-stage teams where the problems are genuinely hard."
+  ],
+  "blockquote": {
+    "text": "I'm able to adapt fast and learn {word} is needed to deliver success.",
+    "highlight": "whatever"
+  },
+  "sections": {
+    "tools": "I appreciate all things. Here are some things I'm currently using.",
+    "exploring": "Here are some things my curiosity is leading me to explore.",
+    "projects": "Open source projects and experiments.",
+    "contact": "Below are some ways we can continue the conversation."
+  },
   "skills": [
     "JavaScript",
     "TypeScript",

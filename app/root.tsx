@@ -8,7 +8,14 @@ import {
 } from 'react-router';
 
 import type { Route } from './+types/root';
+import resumeData from './chat/resume.json';
 import './app.css';
+
+const metaTitle = `${resumeData.name} | ${resumeData.title} @ ${resumeData.experience[0]?.company ?? 'Adobe'}`;
+const firstSummary = resumeData.summary[0];
+const metaDescription =
+  (firstSummary ? firstSummary.slice(0, 155) + (firstSummary.length > 155 ? '...' : '') : null) ??
+  `${resumeData.name} - ${resumeData.title}. Portfolio with AI-powered resume assistant.`;
 
 export const links: Route.LinksFunction = () => [
   { rel: 'preconnect', href: 'https://fonts.googleapis.com' },
@@ -38,31 +45,22 @@ export function Layout({ children }: { children: React.ReactNode }) {
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)" />
         <meta name="theme-color" content="#18181b" media="(prefers-color-scheme: dark)" />
-        <meta
-          name="description"
-          content="Blake Bauman - Software Engineer/Principal Technical Architect @ Adobe. Portfolio with AI-powered resume assistant."
-        />
+        <meta name="description" content={metaDescription} />
 
         {/* Open Graph */}
-        <meta property="og:title" content="Blake Bauman | Principal Technical Architect @ Adobe" />
-        <meta
-          property="og:description"
-          content="Software Engineer & Principal Technical Architect. Portfolio with AI-powered resume assistant."
-        />
-        <meta property="og:url" content="https://blakebauman.dev" />
+        <meta property="og:title" content={metaTitle} />
+        <meta property="og:description" content={metaDescription} />
+        <meta property="og:url" content={resumeData.website} />
         <meta property="og:type" content="website" />
-        <meta property="og:site_name" content="Blake Bauman" />
+        <meta property="og:site_name" content={resumeData.name} />
 
         {/* Twitter Card */}
         <meta name="twitter:card" content="summary" />
-        <meta name="twitter:title" content="Blake Bauman | Principal Technical Architect @ Adobe" />
-        <meta
-          name="twitter:description"
-          content="Software Engineer & Principal Technical Architect. Portfolio with AI-powered resume assistant."
-        />
+        <meta name="twitter:title" content={metaTitle} />
+        <meta name="twitter:description" content={metaDescription} />
 
         {/* Canonical URL */}
-        <link rel="canonical" href="https://blakebauman.dev" />
+        <link rel="canonical" href={resumeData.website} />
 
         {/* Performance-focused meta tags */}
         <meta httpEquiv="X-UA-Compatible" content="IE=edge" />
@@ -70,7 +68,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
         <meta name="mobile-web-app-capable" content="yes" />
         <meta name="apple-mobile-web-app-capable" content="yes" />
         <meta name="apple-mobile-web-app-status-bar-style" content="default" />
-        <meta name="apple-mobile-web-app-title" content="Blake Bauman" />
+        <meta name="apple-mobile-web-app-title" content={resumeData.name} />
 
         {/* Resource hints */}
         <link rel="dns-prefetch" href="https://fonts.googleapis.com" />
@@ -87,14 +85,17 @@ export function Layout({ children }: { children: React.ReactNode }) {
             __html: JSON.stringify({
               '@context': 'https://schema.org',
               '@type': 'Person',
-              name: 'Blake Bauman',
-              jobTitle: 'Principal Technical Architect',
-              worksFor: { '@type': 'Organization', name: 'Adobe' },
-              url: 'https://blakebauman.dev',
+              name: resumeData.name,
+              jobTitle: resumeData.title,
+              worksFor: {
+                '@type': 'Organization',
+                name: resumeData.experience[0]?.company ?? 'Adobe',
+              },
+              url: resumeData.website,
               sameAs: [
-                'https://www.linkedin.com/in/blakebauman',
-                'https://github.com/blakebauman',
-                'https://bsky.app/profile/blakebauman.dev',
+                resumeData.linkedin,
+                resumeData.github,
+                ...(resumeData.bluesky ? [resumeData.bluesky] : []),
               ],
             }),
           }}
@@ -148,7 +149,7 @@ export function ErrorBoundary({ error }: Route.ErrorBoundaryProps) {
             Back to home
           </a>
           <a
-            href="mailto:blake.bauman@gmail.com?subject=Error%20on%20blakebauman.dev"
+            href={`mailto:${resumeData.email}?subject=Error%20on%20blakebauman.dev`}
             className="inline-flex items-center justify-center px-4 py-2 border border-zinc-300 dark:border-zinc-600 text-zinc-700 dark:text-zinc-300 hover:bg-zinc-100 dark:hover:bg-zinc-800 transition-colors"
           >
             Report an issue

@@ -30,6 +30,14 @@ describe('ResumeDataSchema', () => {
         description: 'Building awesome stuff',
       },
     ],
+    summary: ['Professional summary paragraph one.', 'Professional summary paragraph two.'],
+    blockquote: { text: 'I learn {word} quickly.', highlight: 'things' },
+    sections: {
+      tools: 'Tools intro text.',
+      exploring: 'Exploring intro text.',
+      projects: 'Projects intro text.',
+      contact: 'Contact intro text.',
+    },
   };
 
   it('validates complete resume data', () => {
@@ -141,7 +149,15 @@ describe('ChunkMetadataSchema', () => {
   });
 
   it('validates all valid types', () => {
-    const types = ['personal', 'skills', 'experience', 'tools', 'exploring', 'projects'] as const;
+    const types = [
+      'personal',
+      'skills',
+      'experience',
+      'tools',
+      'exploring',
+      'projects',
+      'summary',
+    ] as const;
 
     for (const type of types) {
       const result = ChunkMetadataSchema.safeParse({

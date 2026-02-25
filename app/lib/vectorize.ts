@@ -37,6 +37,15 @@ Links: LinkedIn: ${validatedData.linkedin} | GitHub: ${validatedData.github} | W
         },
       },
       {
+        id: 'summary',
+        text: `Professional Summary:\n${validatedData.summary.join('\n\n')}`,
+        metadata: {
+          type: 'summary' as const,
+          section: 'summary',
+          text: '', // Will be set later
+        },
+      },
+      {
         id: 'skills',
         text: `Skills: ${validatedData.skills.join(', ')}`,
         metadata: {
