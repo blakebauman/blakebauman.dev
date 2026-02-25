@@ -93,6 +93,19 @@ export default function Chatbot() {
     return () => observer.disconnect();
   }, [scrollToBottom]);
 
+  // Scroll to bottom when expanded state changes (after transition)
+  // biome-ignore lint/correctness/useExhaustiveDependencies: intentional trigger on isExpanded change
+  useEffect(() => {
+    const timeout = setTimeout(scrollToBottom, 250);
+    return () => clearTimeout(timeout);
+  }, [isExpanded, scrollToBottom]);
+
+  // Scroll to bottom when messages change
+  // biome-ignore lint/correctness/useExhaustiveDependencies: intentional trigger on messages change
+  useEffect(() => {
+    scrollToBottom();
+  }, [messages, scrollToBottom]);
+
   // Focus input on mount
   useEffect(() => {
     inputRef.current?.focus();
