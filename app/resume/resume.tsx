@@ -47,19 +47,11 @@ export function Resume() {
           <hr className="border-t border-zinc-200 dark:border-zinc-700" />
           <section className="mb-8 md:p-8">
             <h2 className="text-2xl">Who?</h2>
-            <p className="text-zinc-700 dark:text-zinc-400 mt-8">
-              Innovative and results-driven software engineer with a strong background in enterprise
-              e-commerce, cloud architecture, and scalable software solutions. Proven experience
-              leading complex Adobe Commerce implementations, integrating cutting-edge technologies,
-              and mentoring high-performing teams.
-            </p>
-            <p className="text-zinc-700 dark:text-zinc-400 mt-8">
-              Now seeking to transition from consulting to product development, with a focus on AI,
-              machine learning, and large language models (LLMs). Eager to apply my expertise in
-              building scalable systems while deepening my knowledge in AI-driven product
-              innovation. Looking for an opportunity to contribute to the full product lifecycle,
-              drive technical excellence, and help shape intelligent, data-driven solutions.
-            </p>
+            {resumeData.summary.map(paragraph => (
+              <p key={paragraph.slice(0, 40)} className="text-zinc-700 dark:text-zinc-400 mt-8">
+                {paragraph}
+              </p>
+            ))}
           </section>
           <hr className="border-t border-zinc-200 dark:border-zinc-700" />
 
@@ -101,9 +93,7 @@ export function Resume() {
             <hr className="border-t border-zinc-200 dark:border-zinc-700" />
             <section className="mb-4 md:p-8">
               <h2 className="text-2xl">Tools</h2>
-              <p className="text-zinc-700 dark:text-zinc-500 mb-8">
-                I appreciate all things. Here are some things I{"'"}m currently using.
-              </p>
+              <p className="text-zinc-700 dark:text-zinc-500 mb-8">{resumeData.sections.tools}</p>
               <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
                 {resumeData.tools.map(tool => (
                   <div key={tool}>{tool}</div>
@@ -112,17 +102,26 @@ export function Resume() {
             </section>
             <hr className="border-t border-zinc-200 dark:border-zinc-700" />
             <blockquote className="text-center text-2xl md:p-8 text-zinc-900 italic dark:text-white">
-              I{"'"}m able to adapt fast and learn
-              <span className="relative inline-block before:absolute before:-inset-1 before:block before:-skew-y-3 before:bg-red-500 mx-2">
-                <span className="relative text-white dark:text-zinc-950">whatever</span>
-              </span>
-              is needed to deliver success.
+              {resumeData.blockquote.text.split('{word}').map((part, i) =>
+                i === 0 ? (
+                  <span key="blockquote-before">
+                    {part}
+                    <span className="relative inline-block before:absolute before:-inset-1 before:block before:-skew-y-3 before:bg-red-500 mx-2">
+                      <span className="relative text-white dark:text-zinc-950">
+                        {resumeData.blockquote.highlight}
+                      </span>
+                    </span>
+                  </span>
+                ) : (
+                  <span key="blockquote-after">{part}</span>
+                )
+              )}
             </blockquote>
             <hr className="border-t border-zinc-200 dark:border-zinc-700" />
             <section className="mb-4 md:p-8">
               <h2 className="text-2xl">Exploring</h2>
               <p className="text-zinc-700 dark:text-zinc-500 mb-8">
-                Here are some things my curiosity is leading me to explore.
+                {resumeData.sections.exploring}
               </p>
               <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
                 {resumeData.exploring.map(item => (
@@ -134,7 +133,7 @@ export function Resume() {
             <section className="mb-4 md:p-8">
               <h2 className="text-2xl">Projects</h2>
               <p className="text-zinc-700 dark:text-zinc-500 mb-8">
-                Open source projects and experiments.
+                {resumeData.sections.projects}
               </p>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 {resumeData.projects.map(project => (
@@ -174,9 +173,7 @@ export function Resume() {
             <hr className="border-t border-zinc-200 dark:border-zinc-700" />
             <section className="mb-4 md:p-8">
               <h2 className="text-2xl">Contact</h2>
-              <p className="text-zinc-700 dark:text-zinc-500 mb-8">
-                Below are some ways we can continue the conversation.
-              </p>
+              <p className="text-zinc-700 dark:text-zinc-500 mb-8">{resumeData.sections.contact}</p>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
                   Email:{' '}
@@ -198,7 +195,7 @@ export function Resume() {
                     rel="me"
                     aria-label="Personal website"
                   >
-                    blakebauman.dev
+                    {new URL(resumeData.website).hostname}
                   </a>
                 </div>
                 <div>
@@ -209,7 +206,7 @@ export function Resume() {
                     rel="me"
                     aria-label="GitHub profile"
                   >
-                    blakebauman
+                    {resumeData.github.split('/').filter(Boolean).pop() ?? 'GitHub'}
                   </a>
                 </div>
                 <div>
@@ -220,27 +217,29 @@ export function Resume() {
                     rel="me"
                     aria-label="LinkedIn profile"
                   >
-                    blakebauman
+                    {resumeData.linkedin.split('/').filter(Boolean).pop() ?? 'LinkedIn'}
                   </a>
                 </div>
-                <div>
-                  Bluesky:{' '}
-                  <a
-                    href="https://bsky.app/profile/blakebauman.dev"
-                    className="text-red-400"
-                    rel="me"
-                    aria-label="Bluesky profile"
-                  >
-                    @blakebauman.dev
-                  </a>
-                </div>
+                {resumeData.bluesky && (
+                  <div>
+                    Bluesky:{' '}
+                    <a
+                      href={resumeData.bluesky}
+                      className="text-red-400"
+                      rel="me"
+                      aria-label="Bluesky profile"
+                    >
+                      @{resumeData.bluesky.split('/').filter(Boolean).pop() ?? 'Bluesky'}
+                    </a>
+                  </div>
+                )}
               </div>
             </section>
           </Suspense>
         </div>
         <footer className="py-4 border-t border-zinc-200 dark:border-zinc-700 text-center">
           <p className="text-sm text-zinc-700 dark:text-zinc-700">
-            &copy; {new Date().getFullYear()} Blake Bauman. All rights reserved.
+            &copy; {new Date().getFullYear()} {resumeData.name}. All rights reserved.
           </p>
         </footer>
       </div>

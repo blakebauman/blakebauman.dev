@@ -21,6 +21,24 @@ export const ExperienceSchema = z.object({
 });
 
 /**
+ * Schema for section intro copy
+ */
+export const SectionIntrosSchema = z.object({
+  tools: z.string(),
+  exploring: z.string(),
+  projects: z.string(),
+  contact: z.string(),
+});
+
+/**
+ * Schema for the blockquote with highlighted word
+ */
+export const BlockquoteSchema = z.object({
+  text: z.string(),
+  highlight: z.string(),
+});
+
+/**
  * Schema for the full resume data structure
  */
 export const ResumeDataSchema = z.object({
@@ -37,13 +55,17 @@ export const ResumeDataSchema = z.object({
   exploring: z.array(z.string()),
   projects: z.array(ProjectSchema),
   experience: z.array(ExperienceSchema),
+  summary: z.array(z.string()),
+  blockquote: BlockquoteSchema,
+  sections: SectionIntrosSchema,
+  bluesky: z.string().optional(),
 });
 
 /**
  * Schema for chunk metadata used in vector storage
  */
 export const ChunkMetadataSchema = z.object({
-  type: z.enum(['personal', 'skills', 'experience', 'tools', 'exploring', 'projects']),
+  type: z.enum(['personal', 'skills', 'experience', 'tools', 'exploring', 'projects', 'summary']),
   section: z.string(),
   text: z.string(),
   company: z.string().optional(),

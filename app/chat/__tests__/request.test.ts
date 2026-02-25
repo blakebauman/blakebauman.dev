@@ -2,7 +2,7 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
 import type { Env } from '../../types';
 import { requestAI } from '../request';
 
-// Mock resume data
+// Mock resume data (must match ResumeDataSchema - request.ts uses resumeJson for context)
 const mockResumeData = {
   name: 'Test User',
   title: 'Software Engineer',
@@ -31,6 +31,14 @@ const mockResumeData = {
       description: 'Led development of key features',
     },
   ],
+  summary: ['Test professional summary.'],
+  blockquote: { text: 'I learn {word} fast.', highlight: 'things' },
+  sections: {
+    tools: 'Tools intro.',
+    exploring: 'Exploring intro.',
+    projects: 'Projects intro.',
+    contact: 'Contact intro.',
+  },
 };
 
 // Mock environment - request.ts uses AI.run for both embeddings and LLM (not AI_EMBEDDINGS)
