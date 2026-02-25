@@ -107,13 +107,15 @@ export default function ChatbotUI({
                     msg.content
                   )}
                 </div>
-                <span
-                  className={`text-xs text-zinc-400 dark:text-zinc-500 mt-1 ${
-                    msg.role === 'assistant' ? 'ml-3' : 'mr-3'
-                  }`}
-                >
-                  {formatTimestamp(msg.timestamp)}
-                </span>
+                {msg.timestamp > 0 && (
+                  <span
+                    className={`text-xs text-zinc-400 dark:text-zinc-500 mt-1 ${
+                      msg.role === 'assistant' ? 'ml-3' : 'mr-3'
+                    }`}
+                  >
+                    {formatTimestamp(msg.timestamp)}
+                  </span>
+                )}
               </div>
             );
           })}

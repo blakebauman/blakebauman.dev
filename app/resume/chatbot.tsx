@@ -23,14 +23,17 @@ interface StreamChunk {
 // Session storage key for conversation history
 const CHAT_HISTORY_KEY = 'blakebauman_chat_history';
 
-// Create initial welcome message with fresh timestamp
+// Stable timestamp for initial message to avoid hydration mismatch
+const INITIAL_MESSAGE_TIMESTAMP = 0;
+
+// Create initial welcome message with stable timestamp
 function createInitialMessage(): Message {
   return {
     role: 'assistant',
     content:
       "Hi! I'm Blake's conversational AI agent. I can help you learn about his professional experience, skills, and background. What would you like to know?",
     id: '1',
-    timestamp: Date.now(),
+    timestamp: INITIAL_MESSAGE_TIMESTAMP,
   };
 }
 
