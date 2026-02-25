@@ -4,6 +4,20 @@
   --font-sans:
     'Inter', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji',
     'Segoe UI Symbol', 'Noto Color Emoji';
+
+  /* Fluid typography - scales with viewport */
+  --text-fluid-sm: clamp(0.875rem, 0.8rem + 0.35vw, 1rem);
+  --text-fluid-base: clamp(1rem, 0.9rem + 0.5vw, 1.25rem);
+  --text-fluid-lg: clamp(1.125rem, 1rem + 0.75vw, 1.5rem);
+  --text-fluid-xl: clamp(1.25rem, 1rem + 1.25vw, 2rem);
+  --text-fluid-2xl: clamp(1.5rem, 1rem + 2vw, 2.5rem);
+  --text-fluid-5xl: clamp(3rem, 2rem + 4vw, 6rem);
+
+  /* Fluid spacing */
+  --space-fluid-sm: clamp(1rem, 2vw, 2rem);
+  --space-fluid-md: clamp(1.5rem, 3vw, 3rem);
+  --space-fluid-lg: clamp(2rem, 5vw, 5rem);
+  --space-fluid-xl: clamp(3rem, 6vw, 6rem);
 }
 
 @font-face {
@@ -25,6 +39,59 @@ body {
   @media (prefers-color-scheme: dark) {
     color-scheme: dark;
   }
+}
+
+/* Fluid typography utility classes */
+.text-fluid-sm {
+  font-size: var(--text-fluid-sm);
+}
+.text-fluid-base {
+  font-size: var(--text-fluid-base);
+}
+.text-fluid-lg {
+  font-size: var(--text-fluid-lg);
+}
+.text-fluid-xl {
+  font-size: var(--text-fluid-xl);
+}
+.text-fluid-2xl {
+  font-size: var(--text-fluid-2xl);
+}
+.text-fluid-5xl {
+  font-size: var(--text-fluid-5xl);
+}
+
+/* Fluid spacing utility classes */
+.gap-fluid-sm {
+  gap: var(--space-fluid-sm);
+}
+.gap-fluid-md {
+  gap: var(--space-fluid-md);
+}
+.gap-fluid-lg {
+  gap: var(--space-fluid-lg);
+}
+.gap-fluid-xl {
+  gap: var(--space-fluid-xl);
+}
+.py-fluid-lg {
+  padding-top: var(--space-fluid-lg);
+  padding-bottom: var(--space-fluid-lg);
+}
+.py-fluid-xl {
+  padding-top: var(--space-fluid-xl);
+  padding-bottom: var(--space-fluid-xl);
+}
+.section-padding {
+  padding-inline: var(--space-fluid-md);
+}
+
+/* Fluid vertical spacing between children */
+.space-y-fluid-md > * + * {
+  margin-top: var(--space-fluid-md);
+}
+.space-y-fluid-lg > * + * {
+  margin-top: var(--space-fluid-lg);
 }
 
 /* Print styles - clean resume layout */
