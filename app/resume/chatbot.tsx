@@ -23,30 +23,36 @@ interface StreamChunk {
 // Session storage key for conversation history
 const CHAT_HISTORY_KEY = 'blakebauman_chat_history';
 
-// Initial welcome message
-const INITIAL_MESSAGE: Message = {
-  role: 'assistant',
-  content:
-    "Hi! I'm Blake's conversational AI agent. I can help you learn about his professional experience, skills, and background. What would you like to know?",
-  id: '1',
-  timestamp: Date.now(),
-};
+// Create initial welcome message with fresh timestamp
+function createInitialMessage(): Message {
+  return {
+    role: 'assistant',
+    content:
+      "Hi! I'm Blake's conversational AI agent. I can help you learn about his professional experience, skills, and background. What would you like to know?",
+    id: '1',
+    timestamp: Date.now(),
+  };
+}
 
 // Load messages from sessionStorage
 function loadMessages(): Message[] {
-  if (typeof window === 'undefined') return [INITIAL_MESSAGE];
+  if (typeof window === 'undefined') return [createInitialMessage()];
   try {
     const stored = sessionStorage.getItem(CHAT_HISTORY_KEY);
     if (stored) {
       const parsed = JSON.parse(stored);
       if (Array.isArray(parsed) && parsed.length > 0) {
-        return parsed;
+        // Migrate old messages without timestamps
+        return parsed.map((msg: Message, index: number) => ({
+          ...msg,
+          timestamp: msg.timestamp || Date.now() - (parsed.length - index) * 1000,
+        }));
       }
     }
   } catch {
     // Ignore parse errors
   }
-  return [INITIAL_MESSAGE];
+  return [createInitialMessage()];
 }
 
 // Save messages to sessionStorage
@@ -106,10 +112,13 @@ export default function Chatbot() {
     scrollToBottom();
   }, [messages, scrollToBottom]);
 
-  // Focus input on mount
+  // Focus input and scroll to bottom on mount
   useEffect(() => {
     inputRef.current?.focus();
-  }, []);
+    // Delay scroll to ensure DOM is ready
+    const timeout = setTimeout(scrollToBottom, 100);
+    return () => clearTimeout(timeout);
+  }, [scrollToBottom]);
 
   // Focus input after messages update
   useEffect(() => {
