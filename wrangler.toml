@@ -6,7 +6,7 @@ assets = { directory = "./build/client/" }
 
 [vars]
 NODE_ENV = "development"
-OPENAI_API_KEY = "***REMOVED***"
+# OPENAI_API_KEY is stored as a secret - run: wrangler secret put OPENAI_API_KEY
 
 [ai]
 binding = "AI"
