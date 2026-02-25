@@ -62,7 +62,7 @@ pnpm run vectorize:populate  # Populate vector index (requires VECTORIZE_ADMIN_K
 - `app/lib/` - Shared utilities (vectorize population)
 - `workers/` - Cloudflare Worker entry points
 
-### Cloudflare Bindings (wrangler.toml)
+### Cloudflare Bindings (wrangler.jsonc)
 - `AI` - Workers AI for embeddings (@cf/baai/bge-base-en-v1.5) and LLM (@cf/meta/llama-3.1-8b-instruct)
 - `VECTORIZE` - Vector index for semantic resume search (768 dimensions)
 - `RESUME_DATA_KV` - KV namespace for resume JSON and rate limiting

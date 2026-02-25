@@ -18,8 +18,8 @@
     "check": "biome check .",
     "check:fix": "biome check --write .",
     "prepare": "lefthook install",
-    "vectorize:dev": "wrangler dev -c workers/vectorize/wrangler.toml --remote",
-    "vectorize:deploy": "wrangler deploy -c workers/vectorize/wrangler.toml",
+    "vectorize:dev": "wrangler dev -c workers/vectorize/wrangler.jsonc --remote",
+    "vectorize:deploy": "wrangler deploy -c workers/vectorize/wrangler.jsonc",
     "vectorize:populate": "curl -X POST -H \"Authorization: Bearer $VECTORIZE_ADMIN_KEY\" https://vectorize.blakebauman.dev/populate",
     "vectorize:query": "curl 'https://vectorize.blakebauman.dev/query?q=edge%20computing'"
   },
@@ -37,7 +37,7 @@
   },
   "devDependencies": {
     "@biomejs/biome": "^2.4.4",
-    "@cloudflare/workers-types": "^4.20250214.0",
+    "@cloudflare/workers-types": "^4.20260304.0",
     "@react-router/cloudflare": "^7.2.0",
     "@react-router/dev": "^7.2.0",
     "@tailwindcss/vite": "^4.0.7",
@@ -56,6 +56,6 @@
     "vite": "^5.4.14",
     "vite-tsconfig-paths": "^5.1.4",
     "vitest": "^3.0.7",
-    "wrangler": "^3.109.2"
+    "wrangler": "^4.68.1"
   }
 }

@@ -1,0 +1,12 @@
+# Main worker (root) - copy to .dev.vars and fill in values
+# .dev.vars is gitignored - never commit real secrets
+#
+# For the vectorize worker, see: workers/vectorize/.dev.vars.example
+
+# Required for /api/populate-vectorize endpoint
+# Used to protect the vector index population route
+VECTORIZE_ADMIN_KEY = "your-secret-key-here"
+
+# Optional - not currently used (chat uses Workers AI exclusively)
+# Keep for future alternate AI backends if needed
+# OPENAI_API_KEY = "sk-your-openai-api-key-here"

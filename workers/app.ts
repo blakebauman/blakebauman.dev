@@ -143,6 +143,14 @@ export default {
       }
     }
 
+    // Check if chat is disabled
+    if (url.pathname === '/api/chat' && env.CHAT_ENABLED !== 'true') {
+      return new Response(JSON.stringify({ error: 'Chat is temporarily unavailable.' }), {
+        status: 503,
+        headers: { 'Content-Type': 'application/json', ...corsHeaders },
+      });
+    }
+
     // Rate limit check for /api/chat endpoint
     if (url.pathname === '/api/chat' && request.method === 'POST') {
       const rateLimit = await checkRateLimit(env.RESUME_DATA_KV, getClientIP(request));
