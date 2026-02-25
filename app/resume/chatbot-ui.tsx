@@ -70,68 +70,12 @@ export default function ChatbotUI({
   // Show suggested prompts only when there's just the initial message
   const showSuggestions = messages.length === 1 && !isLoading;
 
-  return (
-    <div
-      className={`w-full mx-auto p-0 pb-4 bg-transparent transition-all duration-300 ${
-        isExpanded
-          ? 'fixed inset-4 z-50 bg-white dark:bg-zinc-950 p-4 border border-zinc-200 dark:border-zinc-700 shadow-2xl'
-          : ''
-      }`}
-      role="region"
-      aria-label="AI Chat Assistant"
-    >
-      {/* Expand/Collapse button */}
-      <div className="flex justify-end mb-2">
-        <button
-          type="button"
-          onClick={onToggleExpand}
-          className="text-xs text-zinc-500 hover:text-zinc-700 dark:text-zinc-400 dark:hover:text-zinc-200 transition-colors flex items-center gap-1"
-          aria-label={isExpanded ? 'Collapse chat' : 'Expand chat'}
-        >
-          {isExpanded ? (
-            <>
-              <svg
-                className="w-4 h-4"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-                aria-hidden="true"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M6 18L18 6M6 6l12 12"
-                />
-              </svg>
-              Close
-            </>
-          ) : (
-            <>
-              <svg
-                className="w-4 h-4"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-                aria-hidden="true"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4"
-                />
-              </svg>
-              Expand
-            </>
-          )}
-        </button>
-      </div>
-
+  const chatContent = (
+    <>
       <div
         ref={messagesContainerRef}
-        className={`overflow-y-auto py-4 px-0 space-y-4 border border-zinc-200 dark:border-zinc-700 transition-all duration-300 ${
-          isExpanded ? 'h-[calc(100%-120px)]' : 'h-64'
+        className={`overflow-y-auto py-4 px-0 space-y-4 border border-zinc-200 dark:border-zinc-700 ${
+          isExpanded ? 'flex-1' : 'h-64'
         }`}
         role="log"
         aria-label="Chat messages"
@@ -246,6 +190,101 @@ export default function ChatbotUI({
           )}
         </button>
       </div>
-    </div>
+    </>
+  );
+
+  return (
+    <>
+      {/* Normal inline chat */}
+      <div
+        className={`w-full mx-auto p-0 pb-4 bg-transparent ${isExpanded ? 'invisible' : ''}`}
+        role="region"
+        aria-label="AI Chat Assistant"
+        aria-hidden={isExpanded}
+      >
+        {/* Expand button */}
+        <div className="flex justify-end mb-2">
+          <button
+            type="button"
+            onClick={onToggleExpand}
+            className="text-xs text-zinc-500 hover:text-zinc-700 dark:text-zinc-400 dark:hover:text-zinc-200 transition-colors flex items-center gap-1"
+            aria-label="Expand chat"
+          >
+            <svg
+              className="w-4 h-4"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+              aria-hidden="true"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4"
+              />
+            </svg>
+            Expand
+          </button>
+        </div>
+        {!isExpanded && chatContent}
+      </div>
+
+      {/* Expanded modal overlay */}
+      <div
+        className={`fixed inset-0 z-50 transition-opacity duration-200 ${
+          isExpanded ? 'opacity-100' : 'opacity-0 pointer-events-none'
+        }`}
+        aria-hidden={!isExpanded}
+      >
+        {/* Backdrop */}
+        <div
+          className="absolute inset-0 bg-black/50 dark:bg-black/70"
+          onClick={onToggleExpand}
+          aria-hidden="true"
+        />
+
+        {/* Modal content */}
+        <div
+          className={`absolute inset-4 sm:inset-8 bg-white dark:bg-zinc-950 border border-zinc-200 dark:border-zinc-700 shadow-2xl flex flex-col transition-transform duration-200 ${
+            isExpanded ? 'scale-100' : 'scale-95'
+          }`}
+          role="dialog"
+          aria-label="Expanded chat"
+          aria-modal="true"
+        >
+          {/* Close button */}
+          <div className="flex justify-end p-3 border-b border-zinc-200 dark:border-zinc-700">
+            <button
+              type="button"
+              onClick={onToggleExpand}
+              className="text-xs text-zinc-500 hover:text-zinc-700 dark:text-zinc-400 dark:hover:text-zinc-200 transition-colors flex items-center gap-1"
+              aria-label="Close expanded chat"
+            >
+              <svg
+                className="w-4 h-4"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+                aria-hidden="true"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M6 18L18 6M6 6l12 12"
+                />
+              </svg>
+              Close
+            </button>
+          </div>
+
+          {/* Chat content in modal */}
+          <div className="flex-1 flex flex-col p-4 overflow-hidden">
+            {isExpanded && chatContent}
+          </div>
+        </div>
+      </div>
+    </>
   );
 }
