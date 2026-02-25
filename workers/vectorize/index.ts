@@ -1,6 +1,6 @@
-import type { Env } from '../app/types';
-import { populateVectorizeIndex } from '../app/lib/vectorize';
-import resumeData from '../app/chat/resume.json';
+import resumeData from '../../app/chat/resume.json';
+import { populateVectorizeIndex } from '../../app/lib/vectorize';
+import type { Env } from '../../app/types';
 
 interface VectorizeEnv extends Env {
   VECTORIZE_ADMIN_KEY?: string;
