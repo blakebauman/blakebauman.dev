@@ -1,13 +1,12 @@
-import type { Route } from "./+types/home";
-import { Resume } from "../resume/resume";
+import type { Route } from './+types/home';
+import { Resume } from '../resume/resume';
 
 export function meta({}: Route.MetaArgs) {
   return [
     {
-      title:
-        "Blake Bauman | Software Engineer/Principal Technical Architect @ Adobe",
+      title: 'Blake Bauman | Software Engineer/Principal Technical Architect @ Adobe',
     },
-    { name: "description", content: "Welcome to blakebauman.dev!" },
+    { name: 'description', content: 'Welcome to blakebauman.dev!' },
   ];
 }
 

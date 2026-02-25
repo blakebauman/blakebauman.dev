@@ -31,7 +31,7 @@ async function populateVectorize() {
   }
 
   // Import resume data
-  const resumeData = await import('../app/chat/resume.json') as ResumeData;
+  const resumeData = (await import('../app/chat/resume.json')) as ResumeData;
 
   // Create chunks of resume data
   const chunks = [
@@ -44,16 +44,16 @@ Contact: ${resumeData.email} | ${resumeData.phone}
 Links: LinkedIn: ${resumeData.linkedin} | GitHub: ${resumeData.github} | Website: ${resumeData.website}`,
       metadata: {
         type: 'personal',
-        section: 'personal_info'
-      }
+        section: 'personal_info',
+      },
     },
     {
       id: 'skills',
       text: `Skills: ${resumeData.skills.join(', ')}`,
       metadata: {
         type: 'skills',
-        section: 'skills'
-      }
+        section: 'skills',
+      },
     },
     ...resumeData.experience.map((exp, index) => ({
       id: `experience_${index}`,
@@ -66,24 +66,27 @@ Description: ${exp.description}`,
         section: 'work_experience',
         company: exp.company,
         role: exp.role,
-        years: exp.years
-      }
-    }))
+        years: exp.years,
+      },
+    })),
   ];
 
   // Create embeddings using the Cloudflare AI API
   const embeddings = await Promise.all(
-    chunks.map(async (chunk) => {
-      const response = await fetch(`https://api.cloudflare.com/client/v4/accounts/${accountId}/ai/run/@cf/baai/bge-large-en-v1.5`, {
-        method: 'POST',
-        headers: {
-          'Authorization': `Bearer ${apiToken}`,
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          text: chunk.text,
-        }),
-      });
+    chunks.map(async chunk => {
+      const response = await fetch(
+        `https://api.cloudflare.com/client/v4/accounts/${accountId}/ai/run/@cf/baai/bge-large-en-v1.5`,
+        {
+          method: 'POST',
+          headers: {
+            Authorization: `Bearer ${apiToken}`,
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            text: chunk.text,
+          }),
+        }
+      );
 
       if (!response.ok) {
         throw new Error(`Failed to generate embedding: ${await response.text()}`);
@@ -102,16 +105,19 @@ Description: ${exp.description}`,
   );
 
   // Insert vectors into Vectorize
-  const insertResponse = await fetch(`https://api.cloudflare.com/client/v4/accounts/${accountId}/vectorize/indexes/resume-index/upsert`, {
-    method: 'POST',
-    headers: {
-      'Authorization': `Bearer ${apiToken}`,
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify({
-      vectors: embeddings,
-    }),
-  });
+  const insertResponse = await fetch(
+    `https://api.cloudflare.com/client/v4/accounts/${accountId}/vectorize/indexes/resume-index/upsert`,
+    {
+      method: 'POST',
+      headers: {
+        Authorization: `Bearer ${apiToken}`,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        vectors: embeddings,
+      }),
+    }
+  );
 
   if (!insertResponse.ok) {
     throw new Error(`Failed to insert vectors: ${await insertResponse.text()}`);
@@ -121,4 +127,4 @@ Description: ${exp.description}`,
 }
 
 // Run the script
-populateVectorize().catch(console.error); 
+populateVectorize().catch(console.error);

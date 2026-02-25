@@ -1,5 +1,5 @@
-import { requestAI } from "@/chat/request";
-import type { ActionFunctionArgs, LoaderFunctionArgs } from "react-router";
+import { requestAI } from '@/chat/request';
+import type { ActionFunctionArgs, LoaderFunctionArgs } from 'react-router';
 
 export async function loader({ request, context }: LoaderFunctionArgs) {
   return await requestAI({ request, context });
