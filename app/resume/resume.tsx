@@ -29,7 +29,7 @@ export function Resume({ chatEnabled }: ResumeProps) {
           Ask about Blake
         </a>
       )}
-      <div className="w-full max-w-[1800px] mx-auto px-[5vw] py-fluid-lg flex flex-col gap-fluid-xl">
+      <div className="w-full max-w-[2000px] mx-auto px-[5vw] py-fluid-lg flex flex-col gap-fluid-xl">
         {/* Priority content - above the fold */}
         <header className="flex flex-col">
           <div className="gap-0 section-padding flex flex-col md:flex-row md:items-start md:justify-between">
