@@ -4,6 +4,7 @@ interface Message {
   role: 'assistant' | 'user';
   content: string;
   id: string;
+  timestamp: number;
 }
 
 interface ChatResponse {
@@ -28,6 +29,7 @@ const INITIAL_MESSAGE: Message = {
   content:
     "Hi! I'm Blake's conversational AI agent. I can help you learn about his professional experience, skills, and background. What would you like to know?",
   id: '1',
+  timestamp: Date.now(),
 };
 
 // Load messages from sessionStorage
@@ -65,6 +67,7 @@ export default function Chatbot() {
   const [input, setInput] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [isExpanded, setIsExpanded] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const messagesContainerRef = useRef<HTMLDivElement>(null);
   const messagesContentRef = useRef<HTMLDivElement>(null);
@@ -110,18 +113,26 @@ export default function Chatbot() {
   const sendMessage = async () => {
     if (!input.trim() || isLoading) return;
 
-    const newMessage: Message = { role: 'user', content: input, id: Date.now().toString() };
+    const now = Date.now();
+    const newMessage: Message = {
+      role: 'user',
+      content: input,
+      id: now.toString(),
+      timestamp: now,
+    };
     setMessages(prev => [...prev, newMessage]);
     setInput('');
     setIsLoading(true);
     setError(null);
 
     // Create a placeholder message for streaming
-    const assistantMessageId = (Date.now() + 1).toString();
+    const assistantTimestamp = Date.now() + 1;
+    const assistantMessageId = assistantTimestamp.toString();
     const placeholderMessage: Message = {
       role: 'assistant',
       content: '',
       id: assistantMessageId,
+      timestamp: assistantTimestamp,
     };
 
     try {
@@ -202,6 +213,7 @@ export default function Chatbot() {
             role: 'assistant',
             content: data.choices[0].message.content,
             id: assistantMessageId,
+            timestamp: assistantTimestamp,
           };
           setMessages(prev => [...prev, assistantMessage]);
         } else {
@@ -232,6 +244,15 @@ export default function Chatbot() {
     inputRef.current?.focus();
   }, []);
 
+  const handleSuggestedPrompt = useCallback((prompt: string) => {
+    setInput(prompt);
+    inputRef.current?.focus();
+  }, []);
+
+  const handleToggleExpand = useCallback(() => {
+    setIsExpanded(prev => !prev);
+  }, []);
+
   return (
     <Suspense
       fallback={
@@ -246,6 +267,7 @@ export default function Chatbot() {
         input={input}
         isLoading={isLoading}
         error={error}
+        isExpanded={isExpanded}
         messagesEndRef={messagesEndRef}
         messagesContainerRef={messagesContainerRef}
         messagesContentRef={messagesContentRef}
@@ -254,6 +276,8 @@ export default function Chatbot() {
         onKeyPress={handleKeyPress}
         onSendMessage={sendMessage}
         onClearInput={handleClearInput}
+        onSuggestedPrompt={handleSuggestedPrompt}
+        onToggleExpand={handleToggleExpand}
       />
     </Suspense>
   );
