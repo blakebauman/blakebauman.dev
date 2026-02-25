@@ -1,9 +1,9 @@
-import { describe, it, expect } from 'vitest';
+import { describe, expect, it } from 'vitest';
 import {
-  PromptSchema,
-  ConversationMessageSchema,
-  ChatRequestSchema,
   ChatQueryParamsSchema,
+  ChatRequestSchema,
+  ConversationMessageSchema,
+  PromptSchema,
 } from '../chat';
 import { getFirstErrorMessage } from '../errors';
 

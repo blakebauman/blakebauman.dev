@@ -1,4 +1,4 @@
-import { describe, it, expect, vi, beforeEach } from 'vitest';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
 import type { Env } from '../../types';
 import { requestAI } from '../request';
 
@@ -66,12 +66,14 @@ describe('requestAI', () => {
     });
 
     // AI.run is called twice: (1) embeddings with { text: [prompt] }, (2) LLM with { messages }
-    mockEnv.AI.run.mockImplementation((model: string, input: { text?: string[]; messages?: unknown[] }) => {
-      if (input.text) {
-        return Promise.resolve({ data: [[0.1, 0.2, 0.3]] });
+    mockEnv.AI.run.mockImplementation(
+      (model: string, input: { text?: string[]; messages?: unknown[] }) => {
+        if (input.text) {
+          return Promise.resolve({ data: [[0.1, 0.2, 0.3]] });
+        }
+        return Promise.resolve({ response: 'Test response' });
       }
-      return Promise.resolve({ response: 'Test response' });
-    });
+    );
   });
 
   it('should handle a basic query successfully', async () => {
@@ -82,7 +84,7 @@ describe('requestAI', () => {
 
     const response = await requestAI({
       request,
-      context: { cloudflare: { env: mockEnv as Env } },
+      context: { cloudflare: { env: mockEnv as unknown as Env } },
     });
 
     expect(response.status).toBe(200);
@@ -100,19 +102,21 @@ describe('requestAI', () => {
 
     await requestAI({
       request,
-      context: { cloudflare: { env: mockEnv } },
+      context: { cloudflare: { env: mockEnv as unknown as Env } },
     });
 
     expect(mockEnv.RESUME_DATA_KV.put).toHaveBeenCalled();
   });
 
   it('should handle empty embeddings by falling back to full resume', async () => {
-    mockEnv.AI.run.mockImplementation((_model: string, input: { text?: string[]; messages?: unknown[] }) => {
-      if (input.text) {
-        return Promise.resolve({ data: [] }); // No embeddings - triggers fallback to full resume
+    mockEnv.AI.run.mockImplementation(
+      (_model: string, input: { text?: string[]; messages?: unknown[] }) => {
+        if (input.text) {
+          return Promise.resolve({ data: [] }); // No embeddings - triggers fallback to full resume
+        }
+        return Promise.resolve({ response: 'Test response' });
       }
-      return Promise.resolve({ response: 'Test response' });
-    });
+    );
 
     const request = new Request('http://test.com', {
       method: 'POST',
@@ -121,7 +125,7 @@ describe('requestAI', () => {
 
     const response = await requestAI({
       request,
-      context: { cloudflare: { env: mockEnv as Env } },
+      context: { cloudflare: { env: mockEnv as unknown as Env } },
     });
 
     // When embeddings.data[0] is falsy, code uses full resume and continues to LLM
@@ -140,7 +144,7 @@ describe('requestAI', () => {
 
     const response = await requestAI({
       request,
-      context: { cloudflare: { env: mockEnv as Env } },
+      context: { cloudflare: { env: mockEnv as unknown as Env } },
     });
 
     // Vectorize failure is caught and falls back to full resume; LLM still responds
@@ -159,7 +163,7 @@ describe('requestAI', () => {
 
     const response = await requestAI({
       request,
-      context: { cloudflare: { env: mockEnv as Env } },
+      context: { cloudflare: { env: mockEnv as unknown as Env } },
     });
 
     expect(response.status).toBe(500);

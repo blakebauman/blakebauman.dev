@@ -1,9 +1,9 @@
-import type { Env, ResumeData, VectorMatch } from '../types';
 import {
-  ChatRequestSchema,
   ChatQueryParamsSchema,
+  ChatRequestSchema,
   createValidationErrorResponse,
 } from '../schemas';
+import type { Env, ResumeData, VectorMatch } from '../types';
 import resumeJson from './resume.json';
 
 export async function requestAI({

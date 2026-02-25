@@ -24,12 +24,14 @@ pnpm test:coverage    # Run with coverage report
 pnpm test -- app/chat # Run tests matching path
 ```
 
-### Linting/Formatting
+### Linting/Formatting (Biome)
 ```bash
-pnpm run lint         # Run ESLint
-pnpm run lint:fix     # Fix ESLint issues
-pnpm run format       # Format with Prettier
-pnpm run format:check # Check formatting
+pnpm run check        # Run Biome lint + format check
+pnpm run check:fix    # Fix lint and format issues
+pnpm run lint         # Run Biome linter only
+pnpm run lint:fix     # Fix lint issues
+pnpm run format       # Format all files
+pnpm run format:check # Check formatting only
 ```
 
 ### Vectorize Commands (separate worker)

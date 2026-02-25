@@ -1,13 +1,13 @@
 // Re-export types from schemas
 export type {
+  ChatQueryParams,
+  ChatRequest,
+  ChunkMetadata,
+  ConversationMessage,
   Project,
   ResumeData,
-  ChunkMetadata,
   VectorMatch,
   VectorQueryResult,
-  ConversationMessage,
-  ChatRequest,
-  ChatQueryParams,
 } from './schemas';
 
 interface AIRunInput {
