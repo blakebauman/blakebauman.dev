@@ -1,7 +1,7 @@
-import type { AppLoadContext, EntryContext } from "react-router";
-import { ServerRouter } from "react-router";
-import { isbot } from "isbot";
-import { renderToReadableStream } from "react-dom/server";
+import type { AppLoadContext, EntryContext } from 'react-router';
+import { ServerRouter } from 'react-router';
+import { isbot } from 'isbot';
+import { renderToReadableStream } from 'react-dom/server';
 
 export default async function handleRequest(
   request: Request,
@@ -11,20 +11,20 @@ export default async function handleRequest(
   _loadContext: AppLoadContext
 ) {
   let shellRendered = false;
-  const userAgent = request.headers.get("user-agent");
+  const userAgent = request.headers.get('user-agent');
   let statusCode = responseStatusCode;
 
   // Add security headers
-  responseHeaders.set("X-Content-Type-Options", "nosniff");
-  responseHeaders.set("X-Frame-Options", "DENY");
-  responseHeaders.set("X-XSS-Protection", "1; mode=block");
-  responseHeaders.set("Referrer-Policy", "strict-origin-when-cross-origin");
-  responseHeaders.set("Permissions-Policy", "camera=(), microphone=(), geolocation=()");
-  
+  responseHeaders.set('X-Content-Type-Options', 'nosniff');
+  responseHeaders.set('X-Frame-Options', 'DENY');
+  responseHeaders.set('X-XSS-Protection', '1; mode=block');
+  responseHeaders.set('Referrer-Policy', 'strict-origin-when-cross-origin');
+  responseHeaders.set('Permissions-Policy', 'camera=(), microphone=(), geolocation=()');
+
   // Add performance headers
-  responseHeaders.set("Cache-Control", "public, max-age=31536000, immutable");
-  responseHeaders.set("Accept-Ranges", "bytes");
-  responseHeaders.set("Vary", "Accept-Encoding");
+  responseHeaders.set('Cache-Control', 'public, max-age=31536000, immutable');
+  responseHeaders.set('Accept-Ranges', 'bytes');
+  responseHeaders.set('Vary', 'Accept-Encoding');
 
   const body = await renderToReadableStream(
     <ServerRouter context={routerContext} url={request.url} />,
@@ -38,7 +38,7 @@ export default async function handleRequest(
           console.error(error);
         }
       },
-      bootstrapScripts: ["/build/entry.client.js"],
+      bootstrapScripts: ['/build/entry.client.js'],
       bootstrapModules: [],
       // Enable streaming for faster initial page load
       signal: AbortSignal.timeout(5000), // 5 second timeout
@@ -52,7 +52,7 @@ export default async function handleRequest(
     await body.allReady;
   }
 
-  responseHeaders.set("Content-Type", "text/html");
+  responseHeaders.set('Content-Type', 'text/html');
   return new Response(body, {
     headers: responseHeaders,
     status: statusCode,

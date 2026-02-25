@@ -1,7 +1,7 @@
-import { useState, useRef, useEffect, useCallback, lazy, Suspense } from "react";
+import { useState, useRef, useEffect, useCallback, lazy, Suspense } from 'react';
 
 interface Message {
-  role: "assistant" | "user";
+  role: 'assistant' | 'user';
   content: string;
   id: string;
 }
@@ -15,18 +15,54 @@ interface ChatResponse {
   error?: string;
 }
 
+interface StreamChunk {
+  content: string;
+}
+
+// Session storage key for conversation history
+const CHAT_HISTORY_KEY = 'blakebauman_chat_history';
+
+// Initial welcome message
+const INITIAL_MESSAGE: Message = {
+  role: 'assistant',
+  content:
+    "Hi! I'm Blake's conversational AI agent. I can help you learn about his professional experience, skills, and background. What would you like to know?",
+  id: '1',
+};
+
+// Load messages from sessionStorage
+function loadMessages(): Message[] {
+  if (typeof window === 'undefined') return [INITIAL_MESSAGE];
+  try {
+    const stored = sessionStorage.getItem(CHAT_HISTORY_KEY);
+    if (stored) {
+      const parsed = JSON.parse(stored);
+      if (Array.isArray(parsed) && parsed.length > 0) {
+        return parsed;
+      }
+    }
+  } catch {
+    // Ignore parse errors
+  }
+  return [INITIAL_MESSAGE];
+}
+
+// Save messages to sessionStorage
+function saveMessages(messages: Message[]): void {
+  if (typeof window === 'undefined') return;
+  try {
+    sessionStorage.setItem(CHAT_HISTORY_KEY, JSON.stringify(messages));
+  } catch {
+    // Ignore storage errors (e.g., quota exceeded)
+  }
+}
+
 // Lazy load the chatbot UI
-const ChatbotUI = lazy(() => import("@/resume/chatbot-ui"));
+const ChatbotUI = lazy(() => import('@/resume/chatbot-ui'));
 
 export default function Chatbot() {
-  const [messages, setMessages] = useState<Message[]>([
-    { 
-      role: "assistant", 
-      content: "Hi! I'm Blake's conversational AI agent. I can help you learn about his professional experience, skills, and background. What would you like to know?", 
-      id: "1" 
-    },
-  ]);
-  const [input, setInput] = useState("");
+  const [messages, setMessages] = useState<Message[]>(loadMessages);
+  const [input, setInput] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const messagesEndRef = useRef<HTMLDivElement>(null);
@@ -48,7 +84,7 @@ export default function Chatbot() {
     observer.observe(container, {
       childList: true,
       subtree: true,
-      characterData: true
+      characterData: true,
     });
 
     return () => observer.disconnect();
@@ -66,48 +102,118 @@ export default function Chatbot() {
     }
   }, [isLoading]);
 
+  // Persist messages to sessionStorage
+  useEffect(() => {
+    saveMessages(messages);
+  }, [messages]);
+
   const sendMessage = async () => {
     if (!input.trim() || isLoading) return;
 
-    const newMessage: Message = { role: "user", content: input, id: Date.now().toString() };
+    const newMessage: Message = { role: 'user', content: input, id: Date.now().toString() };
     setMessages(prev => [...prev, newMessage]);
-    setInput("");
+    setInput('');
     setIsLoading(true);
     setError(null);
 
+    // Create a placeholder message for streaming
+    const assistantMessageId = (Date.now() + 1).toString();
+    const placeholderMessage: Message = {
+      role: 'assistant',
+      content: '',
+      id: assistantMessageId,
+    };
+
     try {
-      const res = await fetch("/api/chat", {
-        method: "POST",
+      // Build conversation context from recent messages (last 6 exchanges max)
+      const recentMessages = [...messages, newMessage]
+        .slice(-12) // Last 12 messages (6 exchanges)
+        .map(m => ({ role: m.role, content: m.content }));
+
+      const res = await fetch('/api/chat?stream=true', {
+        method: 'POST',
         headers: {
-          "Content-Type": "application/json",
+          'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ prompt: input }),
+        body: JSON.stringify({
+          prompt: input,
+          conversationHistory: recentMessages,
+        }),
       });
 
       if (!res.ok) {
         throw new Error(`Failed to get response: ${res.statusText}`);
       }
 
-      const data = await res.json() as ChatResponse;
-      
-      if (data.error) {
-        throw new Error(data.error);
-      }
+      // Check if response is streaming
+      const contentType = res.headers.get('content-type');
+      if (contentType?.includes('text/event-stream') && res.body) {
+        // Add placeholder message for streaming
+        setMessages(prev => [...prev, placeholderMessage]);
 
-      if (data.choices?.[0]?.message?.content) {
-        const assistantMessage: Message = {
-          role: "assistant",
-          content: data.choices[0].message.content,
-          id: (Date.now() + 1).toString(),
-        };
-        setMessages(prev => [...prev, assistantMessage]);
+        const reader = res.body.getReader();
+        const decoder = new TextDecoder();
+        let accumulatedContent = '';
+
+        while (true) {
+          const { done, value } = await reader.read();
+          if (done) break;
+
+          const chunk = decoder.decode(value, { stream: true });
+          const lines = chunk.split('\n');
+
+          for (const line of lines) {
+            if (line.startsWith('data: ')) {
+              const data = line.slice(6);
+              if (data === '[DONE]') {
+                break;
+              }
+              try {
+                const parsed = JSON.parse(data) as StreamChunk;
+                if (parsed.content) {
+                  accumulatedContent += parsed.content;
+                  // Update the message with accumulated content
+                  setMessages(prev =>
+                    prev.map(msg =>
+                      msg.id === assistantMessageId ? { ...msg, content: accumulatedContent } : msg
+                    )
+                  );
+                }
+              } catch {
+                // Ignore parse errors for incomplete chunks
+              }
+            }
+          }
+        }
+
+        if (!accumulatedContent) {
+          throw new Error('No content received from stream');
+        }
       } else {
-        throw new Error("Invalid response format from server");
+        // Fallback to non-streaming response
+        const data = (await res.json()) as ChatResponse;
+
+        if (data.error) {
+          throw new Error(data.error);
+        }
+
+        if (data.choices?.[0]?.message?.content) {
+          const assistantMessage: Message = {
+            role: 'assistant',
+            content: data.choices[0].message.content,
+            id: assistantMessageId,
+          };
+          setMessages(prev => [...prev, assistantMessage]);
+        } else {
+          throw new Error('Invalid response format from server');
+        }
       }
     } catch (err) {
-      const errorMessage = err instanceof Error ? err.message : "An unexpected error occurred";
+      const errorMessage = err instanceof Error ? err.message : 'An unexpected error occurred';
       setError(`Sorry, I encountered an error: ${errorMessage}`);
-      console.error("Chat error:", err);
+      // Remove placeholder message on error
+      setMessages(prev => prev.filter(msg => msg.id !== assistantMessageId));
+      console.error('Chat error:', err);
     } finally {
       setIsLoading(false);
       inputRef.current?.focus();
@@ -115,14 +221,26 @@ export default function Chatbot() {
   };
 
   const handleKeyPress = (e: React.KeyboardEvent) => {
-    if (e.key === "Enter" && !e.shiftKey) {
+    if (e.key === 'Enter' && !e.shiftKey) {
       e.preventDefault();
       sendMessage();
     }
   };
 
+  const handleClearInput = useCallback(() => {
+    setInput('');
+    inputRef.current?.focus();
+  }, []);
+
   return (
-    <Suspense fallback={<div className="w-full h-64 bg-transparent animate-pulse" />}>
+    <Suspense
+      fallback={
+        <div
+          className="w-full h-64 bg-transparent animate-pulse"
+          aria-label="Loading chat interface"
+        />
+      }
+    >
       <ChatbotUI
         messages={messages}
         input={input}
@@ -132,9 +250,10 @@ export default function Chatbot() {
         messagesContainerRef={messagesContainerRef}
         messagesContentRef={messagesContentRef}
         inputRef={inputRef}
-        onInputChange={(e) => setInput(e.target.value)}
+        onInputChange={e => setInput(e.target.value)}
         onKeyPress={handleKeyPress}
         onSendMessage={sendMessage}
+        onClearInput={handleClearInput}
       />
     </Suspense>
   );

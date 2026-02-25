@@ -1,7 +1,7 @@
-import type { ChangeEvent, KeyboardEvent, RefObject } from "react";
+import type { ChangeEvent, KeyboardEvent, RefObject } from 'react';
 
 interface Message {
-  role: "assistant" | "user";
+  role: 'assistant' | 'user';
   content: string;
   id: string;
 }
@@ -18,6 +18,7 @@ interface ChatbotUIProps {
   onInputChange: (e: ChangeEvent<HTMLInputElement>) => void;
   onKeyPress: (e: KeyboardEvent<HTMLInputElement>) => void;
   onSendMessage: () => void;
+  onClearInput?: () => void;
 }
 
 export default function ChatbotUI({
@@ -25,77 +26,126 @@ export default function ChatbotUI({
   input,
   isLoading,
   error,
-  messagesEndRef,
   messagesContainerRef,
   messagesContentRef,
   inputRef,
   onInputChange,
   onKeyPress,
   onSendMessage,
+  onClearInput,
 }: ChatbotUIProps) {
+  const handleKeyDown = (e: KeyboardEvent<HTMLInputElement>) => {
+    // Escape key clears input
+    if (e.key === 'Escape' && onClearInput) {
+      e.preventDefault();
+      onClearInput();
+    }
+  };
+
   return (
-    <div className="w-full mx-auto p-0 pb-4 bg-transparent">
-      <div ref={messagesContainerRef} className="h-64 overflow-y-auto py-4 px-0 space-y-4 border border-zinc-200 dark:border-zinc-700">
+    <div
+      className="w-full mx-auto p-0 pb-4 bg-transparent"
+      role="region"
+      aria-label="AI Chat Assistant"
+    >
+      <div
+        ref={messagesContainerRef}
+        className="h-64 overflow-y-auto py-4 px-0 space-y-4 border border-zinc-200 dark:border-zinc-700"
+        role="log"
+        aria-label="Chat messages"
+        aria-live="polite"
+        aria-relevant="additions"
+      >
         <div ref={messagesContentRef} className="px-4 space-y-4">
-          {messages.map((msg) => (
-            <div
-              key={msg.id}
-              className={`flex ${msg.role === "assistant" ? "justify-start" : "justify-end"}`}
-            >
+          {messages.map((msg, index) => {
+            const isLastMessage = index === messages.length - 1;
+            const isStreaming = isLastMessage && isLoading && msg.role === 'assistant';
+
+            return (
               <div
-                className={`max-w-[80%] p-3 ${
-                  msg.role === "assistant"
-                    ? "bg-transparent text-zinc-900 dark:text-zinc-400"
-                    : "bg-red-500 text-white dark:text-zinc-950"
-                }`}
+                key={msg.id}
+                className={`flex ${msg.role === 'assistant' ? 'justify-start' : 'justify-end'}`}
               >
-                {msg.content}
+                <div
+                  className={`max-w-[80%] p-3 ${
+                    msg.role === 'assistant'
+                      ? 'bg-transparent text-zinc-900 dark:text-zinc-400'
+                      : 'bg-red-500 text-white dark:text-zinc-950'
+                  }`}
+                  role="article"
+                  aria-label={`${msg.role === 'assistant' ? 'Assistant' : 'You'}: ${msg.content}`}
+                >
+                  {msg.content}
+                  {isStreaming && (
+                    <span
+                      className="inline-block w-2 h-4 ml-1 bg-red-500 dark:bg-red-400 animate-pulse"
+                      aria-hidden="true"
+                    />
+                  )}
+                </div>
               </div>
-            </div>
-          ))}
-          {isLoading && (
-            <div className="flex justify-start">
+            );
+          })}
+          {/* Show "Thinking..." only when loading and the last message is NOT an assistant message (i.e., streaming hasn't started yet) */}
+          {isLoading && messages[messages.length - 1]?.role !== 'assistant' && (
+            <div className="flex justify-start" role="status" aria-label="Assistant is thinking">
               <div className="bg-transparent text-zinc-700 dark:text-zinc-400 p-3 flex items-center gap-2">
-                <div className="animate-spin h-4 w-4 border-2 border-zinc-700 dark:border-red-400 border-t-transparent rounded-full" />
-                Thinking...
+                <div
+                  className="animate-spin h-4 w-4 border-2 border-zinc-700 dark:border-red-400 border-t-transparent rounded-full"
+                  aria-hidden="true"
+                />
+                <span>Thinking...</span>
               </div>
             </div>
           )}
           {error && (
-            <div className="flex justify-start">
-              <div className="bg-transparent text-red-400 p-3">
-                {error}
-              </div>
+            <div className="flex justify-start" role="alert" aria-live="assertive">
+              <div className="bg-transparent text-red-400 p-3">{error}</div>
             </div>
           )}
         </div>
       </div>
       <div className="flex mt-4 gap-2 px-0">
+        <label htmlFor="chat-input" className="sr-only">
+          Ask a question about Blake's experience
+        </label>
         <input
+          id="chat-input"
           ref={inputRef}
-          className="flex-1 p-2 bg-transparent border border-zinc-200 dark:border-zinc-700 text-zinc-900 dark:text-white focus:outline-none focus:border-red-500 disabled:opacity-50"
+          className="flex-1 p-2 bg-transparent border border-zinc-200 dark:border-zinc-700 text-zinc-900 dark:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-red-500 focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:focus-visible:ring-offset-zinc-950 disabled:opacity-50"
           value={input}
           onChange={onInputChange}
           onKeyPress={onKeyPress}
+          onKeyDown={handleKeyDown}
           placeholder="Ask my agent about my experience..."
           disabled={isLoading}
+          aria-label="Ask a question about Blake's experience"
+          aria-describedby="chat-hint"
+          autoComplete="off"
         />
+        <span id="chat-hint" className="sr-only">
+          Press Enter to send your message, Escape to clear
+        </span>
         <button
           type="button"
           onClick={onSendMessage}
           disabled={isLoading || !input.trim()}
-          className="bg-red-500 text-white dark:text-zinc-950 p-2 font-semibold hover:bg-red-600 disabled:opacity-50 disabled:cursor-not-allowed transition-colors flex items-center gap-2"
+          className="bg-red-500 text-white dark:text-zinc-950 p-2 font-semibold hover:bg-red-600 disabled:opacity-50 disabled:cursor-not-allowed transition-colors flex items-center gap-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-red-500 focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:focus-visible:ring-offset-zinc-950"
+          aria-label={isLoading ? 'Sending message' : 'Send message'}
         >
           {isLoading ? (
             <>
-              <div className="animate-spin h-4 w-4 border-2 border-white dark:border-zinc-950 border-t-transparent rounded-full" />
-              Sending...
+              <div
+                className="animate-spin h-4 w-4 border-2 border-white dark:border-zinc-950 border-t-transparent rounded-full"
+                aria-hidden="true"
+              />
+              <span>Sending...</span>
             </>
           ) : (
-            "Send"
+            'Send'
           )}
         </button>
       </div>
     </div>
   );
-} 
+}

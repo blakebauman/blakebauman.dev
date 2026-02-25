@@ -1,8 +1,0 @@
-{
-  "indexes": {
-    "resume-index": {
-      "dimensions": 1024,
-      "metric": "cosine"
-    }
-  }
-} 
