@@ -24,7 +24,98 @@
     "Cloudflare Queues",
     "Magento Commerce",
     "Adobe Commerce",
-    "AEM Edge Delivery Services"
+    "Adobe Experience Manager",
+    "AEM Edge Delivery Services",
+    "Python",
+    "LangChain",
+    "Claude",
+    "Agentic AI",
+    "Serverless Architecture",
+    "Real-time Systems",
+    "NLP",
+    "WebSockets",
+    "Infrastructure as Code"
+  ],
+  "tools": [
+    "JavaScript",
+    "TypeScript",
+    "PHP",
+    "Edge Computing",
+    "Cloudflare Workers",
+    "Postgres",
+    "Redis",
+    "React",
+    "Hono",
+    "RPC",
+    "Python",
+    "LangChain",
+    "Agentic AI",
+    "Claude",
+    "LangGraph",
+    "LangSmith",
+    "Durable Objects",
+    "Bun",
+    "AWS Lambda",
+    "AWS CDK",
+    "Drizzle ORM",
+    "FastAPI",
+    "spaCy",
+    "Docker"
+  ],
+  "exploring": [
+    "AI",
+    "LLMs",
+    "Machine Learning",
+    "RAG",
+    "Vector Search",
+    "Prompt Engineering",
+    "Cloudflare Workflows",
+    "Cloudflare D1",
+    "Design Patterns",
+    "Claude / Anthropic",
+    "Multi-Agent Systems",
+    "Intent Classification",
+    "Reasoning Engines",
+    "Human-in-the-Loop AI",
+    "Entity Extraction"
+  ],
+  "projects": [
+    {
+      "name": "ecommerce-intent-reasoning-engine",
+      "description": "Reasoning engine for eCommerce intent classification with LLM-powered conflict resolution",
+      "tech": ["Python", "Claude API", "FastAPI", "PostgreSQL"],
+      "github": "https://github.com/blakebauman/ecommerce-intent-reasoning-engine"
+    },
+    {
+      "name": "fleet-workspace",
+      "description": "Hierarchical Durable Objects demo with infinite nesting and real-time WebSocket communication",
+      "tech": ["TypeScript", "Cloudflare Workers", "Durable Objects", "WebSockets"],
+      "github": "https://github.com/blakebauman/fleet-workspace"
+    },
+    {
+      "name": "adventure-agent",
+      "description": "Multi-agent AI system for Arizona adventure planning with 17+ specialized agents",
+      "tech": ["Python", "LangChain", "LangGraph", "LangSmith"],
+      "github": "https://github.com/blakebauman/adventure-agent"
+    },
+    {
+      "name": "hono-aws-lambda",
+      "description": "Production-ready Hono REST API with Bun runtime and AWS Lambda deployment",
+      "tech": ["TypeScript", "Hono", "Bun", "AWS CDK", "Drizzle ORM"],
+      "github": "https://github.com/blakebauman/hono-aws-lambda"
+    },
+    {
+      "name": "nomoji.dev",
+      "description": "Emoji control platform for AI coding assistants",
+      "tech": ["TypeScript", "Cloudflare Workers"],
+      "github": "https://github.com/blakebauman/nomoji.dev"
+    },
+    {
+      "name": "langchain-fastapi",
+      "description": "AI-powered content generation for e-commerce product descriptions",
+      "tech": ["JavaScript", "LangChain", "LangGraph"],
+      "github": "https://github.com/blakebauman/langchain-fastapi"
+    }
   ],
   "experience": [
     {
