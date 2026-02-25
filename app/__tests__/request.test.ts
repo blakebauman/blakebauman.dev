@@ -1,4 +1,4 @@
-import { describe, it, expect } from 'vitest';
+import { describe, expect, it } from 'vitest';
 import { PromptSchema } from '../schemas';
 import { getFirstErrorMessage } from '../schemas/errors';
 

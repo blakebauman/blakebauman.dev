@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect, useCallback, lazy, Suspense } from 'react';
+import { lazy, Suspense, useCallback, useEffect, useRef, useState } from 'react';
 
 interface Message {
   role: 'assistant' | 'user';

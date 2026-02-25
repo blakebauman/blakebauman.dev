@@ -29,10 +29,10 @@ export function Resume() {
           <div className="gap-0 md:p-8 flex flex-col md:flex-row md:items-start md:justify-between">
             <div>
               <h1 className="text-5xl mb-4">{resumeData.name}</h1>
-            <p className="text-2xl text-zinc-700 dark:text-zinc-400 mb-2">
-              {resumeData.title} @ {resumeData.experience[0]?.company ?? "Adobe"}
-            </p>
-            <p className="text-lg text-zinc-700 dark:text-zinc-500">{resumeData.location}</p>
+              <p className="text-2xl text-zinc-700 dark:text-zinc-400 mb-2">
+                {resumeData.title} @ {resumeData.experience[0]?.company ?? 'Adobe'}
+              </p>
+              <p className="text-lg text-zinc-700 dark:text-zinc-500">{resumeData.location}</p>
             </div>
             <button
               type="button"
@@ -163,10 +163,7 @@ export function Resume() {
               </div>
             </section>
             <hr className="border-t border-zinc-200 dark:border-zinc-700" />
-            <section
-              id="ai-agent-section"
-              className="mb-4 md:p-8 scroll-mt-8 print:hidden"
-            >
+            <section id="ai-agent-section" className="mb-4 md:p-8 scroll-mt-8 print:hidden">
               <h2 className="text-2xl mb-4">AI Agent</h2>
               <Suspense
                 fallback={<div className="h-64 animate-pulse bg-zinc-100 dark:bg-zinc-800" />}

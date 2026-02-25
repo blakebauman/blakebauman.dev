@@ -1,5 +1,4 @@
 import { config } from 'dotenv';
-import fetch from 'node-fetch';
 
 // Load environment variables
 config();
@@ -92,7 +91,11 @@ Description: ${exp.description}`,
         throw new Error(`Failed to generate embedding: ${await response.text()}`);
       }
 
-      const { result } = await response.json();
+      const json = (await response.json()) as { result?: { data?: number[][] } };
+      const result = json.result;
+      if (!result?.data?.[0]) {
+        throw new Error('Invalid embedding response');
+      }
       return {
         id: chunk.id,
         values: result.data[0],

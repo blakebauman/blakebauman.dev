@@ -1,5 +1,5 @@
-import { describe, it, expect } from 'vitest';
-import { ResumeDataSchema, ChunkMetadataSchema, VectorMatchSchema } from '../resume';
+import { describe, expect, it } from 'vitest';
+import { ChunkMetadataSchema, ResumeDataSchema, VectorMatchSchema } from '../resume';
 
 describe('ResumeDataSchema', () => {
   const validResumeData = {

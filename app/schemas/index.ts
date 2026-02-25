@@ -1,34 +1,32 @@
 // Chat schemas and types
 export {
-  PromptSchema,
-  ConversationMessageSchema,
-  ChatRequestSchema,
-  ChatQueryParamsSchema,
-  type ConversationMessage,
-  type ChatRequest,
   type ChatQueryParams,
+  ChatQueryParamsSchema,
+  type ChatRequest,
+  ChatRequestSchema,
+  type ConversationMessage,
+  ConversationMessageSchema,
+  PromptSchema,
 } from './chat';
-
-// Resume schemas and types
-export {
-  ProjectSchema,
-  ExperienceSchema,
-  ResumeDataSchema,
-  ChunkMetadataSchema,
-  VectorMatchSchema,
-  VectorQueryResultSchema,
-  type Project,
-  type Experience,
-  type ResumeData,
-  type ChunkMetadata,
-  type VectorMatch,
-  type VectorQueryResult,
-} from './resume';
-
 // Error utilities
 export {
-  formatZodError,
-  getFirstErrorMessage,
   createValidationErrorResponse,
   type FormattedError,
+  formatZodError,
+  getFirstErrorMessage,
 } from './errors';
+// Resume schemas and types
+export {
+  type ChunkMetadata,
+  ChunkMetadataSchema,
+  type Experience,
+  ExperienceSchema,
+  type Project,
+  ProjectSchema,
+  type ResumeData,
+  ResumeDataSchema,
+  type VectorMatch,
+  VectorMatchSchema,
+  type VectorQueryResult,
+  VectorQueryResultSchema,
+} from './resume';

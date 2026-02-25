@@ -1,5 +1,5 @@
-import type { Env, ResumeData } from '../types';
 import { ResumeDataSchema } from '../schemas';
+import type { Env, ResumeData } from '../types';
 
 export class VectorizeError extends Error {
   constructor(message: string) {

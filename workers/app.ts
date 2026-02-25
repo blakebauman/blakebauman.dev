@@ -1,6 +1,6 @@
 import { createRequestHandler } from 'react-router';
-import type { Env, ResumeData } from '../app/types';
 import { populateVectorizeIndex } from '../app/lib/vectorize';
+import type { Env, ResumeData } from '../app/types';
 
 interface CloudflareEnvironment extends Env {}
 
@@ -54,7 +54,7 @@ function getCorsOrigin(request: Request): string {
     return origin;
   }
   // Default to first allowed origin for same-origin requests
-  return ALLOWED_ORIGINS[0];
+  return ALLOWED_ORIGINS[0] ?? 'https://blakebauman.dev';
 }
 
 function getCorsHeaders(request: Request): Record<string, string> {
@@ -99,10 +99,10 @@ export default {
       const authHeader = request.headers.get('Authorization');
       const token = authHeader?.startsWith('Bearer ') ? authHeader.slice(7) : null;
       if (!env.VECTORIZE_ADMIN_KEY || token !== env.VECTORIZE_ADMIN_KEY) {
-        return new Response(
-          JSON.stringify({ error: 'Unauthorized' }),
-          { status: 401, headers: { 'Content-Type': 'application/json', ...corsHeaders } }
-        );
+        return new Response(JSON.stringify({ error: 'Unauthorized' }), {
+          status: 401,
+          headers: { 'Content-Type': 'application/json', ...corsHeaders },
+        });
       }
       try {
         // Import resume data
