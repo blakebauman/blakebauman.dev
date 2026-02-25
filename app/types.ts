@@ -53,4 +53,5 @@ export interface Env {
   CF_API_TOKEN?: string;
   VECTORIZE_INDEX?: string;
   VECTORIZE_ADMIN_KEY?: string;
+  CHAT_ENABLED?: string;
 }

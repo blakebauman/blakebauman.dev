@@ -8,21 +8,27 @@ function scrollToChat() {
   document.getElementById('ai-agent-section')?.scrollIntoView({ behavior: 'smooth' });
 }
 
-export function Resume() {
+interface ResumeProps {
+  chatEnabled: boolean;
+}
+
+export function Resume({ chatEnabled }: ResumeProps) {
   return (
     <main className="w-full min-h-screen">
-      {/* Floating CTA - hidden when printing */}
-      <a
-        href="#ai-agent-section"
-        onClick={e => {
-          e.preventDefault();
-          scrollToChat();
-        }}
-        className="print:hidden fixed bottom-6 right-6 z-50 bg-red-500 text-white dark:text-zinc-950 px-4 py-2 font-semibold shadow-lg hover:bg-red-600 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-red-500 focus-visible:ring-offset-2"
-        aria-label="Scroll to chat with Blake's AI assistant"
-      >
-        Ask about Blake
-      </a>
+      {/* Floating CTA - hidden when printing or chat disabled */}
+      {chatEnabled && (
+        <a
+          href="#ai-agent-section"
+          onClick={e => {
+            e.preventDefault();
+            scrollToChat();
+          }}
+          className="print:hidden fixed bottom-6 right-6 z-50 bg-red-500 text-white dark:text-zinc-950 px-4 py-2 font-semibold shadow-lg hover:bg-red-600 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-red-500 focus-visible:ring-offset-2"
+          aria-label="Scroll to chat with Blake's AI assistant"
+        >
+          Ask about Blake
+        </a>
+      )}
       <div className="w-full px-[5vw] py-fluid-lg flex flex-col gap-fluid-xl">
         {/* Priority content - above the fold */}
         <header className="flex flex-col">
@@ -172,18 +178,22 @@ export function Resume() {
                 ))}
               </div>
             </section>
-            <hr className="border-t border-zinc-200 dark:border-zinc-700" />
-            <section
-              id="ai-agent-section"
-              className="mb-4 section-padding scroll-mt-8 print:hidden"
-            >
-              <h2 className="text-fluid-2xl mb-4">AI Agent</h2>
-              <Suspense
-                fallback={<div className="h-64 animate-pulse bg-zinc-100 dark:bg-zinc-800" />}
-              >
-                <Chatbot />
-              </Suspense>
-            </section>
+            {chatEnabled && (
+              <>
+                <hr className="border-t border-zinc-200 dark:border-zinc-700" />
+                <section
+                  id="ai-agent-section"
+                  className="mb-4 section-padding scroll-mt-8 print:hidden"
+                >
+                  <h2 className="text-fluid-2xl mb-4">AI Agent</h2>
+                  <Suspense
+                    fallback={<div className="h-64 animate-pulse bg-zinc-100 dark:bg-zinc-800" />}
+                  >
+                    <Chatbot />
+                  </Suspense>
+                </section>
+              </>
+            )}
             <hr className="border-t border-zinc-200 dark:border-zinc-700" />
             <section className="mb-4 section-padding">
               <h2 className="text-fluid-2xl">Contact</h2>
