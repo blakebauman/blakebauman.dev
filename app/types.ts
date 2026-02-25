@@ -46,6 +46,7 @@ export interface Env {
       vector: number[],
       options: {
         topK: number;
+        returnMetadata?: 'all' | 'indexed' | 'none';
       }
     ) => Promise<import('./schemas').VectorQueryResult>;
   };

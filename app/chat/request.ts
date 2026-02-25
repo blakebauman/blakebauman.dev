@@ -72,6 +72,7 @@ export async function requestAI({
           // Query Vectorize to find relevant resume sections
           const vectorResults = await context.cloudflare.env.VECTORIZE.query(embeddings.data[0], {
             topK: 5, // Increased from 3 to get more context
+            returnMetadata: 'all',
           });
 
           console.log('Vector search results:', JSON.stringify(vectorResults));
