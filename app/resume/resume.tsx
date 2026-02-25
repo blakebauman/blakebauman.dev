@@ -10,7 +10,7 @@ function scrollToChat() {
 
 export function Resume() {
   return (
-    <main className="flex justify-left pt-16 p-8 max-w-screen-lg">
+    <main className="w-full min-h-screen">
       {/* Floating CTA - hidden when printing */}
       <a
         href="#ai-agent-section"
@@ -23,16 +23,18 @@ export function Resume() {
       >
         Ask about Blake
       </a>
-      <div className="flex-1 flex flex-col gap-8 min-h-0">
+      <div className="w-full px-[5vw] py-fluid-lg flex flex-col gap-fluid-xl">
         {/* Priority content - above the fold */}
         <header className="flex flex-col">
-          <div className="gap-0 md:p-8 flex flex-col md:flex-row md:items-start md:justify-between">
+          <div className="gap-0 section-padding flex flex-col md:flex-row md:items-start md:justify-between">
             <div>
-              <h1 className="text-5xl mb-4">{resumeData.name}</h1>
-              <p className="text-2xl text-zinc-700 dark:text-zinc-400 mb-2">
+              <h1 className="text-fluid-5xl mb-4">{resumeData.name}</h1>
+              <p className="text-fluid-2xl text-zinc-700 dark:text-zinc-400 mb-2">
                 {resumeData.title} @ {resumeData.experience[0]?.company ?? 'Adobe'}
               </p>
-              <p className="text-lg text-zinc-700 dark:text-zinc-500">{resumeData.location}</p>
+              <p className="text-fluid-lg text-zinc-700 dark:text-zinc-500">
+                {resumeData.location}
+              </p>
             </div>
             <button
               type="button"
@@ -43,12 +45,15 @@ export function Resume() {
             </button>
           </div>
         </header>
-        <div className="w-full space-y-6">
+        <div className="w-full space-y-fluid-lg">
           <hr className="border-t border-zinc-200 dark:border-zinc-700" />
-          <section className="mb-8 md:p-8">
-            <h2 className="text-2xl">Who?</h2>
+          <section className="mb-8 section-padding">
+            <h2 className="text-fluid-2xl">Who?</h2>
             {resumeData.summary.map(paragraph => (
-              <p key={paragraph.slice(0, 40)} className="text-zinc-700 dark:text-zinc-400 mt-8">
+              <p
+                key={paragraph.slice(0, 40)}
+                className="text-fluid-base text-zinc-700 dark:text-zinc-400 mt-8"
+              >
                 {paragraph}
               </p>
             ))}
@@ -57,8 +62,8 @@ export function Resume() {
 
           {/* Defer loading of content below the fold */}
           <Suspense fallback={<div className="h-64 animate-pulse bg-zinc-100 dark:bg-zinc-800" />}>
-            <section className="mb-4 md:p-8">
-              <h2 className="text-2xl mb-8">Experience</h2>
+            <section className="mb-4 section-padding">
+              <h2 className="text-fluid-2xl mb-8">Experience</h2>
               <ol className="relative border-s border-zinc-200 dark:border-zinc-700 mb-8">
                 {resumeData.experience.map((exp, index) => (
                   <li
@@ -66,19 +71,19 @@ export function Resume() {
                     className={index < resumeData.experience.length - 1 ? 'mb-10 ms-4' : 'ms-4'}
                   >
                     <div className="absolute w-3 h-3 bg-zinc-200 mt-1.5 -start-1.5 border border-white dark:border-red-900 dark:bg-red-400" />
-                    <time className="mb-1 text-sm font-normal leading-none text-zinc-400 dark:text-zinc-500">
+                    <time className="mb-1 text-fluid-sm font-normal leading-none text-zinc-400 dark:text-zinc-500">
                       {exp.years}
                     </time>
                     <h3
-                      className={`text-lg text-zinc-900 dark:text-white mt-2 mb-1 ${index === 0 ? 'font-semibold' : ''}`}
+                      className={`text-fluid-lg text-zinc-900 dark:text-white mt-2 mb-1 ${index === 0 ? 'font-semibold' : ''}`}
                     >
                       {exp.role} | {exp.company}
                     </h3>
                     <p
                       className={
                         index < resumeData.experience.length - 1
-                          ? 'mb-4 text-base font-normal text-zinc-500 dark:text-zinc-400'
-                          : 'text-base font-normal text-zinc-500 dark:text-zinc-500'
+                          ? 'mb-4 text-fluid-base font-normal text-zinc-500 dark:text-zinc-400'
+                          : 'text-fluid-base font-normal text-zinc-500 dark:text-zinc-500'
                       }
                     >
                       {exp.description}
@@ -86,22 +91,26 @@ export function Resume() {
                   </li>
                 ))}
               </ol>
-              <a href={resumeData.linkedin} className="text-red-400">
+              <a href={resumeData.linkedin} className="text-red-400 text-fluid-base">
                 View more on my LinkedIn Profile
               </a>
             </section>
             <hr className="border-t border-zinc-200 dark:border-zinc-700" />
-            <section className="mb-4 md:p-8">
-              <h2 className="text-2xl">Tools</h2>
-              <p className="text-zinc-700 dark:text-zinc-500 mb-8">{resumeData.sections.tools}</p>
-              <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+            <section className="mb-4 section-padding">
+              <h2 className="text-fluid-2xl">Tools</h2>
+              <p className="text-fluid-base text-zinc-700 dark:text-zinc-500 mb-8">
+                {resumeData.sections.tools}
+              </p>
+              <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-4">
                 {resumeData.tools.map(tool => (
-                  <div key={tool}>{tool}</div>
+                  <div key={tool} className="text-fluid-base">
+                    {tool}
+                  </div>
                 ))}
               </div>
             </section>
             <hr className="border-t border-zinc-200 dark:border-zinc-700" />
-            <blockquote className="text-center text-2xl md:p-8 text-zinc-900 italic dark:text-white">
+            <blockquote className="text-center text-fluid-2xl section-padding text-zinc-900 italic dark:text-white">
               {resumeData.blockquote.text.split('{word}').map((part, i) =>
                 i === 0 ? (
                   <span key="blockquote-before">
@@ -118,24 +127,26 @@ export function Resume() {
               )}
             </blockquote>
             <hr className="border-t border-zinc-200 dark:border-zinc-700" />
-            <section className="mb-4 md:p-8">
-              <h2 className="text-2xl">Exploring</h2>
-              <p className="text-zinc-700 dark:text-zinc-500 mb-8">
+            <section className="mb-4 section-padding">
+              <h2 className="text-fluid-2xl">Exploring</h2>
+              <p className="text-fluid-base text-zinc-700 dark:text-zinc-500 mb-8">
                 {resumeData.sections.exploring}
               </p>
-              <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+              <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-4">
                 {resumeData.exploring.map(item => (
-                  <div key={item}>{item}</div>
+                  <div key={item} className="text-fluid-base">
+                    {item}
+                  </div>
                 ))}
               </div>
             </section>
             <hr className="border-t border-zinc-200 dark:border-zinc-700" />
-            <section className="mb-4 md:p-8">
-              <h2 className="text-2xl">Projects</h2>
-              <p className="text-zinc-700 dark:text-zinc-500 mb-8">
+            <section className="mb-4 section-padding">
+              <h2 className="text-fluid-2xl">Projects</h2>
+              <p className="text-fluid-base text-zinc-700 dark:text-zinc-500 mb-8">
                 {resumeData.sections.projects}
               </p>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
                 {resumeData.projects.map(project => (
                   <a
                     key={project.name}
@@ -144,10 +155,10 @@ export function Resume() {
                     rel="noopener noreferrer"
                     className="block p-4 border border-zinc-200 dark:border-zinc-700 hover:border-red-400 transition-colors"
                   >
-                    <h3 className="text-lg font-semibold text-zinc-900 dark:text-white mb-2">
+                    <h3 className="text-fluid-lg font-semibold text-zinc-900 dark:text-white mb-2">
                       {project.name}
                     </h3>
-                    <p className="text-sm text-zinc-600 dark:text-zinc-400 mb-3">
+                    <p className="text-fluid-sm text-zinc-600 dark:text-zinc-400 mb-3">
                       {project.description}
                     </p>
                     <div className="flex flex-wrap gap-2">
@@ -162,8 +173,11 @@ export function Resume() {
               </div>
             </section>
             <hr className="border-t border-zinc-200 dark:border-zinc-700" />
-            <section id="ai-agent-section" className="mb-4 md:p-8 scroll-mt-8 print:hidden">
-              <h2 className="text-2xl mb-4">AI Agent</h2>
+            <section
+              id="ai-agent-section"
+              className="mb-4 section-padding scroll-mt-8 print:hidden"
+            >
+              <h2 className="text-fluid-2xl mb-4">AI Agent</h2>
               <Suspense
                 fallback={<div className="h-64 animate-pulse bg-zinc-100 dark:bg-zinc-800" />}
               >
@@ -171,23 +185,25 @@ export function Resume() {
               </Suspense>
             </section>
             <hr className="border-t border-zinc-200 dark:border-zinc-700" />
-            <section className="mb-4 md:p-8">
-              <h2 className="text-2xl">Contact</h2>
-              <p className="text-zinc-700 dark:text-zinc-500 mb-8">{resumeData.sections.contact}</p>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div>
+            <section className="mb-4 section-padding">
+              <h2 className="text-fluid-2xl">Contact</h2>
+              <p className="text-fluid-base text-zinc-700 dark:text-zinc-500 mb-8">
+                {resumeData.sections.contact}
+              </p>
+              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-4">
+                <div className="text-fluid-base">
                   Email:{' '}
                   <a href={`mailto:${resumeData.email}`} className="text-red-400">
                     {resumeData.email}
                   </a>
                 </div>
-                <div>
+                <div className="text-fluid-base">
                   Phone:{' '}
                   <a href={`tel:${resumeData.phone.replace(/\D/g, '')}`} className="text-red-400">
                     {resumeData.phone}
                   </a>
                 </div>
-                <div>
+                <div className="text-fluid-base">
                   Web:{' '}
                   <a
                     href={resumeData.website}
@@ -198,7 +214,7 @@ export function Resume() {
                     {new URL(resumeData.website).hostname}
                   </a>
                 </div>
-                <div>
+                <div className="text-fluid-base">
                   Github:{' '}
                   <a
                     href={resumeData.github}
@@ -209,7 +225,7 @@ export function Resume() {
                     {resumeData.github.split('/').filter(Boolean).pop() ?? 'GitHub'}
                   </a>
                 </div>
-                <div>
+                <div className="text-fluid-base">
                   LinkedIn:{' '}
                   <a
                     href={resumeData.linkedin}
@@ -221,7 +237,7 @@ export function Resume() {
                   </a>
                 </div>
                 {resumeData.bluesky && (
-                  <div>
+                  <div className="text-fluid-base">
                     Bluesky:{' '}
                     <a
                       href={resumeData.bluesky}
@@ -237,8 +253,8 @@ export function Resume() {
             </section>
           </Suspense>
         </div>
-        <footer className="py-4 border-t border-zinc-200 dark:border-zinc-700 text-center">
-          <p className="text-sm text-zinc-700 dark:text-zinc-700">
+        <footer className="py-4 border-t border-zinc-200 dark:border-zinc-700 text-center section-padding">
+          <p className="text-fluid-sm text-zinc-700 dark:text-zinc-700">
             &copy; {new Date().getFullYear()} {resumeData.name}. All rights reserved.
           </p>
         </footer>

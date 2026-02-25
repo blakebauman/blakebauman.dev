@@ -132,25 +132,25 @@ export function ErrorBoundary({ error }: Route.ErrorBoundaryProps) {
   }
 
   return (
-    <main className="min-h-screen flex flex-col items-center justify-center p-8 bg-white dark:bg-zinc-950">
-      <div className="max-w-md w-full text-center">
-        <h1 className="text-4xl font-bold text-zinc-900 dark:text-white mb-2">{message}</h1>
-        <p className="text-zinc-600 dark:text-zinc-400 mb-6">{details}</p>
+    <main className="w-full min-h-screen flex flex-col items-center justify-center px-[5vw] py-fluid-lg bg-white dark:bg-zinc-950">
+      <div className="w-full max-w-2xl text-center">
+        <h1 className="text-fluid-5xl font-bold text-zinc-900 dark:text-white mb-2">{message}</h1>
+        <p className="text-fluid-base text-zinc-600 dark:text-zinc-400 mb-6">{details}</p>
         {stack && (
-          <pre className="w-full p-4 overflow-x-auto text-left text-sm text-zinc-500 dark:text-zinc-500 bg-zinc-100 dark:bg-zinc-800 mb-6">
+          <pre className="w-full p-4 overflow-x-auto text-left text-fluid-sm text-zinc-500 dark:text-zinc-500 bg-zinc-100 dark:bg-zinc-800 mb-6">
             <code>{stack}</code>
           </pre>
         )}
         <div className="flex flex-col sm:flex-row gap-3 justify-center">
           <a
             href="/"
-            className="inline-flex items-center justify-center px-4 py-2 bg-red-500 text-white dark:text-zinc-950 font-semibold hover:bg-red-600 transition-colors"
+            className="inline-flex items-center justify-center px-4 py-2 bg-red-500 text-white dark:text-zinc-950 font-semibold hover:bg-red-600 transition-colors text-fluid-base"
           >
             Back to home
           </a>
           <a
             href={`mailto:${resumeData.email}?subject=Error%20on%20blakebauman.dev`}
-            className="inline-flex items-center justify-center px-4 py-2 border border-zinc-300 dark:border-zinc-600 text-zinc-700 dark:text-zinc-300 hover:bg-zinc-100 dark:hover:bg-zinc-800 transition-colors"
+            className="inline-flex items-center justify-center px-4 py-2 border border-zinc-300 dark:border-zinc-600 text-zinc-700 dark:text-zinc-300 hover:bg-zinc-100 dark:hover:bg-zinc-800 transition-colors text-fluid-base"
           >
             Report an issue
           </a>
