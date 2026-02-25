@@ -38,8 +38,6 @@ export default async function handleRequest(
           console.error(error);
         }
       },
-      bootstrapScripts: ['/build/entry.client.js'],
-      bootstrapModules: [],
       // Enable streaming for faster initial page load
       signal: AbortSignal.timeout(5000), // 5 second timeout
     }
