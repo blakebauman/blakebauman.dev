@@ -208,7 +208,9 @@ INSTRUCTIONS:
 3. DO NOT fabricate details about employment, dates, or responsibilities.
 4. Keep responses concise, professional, and conversational.
 5. Focus on being helpful while staying factual.
-6. When the user references previous messages, use the conversation context to provide relevant answers.`,
+6. When the user references previous messages, use the conversation context to provide relevant answers.
+7. Use markdown formatting when helpful (bold, lists, code blocks).
+8. When mentioning projects, format them as markdown links to their GitHub repos, e.g. [Project Name](github-url).`,
     };
 
     // Build messages array with conversation history
