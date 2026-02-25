@@ -132,13 +132,14 @@ export default function Chatbot() {
     saveMessages(messages);
   }, [messages]);
 
-  const sendMessage = async () => {
-    if (!input.trim() || isLoading) return;
+  const sendMessage = async (promptOverride?: string) => {
+    const messageText = promptOverride ?? input;
+    if (!messageText.trim() || isLoading) return;
 
     const now = Date.now();
     const newMessage: Message = {
       role: 'user',
-      content: input,
+      content: messageText,
       id: now.toString(),
       timestamp: now,
     };
@@ -169,7 +170,7 @@ export default function Chatbot() {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          prompt: input,
+          prompt: messageText,
           conversationHistory: recentMessages,
         }),
       });
@@ -266,10 +267,9 @@ export default function Chatbot() {
     inputRef.current?.focus();
   }, []);
 
-  const handleSuggestedPrompt = useCallback((prompt: string) => {
-    setInput(prompt);
-    inputRef.current?.focus();
-  }, []);
+  const handleSuggestedPrompt = (prompt: string) => {
+    sendMessage(prompt);
+  };
 
   const handleToggleExpand = useCallback(() => {
     setIsExpanded(prev => !prev);
