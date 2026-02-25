@@ -1,4 +1,5 @@
 import type { Components } from 'react-markdown';
+import { CodeBlock } from './code-block';
 
 /**
  * Custom Tailwind-styled components for rendering markdown in chat messages.
@@ -33,25 +34,7 @@ export const markdownComponents: Components = {
       {children}
     </a>
   ),
-  code: ({ className, children }) => {
-    // Check if this is an inline code block (no language class)
-    const isInline = !className;
-
-    if (isInline) {
-      return (
-        <code className="bg-zinc-100 dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700 px-1 py-0.5 text-sm font-mono">
-          {children}
-        </code>
-      );
-    }
-
-    // Code block
-    return (
-      <code className="block bg-zinc-100 dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700 p-2 text-sm font-mono overflow-x-auto whitespace-pre">
-        {children}
-      </code>
-    );
-  },
+  code: ({ className, children }) => <CodeBlock className={className}>{children}</CodeBlock>,
   pre: ({ children }) => <pre className="mb-2 last:mb-0">{children}</pre>,
   table: ({ children }) => (
     <div className="overflow-x-auto mb-2">
