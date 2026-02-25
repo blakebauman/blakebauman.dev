@@ -29,7 +29,7 @@ export function Resume({ chatEnabled }: ResumeProps) {
           Ask about Blake
         </a>
       )}
-      <div className="w-full px-[5vw] py-fluid-lg flex flex-col gap-fluid-xl">
+      <div className="w-full max-w-[1800px] mx-auto px-[5vw] py-fluid-lg flex flex-col gap-fluid-xl">
         {/* Priority content - above the fold */}
         <header className="flex flex-col">
           <div className="gap-0 section-padding flex flex-col md:flex-row md:items-start md:justify-between">
@@ -200,7 +200,7 @@ export function Resume({ chatEnabled }: ResumeProps) {
               <p className="text-fluid-base text-zinc-700 dark:text-zinc-500 mb-8">
                 {resumeData.sections.contact}
               </p>
-              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-4">
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
                 <div className="text-fluid-base">
                   Email:{' '}
                   <a href={`mailto:${resumeData.email}`} className="text-red-400">
@@ -211,17 +211,6 @@ export function Resume({ chatEnabled }: ResumeProps) {
                   Phone:{' '}
                   <a href={`tel:${resumeData.phone.replace(/\D/g, '')}`} className="text-red-400">
                     {resumeData.phone}
-                  </a>
-                </div>
-                <div className="text-fluid-base">
-                  Web:{' '}
-                  <a
-                    href={resumeData.website}
-                    className="text-red-400"
-                    rel="me"
-                    aria-label="Personal website"
-                  >
-                    {new URL(resumeData.website).hostname}
                   </a>
                 </div>
                 <div className="text-fluid-base">
@@ -246,19 +235,6 @@ export function Resume({ chatEnabled }: ResumeProps) {
                     {resumeData.linkedin.split('/').filter(Boolean).pop() ?? 'LinkedIn'}
                   </a>
                 </div>
-                {resumeData.bluesky && (
-                  <div className="text-fluid-base">
-                    Bluesky:{' '}
-                    <a
-                      href={resumeData.bluesky}
-                      className="text-red-400"
-                      rel="me"
-                      aria-label="Bluesky profile"
-                    >
-                      @{resumeData.bluesky.split('/').filter(Boolean).pop() ?? 'Bluesky'}
-                    </a>
-                  </div>
-                )}
               </div>
             </section>
           </Suspense>
