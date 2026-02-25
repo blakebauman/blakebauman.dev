@@ -1,5 +1,5 @@
 name = "vectorize-worker"
-main = "./vectorize.ts"
+main = "./index.ts"
 compatibility_date = "2024-05-14"
 
 # Custom domain routing
@@ -20,4 +20,4 @@ binding = "VECTORIZE"
 index_name = "resume-index-768"
 
 [vars]
-VECTORIZE_INDEX = "resume-index-768" 
+VECTORIZE_INDEX = "resume-index-768"

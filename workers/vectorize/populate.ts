@@ -1,11 +1,11 @@
-import type { Env, ResumeData } from '../app/types';
-import { populateVectorizeIndex, VectorizeError } from '../app/lib/vectorize';
+import { populateVectorizeIndex, VectorizeError } from '../../app/lib/vectorize';
+import type { Env, ResumeData } from '../../app/types';
 
 export default {
   async fetch(request: Request, env: Env) {
     try {
       // Import resume data
-      const resumeData = (await import('../app/chat/resume.json')) as { default: ResumeData };
+      const resumeData = (await import('../../app/chat/resume.json')) as { default: ResumeData };
 
       // Populate vectorize index
       await populateVectorizeIndex(env, resumeData.default);
