@@ -39,6 +39,7 @@ pnpm run format:check # Check formatting only
 pnpm run vectorize:dev       # Run vectorize worker locally (requires --remote)
 pnpm run vectorize:deploy    # Deploy vectorize worker
 pnpm run vectorize:populate  # Populate vector index (requires VECTORIZE_ADMIN_KEY)
+pnpm run vectorize:query     # Test query against production index
 ```
 
 ## Architecture
@@ -64,15 +65,16 @@ pnpm run vectorize:populate  # Populate vector index (requires VECTORIZE_ADMIN_K
 
 ### Cloudflare Bindings (wrangler.jsonc)
 - `AI` - Workers AI for embeddings (@cf/baai/bge-base-en-v1.5) and LLM (@cf/meta/llama-3.1-8b-instruct)
-- `VECTORIZE` - Vector index for semantic resume search (768 dimensions)
+- `VECTORIZE` - Vector index for semantic resume search (768 dimensions, index: resume-index-768)
 - `RESUME_DATA_KV` - KV namespace for resume JSON and rate limiting
 
 ### AI Chat Flow
 1. User sends prompt to `/api/chat` (rate limited: 20 req/min per IP)
-2. `app/chat/request.ts` validates with Zod, generates embeddings
-3. Vectorize queries find relevant resume sections
-4. Workers AI LLM generates response using matched context
-5. Falls back to full resume context if vector search unavailable (dev mode)
+2. `app/chat/guardrails.ts` checks topic relevance (rejects off-topic before LLM call)
+3. `app/chat/request.ts` validates with Zod, generates embeddings
+4. Vectorize queries find relevant resume sections
+5. Workers AI LLM generates response using matched context
+6. Falls back to full resume context if vector search unavailable (dev mode)
 
 ### Type System
 - `app/types.ts` - Re-exports from schemas, defines Env bindings
@@ -92,3 +94,8 @@ pnpm run vectorize:populate  # Populate vector index (requires VECTORIZE_ADMIN_K
 - Use wrangler.jsonc (not .toml) for new configurations
 - Set `compatibility_date = "2025-02-11"` and `compatibility_flags = ["nodejs_compat"]`
 - Store secrets via `wrangler secret put`, never in config files
+
+### Code Style
+- Biome handles linting and formatting (pre-commit hook via lefthook)
+- Single quotes, 2-space indent, 100 char line width, trailing commas (ES5)
+- Unused variables/imports are errors; explicit `any` is a warning
