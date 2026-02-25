@@ -21,8 +21,8 @@ export default async function handleRequest(
   responseHeaders.set('Referrer-Policy', 'strict-origin-when-cross-origin');
   responseHeaders.set('Permissions-Policy', 'camera=(), microphone=(), geolocation=()');
 
-  // Add performance headers
-  responseHeaders.set('Cache-Control', 'public, max-age=31536000, immutable');
+  // HTML documents should not be cached long-term; static assets use their own cache headers
+  responseHeaders.set('Cache-Control', 'public, max-age=0, must-revalidate');
   responseHeaders.set('Accept-Ranges', 'bytes');
   responseHeaders.set('Vary', 'Accept-Encoding');
 

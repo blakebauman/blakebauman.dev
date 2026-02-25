@@ -26,3 +26,22 @@ body {
     color-scheme: dark;
   }
 }
+
+/* Print styles - clean resume layout */
+@media print {
+  /* Hide interactive/non-print elements */
+  .print\:hidden,
+  [data-print-hide] {
+    display: none !important;
+  }
+
+  /* Ensure readable print contrast */
+  body {
+    background: white;
+    color: black;
+  }
+
+  a[href]::after {
+    content: none;
+  }
+}

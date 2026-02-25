@@ -12,3 +12,9 @@
 
 # TypeScript
 tsconfig.tsbuildinfo
+
+# Test coverage
+coverage/
+
+# Logs
+*.log

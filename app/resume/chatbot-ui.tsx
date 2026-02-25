@@ -91,7 +91,7 @@ export default function ChatbotUI({
             <div className="flex justify-start" role="status" aria-label="Assistant is thinking">
               <div className="bg-transparent text-zinc-700 dark:text-zinc-400 p-3 flex items-center gap-2">
                 <div
-                  className="animate-spin h-4 w-4 border-2 border-zinc-700 dark:border-red-400 border-t-transparent rounded-full"
+                  className="animate-spin h-4 w-4 border-2 border-zinc-700 dark:border-red-400 border-t-transparent"
                   aria-hidden="true"
                 />
                 <span>Thinking...</span>
@@ -136,7 +136,7 @@ export default function ChatbotUI({
           {isLoading ? (
             <>
               <div
-                className="animate-spin h-4 w-4 border-2 border-white dark:border-zinc-950 border-t-transparent rounded-full"
+                className="animate-spin h-4 w-4 border-2 border-white dark:border-zinc-950 border-t-transparent"
                 aria-hidden="true"
               />
               <span>Sending...</span>

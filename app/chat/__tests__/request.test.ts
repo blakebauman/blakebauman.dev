@@ -1,4 +1,5 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
+import type { Env } from '../../types';
 import { requestAI } from '../request';
 
 // Mock resume data
@@ -14,6 +15,14 @@ const mockResumeData = {
   skills: ['JavaScript', 'TypeScript', 'React'],
   tools: ['JavaScript', 'TypeScript', 'React'],
   exploring: ['AI', 'LLMs'],
+  projects: [
+    {
+      name: 'test-project',
+      description: 'A test project',
+      tech: ['TypeScript', 'React'],
+      github: 'https://github.com/test/test-project',
+    },
+  ],
   experience: [
     {
       company: 'Test Company',
@@ -24,16 +33,13 @@ const mockResumeData = {
   ],
 };
 
-// Mock environment
+// Mock environment - request.ts uses AI.run for both embeddings and LLM (not AI_EMBEDDINGS)
 const mockEnv = {
   RESUME_DATA_KV: {
     get: vi.fn(),
     put: vi.fn(),
   },
   AI: {
-    run: vi.fn(),
-  },
-  AI_EMBEDDINGS: {
     run: vi.fn(),
   },
   VECTORIZE: {
@@ -48,27 +54,23 @@ describe('requestAI', () => {
     // Mock KV get to return resume data
     mockEnv.RESUME_DATA_KV.get.mockResolvedValue(mockResumeData);
 
-    // Mock AI embeddings
-    mockEnv.AI_EMBEDDINGS.run.mockResolvedValue({
-      data: [[0.1, 0.2, 0.3]],
-    });
-
     // Mock Vectorize query
     mockEnv.VECTORIZE.query.mockResolvedValue({
       matches: [
         {
           id: 'personal',
           score: 0.9,
-          metadata: {
-            text: 'Test User - Software Engineer',
-          },
+          metadata: { type: 'personal', text: 'Test User - Software Engineer' },
         },
       ],
     });
 
-    // Mock AI response
-    mockEnv.AI.run.mockResolvedValue({
-      response: 'Test response',
+    // AI.run is called twice: (1) embeddings with { text: [prompt] }, (2) LLM with { messages }
+    mockEnv.AI.run.mockImplementation((model: string, input: { text?: string[]; messages?: unknown[] }) => {
+      if (input.text) {
+        return Promise.resolve({ data: [[0.1, 0.2, 0.3]] });
+      }
+      return Promise.resolve({ response: 'Test response' });
     });
   });
 
@@ -80,12 +82,12 @@ describe('requestAI', () => {
 
     const response = await requestAI({
       request,
-      context: { cloudflare: { env: mockEnv } },
+      context: { cloudflare: { env: mockEnv as Env } },
     });
 
     expect(response.status).toBe(200);
-    const data = await response.json();
-    expect(data.choices[0].message.content).toBe('Test response');
+    const data = (await response.json()) as { choices: Array<{ message: { content: string } }> };
+    expect(data.choices[0]?.message.content).toBe('Test response');
   });
 
   it('should fetch resume data from KV if not present', async () => {
@@ -104,8 +106,13 @@ describe('requestAI', () => {
     expect(mockEnv.RESUME_DATA_KV.put).toHaveBeenCalled();
   });
 
-  it('should handle embedding generation failure', async () => {
-    mockEnv.AI_EMBEDDINGS.run.mockResolvedValue({ data: [] });
+  it('should handle empty embeddings by falling back to full resume', async () => {
+    mockEnv.AI.run.mockImplementation((_model: string, input: { text?: string[]; messages?: unknown[] }) => {
+      if (input.text) {
+        return Promise.resolve({ data: [] }); // No embeddings - triggers fallback to full resume
+      }
+      return Promise.resolve({ response: 'Test response' });
+    });
 
     const request = new Request('http://test.com', {
       method: 'POST',
@@ -114,15 +121,16 @@ describe('requestAI', () => {
 
     const response = await requestAI({
       request,
-      context: { cloudflare: { env: mockEnv } },
+      context: { cloudflare: { env: mockEnv as Env } },
     });
 
-    expect(response.status).toBe(500);
-    const data = await response.json();
-    expect(data.error).toBe('Failed to generate AI response');
+    // When embeddings.data[0] is falsy, code uses full resume and continues to LLM
+    expect(response.status).toBe(200);
+    const data = (await response.json()) as { choices: Array<{ message: { content: string } }> };
+    expect(data.choices[0]?.message.content).toBe('Test response');
   });
 
-  it('should handle Vectorize query failure', async () => {
+  it('should handle Vectorize query failure with fallback to full resume', async () => {
     mockEnv.VECTORIZE.query.mockRejectedValue(new Error('Vectorize query failed'));
 
     const request = new Request('http://test.com', {
@@ -132,12 +140,13 @@ describe('requestAI', () => {
 
     const response = await requestAI({
       request,
-      context: { cloudflare: { env: mockEnv } },
+      context: { cloudflare: { env: mockEnv as Env } },
     });
 
-    expect(response.status).toBe(500);
-    const data = await response.json();
-    expect(data.error).toBe('Failed to generate AI response');
+    // Vectorize failure is caught and falls back to full resume; LLM still responds
+    expect(response.status).toBe(200);
+    const data = (await response.json()) as { choices: Array<{ message: { content: string } }> };
+    expect(data.choices[0]?.message.content).toBe('Test response');
   });
 
   it('should handle AI response generation failure', async () => {
@@ -150,11 +159,11 @@ describe('requestAI', () => {
 
     const response = await requestAI({
       request,
-      context: { cloudflare: { env: mockEnv } },
+      context: { cloudflare: { env: mockEnv as Env } },
     });
 
     expect(response.status).toBe(500);
-    const data = await response.json();
-    expect(data.error).toBe('Failed to generate AI response');
+    const data = (await response.json()) as { error: string };
+    expect(data.error).toBe('AI response generation failed');
   });
 });

@@ -1,71 +1,36 @@
-# Welcome to React Router!
+# blakebauman.dev
 
-A modern, production-ready template for building full-stack React applications using React Router.
+Personal portfolio and resume site built with React Router v7, deployed to Cloudflare Workers. Features an AI-powered chatbot that answers questions about the resume using Cloudflare Workers AI and Vectorize for semantic search.
 
-## Features
-
-- 🚀 Server-side rendering
-- ⚡️ Hot Module Replacement (HMR)
-- 📦 Asset bundling and optimization
-- 🔄 Data loading and mutations
-- 🔒 TypeScript by default
-- 🎉 TailwindCSS for styling
-- 📖 [React Router docs](https://reactrouter.com/)
-
-## Getting Started
-
-### Installation
-
-Install the dependencies:
+## Commands
 
 ```bash
-npm install
+pnpm install    # Install dependencies
+pnpm run dev     # Start dev server (http://localhost:5173)
+pnpm run build   # Production build
+pnpm run deploy  # Build and deploy to Cloudflare Workers
+pnpm run typecheck  # Generate types and run TypeScript checks
+pnpm test        # Run tests
 ```
 
-### Development
-
-Start the development server with HMR:
+### Vectorize (separate worker)
 
 ```bash
-npm run dev
+pnpm run vectorize:dev      # Run vectorize worker locally (requires --remote)
+pnpm run vectorize:deploy   # Deploy vectorize worker
+pnpm run vectorize:populate  # Populate vector index (requires VECTORIZE_ADMIN_KEY)
 ```
 
-Your application will be available at `http://localhost:5173`.
+## Environment
 
-## Building for Production
+- **VECTORIZE_ADMIN_KEY** (secret): Required to call `/api/populate-vectorize`. Set via `wrangler secret put VECTORIZE_ADMIN_KEY`.
+- **OPENAI_API_KEY** (secret, optional): For alternate AI backends if configured.
 
-Create a production build:
+## Architecture
 
-```bash
-npm run build
-```
+- **Framework**: React Router v7 with SSR
+- **Styling**: Tailwind CSS v4
+- **Deployment**: Cloudflare Workers (static assets + server)
+- **AI**: Workers AI (embeddings + LLM), Vectorize (semantic search), KV (resume data)
 
-## Deployment
-
-Deployment is done using the Wrangler CLI.
-
-To build and deploy directly to production:
-
-```sh
-npm run deploy
-```
-
-To deploy a preview URL:
-
-```sh
-npx wrangler versions upload
-```
-
-You can then promote a version to production after verification or roll it out progressively.
-
-```sh
-npx wrangler versions deploy
-```
-
-## Styling
-
-This template comes with [Tailwind CSS](https://tailwindcss.com/) already configured for a simple default starting experience. You can use whatever CSS framework you prefer.
-
----
-
-Built with ❤️ using React Router.
+See [CLAUDE.md](CLAUDE.md) for detailed architecture notes.
