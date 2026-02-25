@@ -1,4 +1,5 @@
 import type { ChangeEvent, KeyboardEvent, RefObject } from 'react';
+import { AssistantMessage } from './assistant-message';
 
 interface Message {
   role: 'assistant' | 'user';
@@ -75,12 +76,10 @@ export default function ChatbotUI({
                   role="article"
                   aria-label={`${msg.role === 'assistant' ? 'Assistant' : 'You'}: ${msg.content}`}
                 >
-                  {msg.content}
-                  {isStreaming && (
-                    <span
-                      className="inline-block w-2 h-4 ml-1 bg-red-500 dark:bg-red-400 animate-pulse"
-                      aria-hidden="true"
-                    />
+                  {msg.role === 'assistant' ? (
+                    <AssistantMessage content={msg.content} isStreaming={isStreaming} />
+                  ) : (
+                    msg.content
                   )}
                 </div>
               </div>

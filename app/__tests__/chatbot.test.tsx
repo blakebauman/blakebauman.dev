@@ -1,5 +1,6 @@
 import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
+import { AssistantMessage } from '../resume/assistant-message';
 
 // Mock the lazy-loaded ChatbotUI component
 vi.mock('@/resume/chatbot-ui', () => ({
@@ -40,7 +41,7 @@ vi.mock('@/resume/chatbot-ui', () => ({
         onKeyPress={onKeyPress}
         aria-label="Chat input"
       />
-      <button data-testid="send-button" onClick={onSendMessage}>
+      <button type="button" data-testid="send-button" onClick={onSendMessage}>
         Send
       </button>
     </div>
@@ -134,5 +135,62 @@ describe('Chatbot', () => {
     await waitFor(() => {
       expect(screen.getByTestId('error')).toBeInTheDocument();
     });
+  });
+});
+
+describe('AssistantMessage', () => {
+  it('renders plain text content', () => {
+    render(<AssistantMessage content="Hello, world!" />);
+    expect(screen.getByText('Hello, world!')).toBeInTheDocument();
+  });
+
+  it('renders bold text with strong tag', () => {
+    render(<AssistantMessage content="This is **bold** text" />);
+    const boldElement = screen.getByText('bold');
+    expect(boldElement.tagName).toBe('STRONG');
+  });
+
+  it('renders links with target blank', () => {
+    render(<AssistantMessage content="Check out [this link](https://example.com)" />);
+    const link = screen.getByRole('link', { name: 'this link' });
+    expect(link).toHaveAttribute('href', 'https://example.com');
+    expect(link).toHaveAttribute('target', '_blank');
+    expect(link).toHaveAttribute('rel', 'noopener noreferrer');
+  });
+
+  it('renders unordered lists', () => {
+    const content = `- Item 1
+- Item 2
+- Item 3`;
+    render(<AssistantMessage content={content} />);
+    expect(screen.getByText('Item 1')).toBeInTheDocument();
+    expect(screen.getByText('Item 2')).toBeInTheDocument();
+    expect(screen.getByText('Item 3')).toBeInTheDocument();
+  });
+
+  it('renders inline code', () => {
+    render(<AssistantMessage content="Use the `console.log` function" />);
+    const code = screen.getByText('console.log');
+    expect(code.tagName).toBe('CODE');
+  });
+
+  it('shows streaming cursor when isStreaming is true', () => {
+    render(<AssistantMessage content="Loading..." isStreaming={true} />);
+    const cursor = document.querySelector('.animate-pulse');
+    expect(cursor).toBeInTheDocument();
+  });
+
+  it('hides streaming cursor when isStreaming is false', () => {
+    render(<AssistantMessage content="Done" isStreaming={false} />);
+    const cursor = document.querySelector('.animate-pulse');
+    expect(cursor).not.toBeInTheDocument();
+  });
+
+  it('handles partial markdown during streaming without errors', () => {
+    // Simulates incomplete markdown that might occur during streaming
+    expect(() => {
+      render(<AssistantMessage content="Here is a **bold" isStreaming={true} />);
+    }).not.toThrow();
+    expect(screen.getByText(/Here is a/)).toBeInTheDocument();
   });
 });
