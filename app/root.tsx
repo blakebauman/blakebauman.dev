@@ -40,8 +40,29 @@ export function Layout({ children }: { children: React.ReactNode }) {
         <meta name="theme-color" content="#18181b" media="(prefers-color-scheme: dark)" />
         <meta
           name="description"
-          content="Blake Bauman - Software Engineer/Principal Technical Architect @ Adobe"
+          content="Blake Bauman - Software Engineer/Principal Technical Architect @ Adobe. Portfolio with AI-powered resume assistant."
         />
+
+        {/* Open Graph */}
+        <meta property="og:title" content="Blake Bauman | Principal Technical Architect @ Adobe" />
+        <meta
+          property="og:description"
+          content="Software Engineer & Principal Technical Architect. Portfolio with AI-powered resume assistant."
+        />
+        <meta property="og:url" content="https://blakebauman.dev" />
+        <meta property="og:type" content="website" />
+        <meta property="og:site_name" content="Blake Bauman" />
+
+        {/* Twitter Card */}
+        <meta name="twitter:card" content="summary" />
+        <meta name="twitter:title" content="Blake Bauman | Principal Technical Architect @ Adobe" />
+        <meta
+          name="twitter:description"
+          content="Software Engineer & Principal Technical Architect. Portfolio with AI-powered resume assistant."
+        />
+
+        {/* Canonical URL */}
+        <link rel="canonical" href="https://blakebauman.dev" />
 
         {/* Performance-focused meta tags */}
         <meta httpEquiv="X-UA-Compatible" content="IE=edge" />
@@ -58,6 +79,26 @@ export function Layout({ children }: { children: React.ReactNode }) {
         {/* Preload critical assets */}
         <link rel="preload" as="script" href="/build/entry.client.js" />
         <link rel="preload" as="style" href="/build/entry.client.css" />
+
+        {/* JSON-LD structured data for Person */}
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify({
+              '@context': 'https://schema.org',
+              '@type': 'Person',
+              name: 'Blake Bauman',
+              jobTitle: 'Principal Technical Architect',
+              worksFor: { '@type': 'Organization', name: 'Adobe' },
+              url: 'https://blakebauman.dev',
+              sameAs: [
+                'https://www.linkedin.com/in/blakebauman',
+                'https://github.com/blakebauman',
+                'https://bsky.app/profile/blakebauman.dev',
+              ],
+            }),
+          }}
+        />
 
         <Meta />
         <Links />
@@ -90,14 +131,30 @@ export function ErrorBoundary({ error }: Route.ErrorBoundaryProps) {
   }
 
   return (
-    <main className="pt-16 p-4 container mx-auto">
-      <h1>{message}</h1>
-      <p>{details}</p>
-      {stack && (
-        <pre className="w-full p-4 overflow-x-auto">
-          <code>{stack}</code>
-        </pre>
-      )}
+    <main className="min-h-screen flex flex-col items-center justify-center p-8 bg-white dark:bg-zinc-950">
+      <div className="max-w-md w-full text-center">
+        <h1 className="text-4xl font-bold text-zinc-900 dark:text-white mb-2">{message}</h1>
+        <p className="text-zinc-600 dark:text-zinc-400 mb-6">{details}</p>
+        {stack && (
+          <pre className="w-full p-4 overflow-x-auto text-left text-sm text-zinc-500 dark:text-zinc-500 bg-zinc-100 dark:bg-zinc-800 mb-6">
+            <code>{stack}</code>
+          </pre>
+        )}
+        <div className="flex flex-col sm:flex-row gap-3 justify-center">
+          <a
+            href="/"
+            className="inline-flex items-center justify-center px-4 py-2 bg-red-500 text-white dark:text-zinc-950 font-semibold hover:bg-red-600 transition-colors"
+          >
+            Back to home
+          </a>
+          <a
+            href="mailto:blake.bauman@gmail.com?subject=Error%20on%20blakebauman.dev"
+            className="inline-flex items-center justify-center px-4 py-2 border border-zinc-300 dark:border-zinc-600 text-zinc-700 dark:text-zinc-300 hover:bg-zinc-100 dark:hover:bg-zinc-800 transition-colors"
+          >
+            Report an issue
+          </a>
+        </div>
+      </div>
     </main>
   );
 }

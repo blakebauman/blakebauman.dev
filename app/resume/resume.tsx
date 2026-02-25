@@ -1,22 +1,46 @@
 import { lazy, Suspense } from 'react';
-import type { ResumeProps } from './types';
 import resumeData from '../chat/resume.json';
 
 // Lazy load the chatbot since it's not part of the initial viewport
 const Chatbot = lazy(() => import('./chatbot'));
 
-export function Resume({ message }: ResumeProps) {
+function scrollToChat() {
+  document.getElementById('ai-agent-section')?.scrollIntoView({ behavior: 'smooth' });
+}
+
+export function Resume() {
   return (
     <main className="flex justify-left pt-16 p-8 max-w-screen-lg">
+      {/* Floating CTA - hidden when printing */}
+      <a
+        href="#ai-agent-section"
+        onClick={e => {
+          e.preventDefault();
+          scrollToChat();
+        }}
+        className="print:hidden fixed bottom-6 right-6 z-50 bg-red-500 text-white dark:text-zinc-950 px-4 py-2 font-semibold shadow-lg hover:bg-red-600 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-red-500 focus-visible:ring-offset-2"
+        aria-label="Scroll to chat with Blake's AI assistant"
+      >
+        Ask about Blake
+      </a>
       <div className="flex-1 flex flex-col gap-8 min-h-0">
         {/* Priority content - above the fold */}
         <header className="flex flex-col">
-          <div className="gap-0 md:p-8">
-            <h1 className="text-5xl mb-4">Blake Bauman</h1>
+          <div className="gap-0 md:p-8 flex flex-col md:flex-row md:items-start md:justify-between">
+            <div>
+              <h1 className="text-5xl mb-4">{resumeData.name}</h1>
             <p className="text-2xl text-zinc-700 dark:text-zinc-400 mb-2">
-              Software Engineer/Principal Technical Architect @ Adobe
+              {resumeData.title} @ {resumeData.experience[0]?.company ?? "Adobe"}
             </p>
-            <p className="text-lg text-zinc-700 dark:text-zinc-500">Remote Arizona</p>
+            <p className="text-lg text-zinc-700 dark:text-zinc-500">{resumeData.location}</p>
+            </div>
+            <button
+              type="button"
+              onClick={() => window.print()}
+              className="print:hidden mt-4 md:mt-0 px-4 py-2 border border-zinc-300 dark:border-zinc-600 text-zinc-700 dark:text-zinc-300 hover:bg-zinc-100 dark:hover:bg-zinc-800 transition-colors"
+            >
+              Print Resume
+            </button>
           </div>
         </header>
         <div className="w-full space-y-6">
@@ -44,55 +68,33 @@ export function Resume({ message }: ResumeProps) {
             <section className="mb-4 md:p-8">
               <h2 className="text-2xl mb-8">Experience</h2>
               <ol className="relative border-s border-zinc-200 dark:border-zinc-700 mb-8">
-                <li className="mb-10 ms-4">
-                  <div className="absolute w-3 h-3 bg-zinc-200 rounded-full mt-1.5 -start-1.5 border border-white dark:border-red-900 dark:bg-red-400" />
-                  <time className="mb-1 text-sm font-normal leading-none text-zinc-400 dark:text-zinc-500">
-                    February 2022 - Present
-                  </time>
-                  <h3 className="text-lg font-semibold text-zinc-900 dark:text-white mt-2 mb-1">
-                    Principal Technical Architect | Adobe
-                  </h3>
-                  <p className="mb-4 text-base font-normal text-zinc-500 dark:text-zinc-400">
-                    Contributed to the first production implementation of AEM Edge Delivery Services
-                    integrated with Adobe Commerce B2B Cloud for a Fortune 500 company. Led internal
-                    initiatives to drive adoption and support for new Adobe products and services,
-                    including hosting a webinar on Commerce with Edge Delivery. Additionally,
-                    mentored and trained team members, fostering expertise and collaboration.
-                  </p>
-                </li>
-                <li className="mb-10 ms-4">
-                  <div className="absolute w-3 h-3 bg-zinc-200 rounded-full mt-1.5 -start-1.5 border border-white dark:border-red-900 dark:bg-red-400" />
-                  <time className="mb-1 text-sm font-normal leading-none text-zinc-400 dark:text-zinc-500">
-                    April 2019 - February 2022
-                  </time>
-                  <h3 className="text-lg text-zinc-900 dark:text-white mt-2 mb-1">
-                    Technical Architect | Adobe
-                  </h3>
-                  <p className="text-base font-normal text-zinc-500 dark:text-zinc-500">
-                    Successfully led the migration of a global Beverage company from Adobe Commerce
-                    on-prem to Adobe Commerce Cloud, ensuring a seamless transition with minimal
-                    disruption. Provided governance, best practices, and architectural reviews
-                    across multiple implementations. Additionally, mentored team members, fostering
-                    growth and knowledge sharing within the organization.
-                  </p>
-                </li>
-                <li className="ms-4">
-                  <div className="absolute w-3 h-3 bg-zinc-200 rounded-full mt-1.5 -start-1.5 border border-white dark:border-red-900 dark:bg-red-400" />
-                  <time className="mb-1 text-sm font-normal leading-none text-zinc-400 dark:text-zinc-600">
-                    March 2017 - April 2019
-                  </time>
-                  <h3 className="text-lg text-zinc-900 dark:text-white mt-2 mb-1">
-                    Technical Architect | Lyons Consulting Group (Capgemini)
-                  </h3>
-                  <p className="text-base font-normal text-zinc-500 dark:text-zinc-500">
-                    Led a team in the design and implementation of Adobe Commerce (Magento Commerce)
-                    for a leading Running Shoe and Activewear company. Spearheaded the integration
-                    of Adobe Scene7 to optimize product imagery across the customer experience,
-                    enhancing visual merchandising and performance.
-                  </p>
-                </li>
+                {resumeData.experience.map((exp, index) => (
+                  <li
+                    key={`${exp.company}-${exp.role}-${index}`}
+                    className={index < resumeData.experience.length - 1 ? 'mb-10 ms-4' : 'ms-4'}
+                  >
+                    <div className="absolute w-3 h-3 bg-zinc-200 mt-1.5 -start-1.5 border border-white dark:border-red-900 dark:bg-red-400" />
+                    <time className="mb-1 text-sm font-normal leading-none text-zinc-400 dark:text-zinc-500">
+                      {exp.years}
+                    </time>
+                    <h3
+                      className={`text-lg text-zinc-900 dark:text-white mt-2 mb-1 ${index === 0 ? 'font-semibold' : ''}`}
+                    >
+                      {exp.role} | {exp.company}
+                    </h3>
+                    <p
+                      className={
+                        index < resumeData.experience.length - 1
+                          ? 'mb-4 text-base font-normal text-zinc-500 dark:text-zinc-400'
+                          : 'text-base font-normal text-zinc-500 dark:text-zinc-500'
+                      }
+                    >
+                      {exp.description}
+                    </p>
+                  </li>
+                ))}
               </ol>
-              <a href="https://www.linkedin.com/in/blakebauman" className="text-red-400">
+              <a href={resumeData.linkedin} className="text-red-400">
                 View more on my LinkedIn Profile
               </a>
             </section>
@@ -161,7 +163,10 @@ export function Resume({ message }: ResumeProps) {
               </div>
             </section>
             <hr className="border-t border-zinc-200 dark:border-zinc-700" />
-            <section className="mb-4 md:p-8">
+            <section
+              id="ai-agent-section"
+              className="mb-4 md:p-8 scroll-mt-8 print:hidden"
+            >
               <h2 className="text-2xl mb-4">AI Agent</h2>
               <Suspense
                 fallback={<div className="h-64 animate-pulse bg-zinc-100 dark:bg-zinc-800" />}
@@ -178,35 +183,60 @@ export function Resume({ message }: ResumeProps) {
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
                   Email:{' '}
-                  <a href="mailto:blake.bauman@gmail.com" className="text-red-400">
-                    blake.bauman@gmail.com
+                  <a href={`mailto:${resumeData.email}`} className="text-red-400">
+                    {resumeData.email}
                   </a>
                 </div>
                 <div>
                   Phone:{' '}
-                  <a href="tel:+14148075866" className="text-red-400">
-                    +1 414 807 5866
+                  <a href={`tel:${resumeData.phone.replace(/\D/g, '')}`} className="text-red-400">
+                    {resumeData.phone}
                   </a>
                 </div>
                 <div>
                   Web:{' '}
-                  <a href="https://blakebauman.dev" className="text-red-400">
+                  <a
+                    href={resumeData.website}
+                    className="text-red-400"
+                    rel="me"
+                    aria-label="Personal website"
+                  >
                     blakebauman.dev
                   </a>
                 </div>
                 <div>
                   Github:{' '}
-                  <a href="https://github.com/blakebauman" className="text-red-400">
+                  <a
+                    href={resumeData.github}
+                    className="text-red-400"
+                    rel="me"
+                    aria-label="GitHub profile"
+                  >
+                    blakebauman
+                  </a>
+                </div>
+                <div>
+                  LinkedIn:{' '}
+                  <a
+                    href={resumeData.linkedin}
+                    className="text-red-400"
+                    rel="me"
+                    aria-label="LinkedIn profile"
+                  >
                     blakebauman
                   </a>
                 </div>
                 <div>
                   Bluesky:{' '}
-                  <a href="https://bsky.app/profile/blakebauman.dev" className="text-red-400">
+                  <a
+                    href="https://bsky.app/profile/blakebauman.dev"
+                    className="text-red-400"
+                    rel="me"
+                    aria-label="Bluesky profile"
+                  >
                     @blakebauman.dev
                   </a>
                 </div>
-                <div>&nbsp;</div>
               </div>
             </section>
           </Suspense>

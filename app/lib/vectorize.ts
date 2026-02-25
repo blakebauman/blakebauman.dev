@@ -1,4 +1,5 @@
 import type { Env, ResumeData } from '../types';
+import { ResumeDataSchema } from '../schemas';
 
 export class VectorizeError extends Error {
   constructor(message: string) {
@@ -10,17 +11,25 @@ export class VectorizeError extends Error {
 /**
  * Populates the Vectorize index with resume data chunks
  */
-export async function populateVectorizeIndex(env: Env, resumeData: ResumeData): Promise<number> {
+export async function populateVectorizeIndex(env: Env, resumeData: unknown): Promise<number> {
+  // Validate resume data with Zod
+  const parseResult = ResumeDataSchema.safeParse(resumeData);
+  if (!parseResult.success) {
+    throw new VectorizeError(`Invalid resume data: ${parseResult.error.issues[0]?.message}`);
+  }
+
+  const validatedData: ResumeData = parseResult.data;
+
   try {
     // Create chunks of resume data
     const chunks = [
       {
         id: 'personal',
-        text: `Name: ${resumeData.name}
-Title: ${resumeData.title}
-Location: ${resumeData.location}
-Contact: ${resumeData.email} | ${resumeData.phone}
-Links: LinkedIn: ${resumeData.linkedin} | GitHub: ${resumeData.github} | Website: ${resumeData.website}`,
+        text: `Name: ${validatedData.name}
+Title: ${validatedData.title}
+Location: ${validatedData.location}
+Contact: ${validatedData.email} | ${validatedData.phone}
+Links: LinkedIn: ${validatedData.linkedin} | GitHub: ${validatedData.github} | Website: ${validatedData.website}`,
         metadata: {
           type: 'personal' as const,
           section: 'personal_info',
@@ -29,7 +38,7 @@ Links: LinkedIn: ${resumeData.linkedin} | GitHub: ${resumeData.github} | Website
       },
       {
         id: 'skills',
-        text: `Skills: ${resumeData.skills.join(', ')}`,
+        text: `Skills: ${validatedData.skills.join(', ')}`,
         metadata: {
           type: 'skills' as const,
           section: 'skills',
@@ -38,7 +47,7 @@ Links: LinkedIn: ${resumeData.linkedin} | GitHub: ${resumeData.github} | Website
       },
       {
         id: 'tools',
-        text: `Tools and technologies currently using: ${resumeData.tools.join(', ')}`,
+        text: `Tools and technologies currently using: ${validatedData.tools.join(', ')}`,
         metadata: {
           type: 'tools' as const,
           section: 'tools',
@@ -47,14 +56,14 @@ Links: LinkedIn: ${resumeData.linkedin} | GitHub: ${resumeData.github} | Website
       },
       {
         id: 'exploring',
-        text: `Currently exploring and learning: ${resumeData.exploring.join(', ')}`,
+        text: `Currently exploring and learning: ${validatedData.exploring.join(', ')}`,
         metadata: {
           type: 'exploring' as const,
           section: 'exploring',
           text: '', // Will be set later
         },
       },
-      ...resumeData.projects.map((project, index) => ({
+      ...validatedData.projects.map((project, index) => ({
         id: `project_${index}`,
         text: `Project: ${project.name}
 Description: ${project.description}
@@ -66,7 +75,7 @@ GitHub: ${project.github}`,
           text: '', // Will be set later
         },
       })),
-      ...resumeData.experience.map((exp, index) => ({
+      ...validatedData.experience.map((exp, index) => ({
         id: `experience_${index}`,
         text: `Company: ${exp.company}
 Role: ${exp.role}
@@ -110,8 +119,9 @@ Description: ${exp.description}`,
     });
 
     console.log(`Upserting ${vectors.length} vectors to Vectorize index`);
-    if (vectors.length > 0 && vectors[0].values) {
-      console.log(`Using dimensions: ${vectors[0].values.length}`);
+    const first = vectors[0];
+    if (vectors.length > 0 && first?.values) {
+      console.log(`Using dimensions: ${first.values.length}`);
     }
 
     // Insert vectors into Vectorize

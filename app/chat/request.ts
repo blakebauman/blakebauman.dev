@@ -1,50 +1,10 @@
-import type { Env, ResumeData, ChunkMetadata } from '../types';
-
-interface VectorMatch {
-  id: string;
-  score: number;
-  metadata?: ChunkMetadata;
-}
-
-// Input validation constants
-const MAX_PROMPT_LENGTH = 1000;
-const MIN_PROMPT_LENGTH = 2;
-
-// Sanitize input - remove potential injection patterns and control characters
-function sanitizePrompt(input: string): string {
-  return (
-    input
-      // Remove control characters except newlines and tabs
-      .replace(/[\x00-\x08\x0B\x0C\x0E-\x1F\x7F]/g, '')
-      // Trim whitespace
-      .trim()
-      // Collapse multiple spaces/newlines
-      .replace(/\s+/g, ' ')
-  );
-}
-
-// Validate the prompt input
-function validatePrompt(prompt: unknown): { valid: boolean; error?: string; sanitized?: string } {
-  if (prompt === null || prompt === undefined) {
-    return { valid: false, error: 'Prompt is required' };
-  }
-
-  if (typeof prompt !== 'string') {
-    return { valid: false, error: 'Prompt must be a string' };
-  }
-
-  const sanitized = sanitizePrompt(prompt);
-
-  if (sanitized.length < MIN_PROMPT_LENGTH) {
-    return { valid: false, error: `Prompt must be at least ${MIN_PROMPT_LENGTH} characters` };
-  }
-
-  if (sanitized.length > MAX_PROMPT_LENGTH) {
-    return { valid: false, error: `Prompt must be less than ${MAX_PROMPT_LENGTH} characters` };
-  }
-
-  return { valid: true, sanitized };
-}
+import type { Env, ResumeData, VectorMatch } from '../types';
+import {
+  ChatRequestSchema,
+  ChatQueryParamsSchema,
+  createValidationErrorResponse,
+} from '../schemas';
+import resumeJson from './resume.json';
 
 export async function requestAI({
   request,
@@ -53,15 +13,10 @@ export async function requestAI({
   request: Request;
   context: { cloudflare: { env: Env } };
 }) {
-  // Parse and validate input
-  interface ConversationMessage {
-    role: 'user' | 'assistant';
-    content: string;
-  }
-
-  let body: { prompt?: unknown; conversationHistory?: ConversationMessage[] };
+  // Parse JSON body
+  let rawBody: unknown;
   try {
-    body = await request.json();
+    rawBody = await request.json();
   } catch {
     return new Response(JSON.stringify({ error: 'Invalid JSON in request body' }), {
       status: 400,
@@ -69,35 +24,13 @@ export async function requestAI({
     });
   }
 
-  const validation = validatePrompt(body.prompt);
-  if (!validation.valid) {
-    return new Response(JSON.stringify({ error: validation.error }), {
-      status: 400,
-      headers: { 'Content-Type': 'application/json' },
-    });
+  // Validate and transform request body with Zod
+  const bodyResult = ChatRequestSchema.safeParse(rawBody);
+  if (!bodyResult.success) {
+    return createValidationErrorResponse(bodyResult.error);
   }
 
-  const prompt = validation.sanitized!;
-
-  // Validate and sanitize conversation history (limit to prevent abuse)
-  const MAX_HISTORY_MESSAGES = 12;
-  const conversationHistory: ConversationMessage[] = Array.isArray(body.conversationHistory)
-    ? body.conversationHistory
-        .slice(-MAX_HISTORY_MESSAGES)
-        .filter(
-          (msg): msg is ConversationMessage =>
-            typeof msg === 'object' &&
-            msg !== null &&
-            (msg.role === 'user' || msg.role === 'assistant') &&
-            typeof msg.content === 'string' &&
-            msg.content.length > 0 &&
-            msg.content.length <= MAX_PROMPT_LENGTH
-        )
-        .map(msg => ({
-          role: msg.role,
-          content: sanitizePrompt(msg.content),
-        }))
-    : [];
+  const { prompt, conversationHistory } = bodyResult.data;
 
   try {
     // Check if we're in development mode
@@ -116,16 +49,16 @@ export async function requestAI({
       'json'
     );
 
-    if (!resume) {
-      const resumeData = await import('./resume.json');
-      await context.cloudflare.env.RESUME_DATA_KV.put('resume_json', JSON.stringify(resumeData));
+    // Update KV if missing or stale (missing required fields like projects/tools)
+    if (!resume || !resume.projects || !resume.tools) {
+      await context.cloudflare.env.RESUME_DATA_KV.put('resume_json', JSON.stringify(resumeJson));
     }
 
     let relevantSections = '';
     let relevantSkills: string[] = [];
 
-    // Get the full resume data - will never be null after this line
-    const resumeData = resume || (await import('./resume.json')).default;
+    // Use fresh resume data to ensure all fields are present
+    const resumeData: ResumeData = resumeJson;
 
     // Only use embeddings and vector search if available and not in development
     if (!isDev && context.cloudflare?.env?.AI?.run && context.cloudflare?.env?.VECTORIZE?.query) {
@@ -159,8 +92,30 @@ export async function requestAI({
           );
 
           // Format relevant sections based on type
-          if (matchesByType.skills) {
+          if (matchesByType.skills || matchesByType.tools) {
+            // Include skills if either skills or tools match
             relevantSkills = resumeData.skills;
+          }
+
+          if (matchesByType.tools) {
+            relevantSections += `\nTools & Technologies:\n${matchesByType.tools
+              .map(match => match.metadata?.text)
+              .filter(Boolean)
+              .join('\n\n')}`;
+          }
+
+          if (matchesByType.projects) {
+            relevantSections += `\nProjects:\n${matchesByType.projects
+              .map(match => match.metadata?.text)
+              .filter(Boolean)
+              .join('\n\n')}`;
+          }
+
+          if (matchesByType.exploring) {
+            relevantSections += `\nCurrently Exploring:\n${matchesByType.exploring
+              .map(match => match.metadata?.text)
+              .filter(Boolean)
+              .join('\n\n')}`;
           }
 
           if (matchesByType.experience) {
@@ -180,18 +135,50 @@ export async function requestAI({
       } catch (error) {
         console.error('Vector search error:', error);
         // Fall back to using complete resume data
-        relevantSkills = resumeData.skills;
-        relevantSections += '\nExperience:';
+        relevantSkills = resumeData.skills || [];
+
+        if (resumeData.tools?.length) {
+          relevantSections += `\nTools & Technologies: ${resumeData.tools.join(', ')}`;
+        }
+
+        if (resumeData.projects?.length) {
+          relevantSections += '\n\nProjects:';
+          for (const project of resumeData.projects) {
+            relevantSections += `\n\nProject: ${project.name}\nDescription: ${project.description}\nTechnologies: ${project.tech.join(', ')}\nGitHub: ${project.github}`;
+          }
+        }
+
+        relevantSections += '\n\nExperience:';
         for (const exp of resumeData.experience) {
           relevantSections += `\n\nCompany: ${exp.company}\nRole: ${exp.role}\nYears: ${exp.years}\nDescription: ${exp.description}`;
+        }
+
+        if (resumeData.exploring?.length) {
+          relevantSections += `\n\nCurrently Exploring: ${resumeData.exploring.join(', ')}`;
         }
       }
     } else {
       // If vector search isn't available, use the entire resume
-      relevantSkills = resumeData.skills;
-      relevantSections += '\nExperience:';
+      relevantSkills = resumeData.skills || [];
+
+      if (resumeData.tools?.length) {
+        relevantSections += `\nTools & Technologies: ${resumeData.tools.join(', ')}`;
+      }
+
+      if (resumeData.projects?.length) {
+        relevantSections += '\n\nProjects:';
+        for (const project of resumeData.projects) {
+          relevantSections += `\n\nProject: ${project.name}\nDescription: ${project.description}\nTechnologies: ${project.tech.join(', ')}\nGitHub: ${project.github}`;
+        }
+      }
+
+      relevantSections += '\n\nExperience:';
       for (const exp of resumeData.experience) {
         relevantSections += `\n\nCompany: ${exp.company}\nRole: ${exp.role}\nYears: ${exp.years}\nDescription: ${exp.description}`;
+      }
+
+      if (resumeData.exploring?.length) {
+        relevantSections += `\n\nCurrently Exploring: ${resumeData.exploring.join(', ')}`;
       }
     }
 
@@ -235,9 +222,12 @@ INSTRUCTIONS:
       { role: 'user' as const, content: prompt },
     ];
 
-    // Check if streaming is requested
+    // Validate and parse query parameters
     const url = new URL(request.url);
-    const streamRequested = url.searchParams.get('stream') === 'true';
+    const queryResult = ChatQueryParamsSchema.safeParse({
+      stream: url.searchParams.get('stream') ?? undefined,
+    });
+    const streamRequested = queryResult.success ? queryResult.data.stream : false;
 
     if (streamRequested) {
       // Use Workers AI streaming

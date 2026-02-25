@@ -1,6 +1,6 @@
 ---
 description: Building Cloudflare Workers and Agents
-globs: 
+globs: workers/**/*.ts
 alwaysApply: false
 ---
 <system_context>

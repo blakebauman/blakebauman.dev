@@ -13,6 +13,7 @@ routes = [
 [vars]
 NODE_ENV = "development"
 # OPENAI_API_KEY is stored as a secret - run: wrangler secret put OPENAI_API_KEY
+# VECTORIZE_ADMIN_KEY is required for /api/populate-vectorize - run: wrangler secret put VECTORIZE_ADMIN_KEY
 
 [ai]
 binding = "AI"
