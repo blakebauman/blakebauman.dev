@@ -74,10 +74,6 @@ export function Layout({ children }: { children: React.ReactNode }) {
         <link rel="dns-prefetch" href="https://fonts.googleapis.com" />
         <link rel="dns-prefetch" href="https://fonts.gstatic.com" />
 
-        {/* Preload critical assets */}
-        <link rel="preload" as="script" href="/build/entry.client.js" />
-        <link rel="preload" as="style" href="/build/entry.client.css" />
-
         {/* JSON-LD structured data for Person */}
         <script
           type="application/ld+json"

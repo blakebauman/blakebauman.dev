@@ -55,6 +55,7 @@ export const ChatRequestSchema = z.object({
     .array(ConversationMessageSchema)
     .default([])
     .transform(messages => messages.slice(-MAX_HISTORY_MESSAGES)),
+  sessionId: z.string().uuid().optional(),
 });
 
 /**

@@ -5,15 +5,41 @@ import {
 } from '../schemas';
 import type { Env, ResumeData, VectorMatch } from '../types';
 import { checkTopicRelevance, REDIRECT_MESSAGE } from './guardrails';
+import { hashIP, type LogMessageMetadata, logConversation } from './logger';
 import resumeJson from './resume.json';
+
+function getClientIP(request: Request): string {
+  return (
+    request.headers.get('CF-Connecting-IP') ||
+    request.headers.get('X-Forwarded-For')?.split(',')[0]?.trim() ||
+    'anonymous'
+  );
+}
+
+async function logChatConversation(
+  db: D1Database,
+  ctx: ExecutionContext,
+  sessionId: string,
+  request: Request,
+  userPrompt: string,
+  assistantResponse: string,
+  metadata: LogMessageMetadata
+): Promise<void> {
+  const ipHash = await hashIP(getClientIP(request));
+  const userAgent = request.headers.get('User-Agent');
+  ctx.waitUntil(
+    logConversation(db, sessionId, ipHash, userAgent, userPrompt, assistantResponse, metadata)
+  );
+}
 
 export async function requestAI({
   request,
   context,
 }: {
   request: Request;
-  context: { cloudflare: { env: Env } };
+  context: { cloudflare: { env: Env; ctx: ExecutionContext } };
 }) {
+  const startTime = Date.now();
   // Parse JSON body
   let rawBody: unknown;
   try {
@@ -28,14 +54,30 @@ export async function requestAI({
   // Validate and transform request body with Zod
   const bodyResult = ChatRequestSchema.safeParse(rawBody);
   if (!bodyResult.success) {
+    console.error('Validation error:', JSON.stringify(bodyResult.error.issues, null, 2));
+    console.error('Raw body:', JSON.stringify(rawBody, null, 2));
     return createValidationErrorResponse(bodyResult.error);
   }
 
-  const { prompt, conversationHistory } = bodyResult.data;
+  const { prompt, conversationHistory, sessionId } = bodyResult.data;
 
   // Check topic relevance before processing (saves LLM tokens for off-topic requests)
   const redirectMessage = checkTopicRelevance(prompt);
   if (redirectMessage) {
+    // Log the redirected conversation if logging is available
+    if (context.cloudflare?.env?.CHAT_LOGS_DB && sessionId) {
+      const responseTimeMs = Date.now() - startTime;
+      logChatConversation(
+        context.cloudflare.env.CHAT_LOGS_DB,
+        context.cloudflare.ctx,
+        sessionId,
+        request,
+        prompt,
+        redirectMessage,
+        { responseTimeMs, wasRedirected: true }
+      );
+    }
+
     // Check if streaming was requested
     const url = new URL(request.url);
     const streamRequested = url.searchParams.get('stream') === 'true';
@@ -112,10 +154,9 @@ export async function requestAI({
             (acc: Record<string, VectorMatch[]>, match: VectorMatch) => {
               const type = match.metadata?.type;
               if (type) {
-                if (!acc[type]) {
-                  acc[type] = [];
-                }
-                acc[type].push(match);
+                let arr = acc[type];
+                if (!arr) acc[type] = arr = [];
+                arr.push(match);
               }
               return acc;
             },
@@ -278,9 +319,14 @@ RULES:
         stream: true,
       })) as ReadableStream;
 
-      // Transform the stream to SSE format
+      // Transform the stream to SSE format and capture full response for logging
       const encoder = new TextEncoder();
       const decoder = new TextDecoder();
+      let accumulatedResponse = '';
+
+      // Capture references for logging after stream completes
+      const db = context.cloudflare?.env?.CHAT_LOGS_DB;
+      const ctx = context.cloudflare?.ctx;
 
       const transformedStream = new ReadableStream({
         async start(controller) {
@@ -290,6 +336,16 @@ RULES:
               const { done, value } = await reader.read();
               if (done) {
                 controller.enqueue(encoder.encode('data: [DONE]\n\n'));
+
+                // Log the conversation after stream completes
+                if (db && ctx && sessionId && accumulatedResponse) {
+                  const responseTimeMs = Date.now() - startTime;
+                  logChatConversation(db, ctx, sessionId, request, prompt, accumulatedResponse, {
+                    responseTimeMs,
+                    wasRedirected: false,
+                  });
+                }
+
                 controller.close();
                 break;
               }
@@ -309,6 +365,7 @@ RULES:
                   try {
                     const parsed = JSON.parse(jsonStr) as { response?: string };
                     if (parsed.response) {
+                      accumulatedResponse += parsed.response;
                       controller.enqueue(
                         encoder.encode(`data: ${JSON.stringify({ content: parsed.response })}\n\n`)
                       );
@@ -339,12 +396,28 @@ RULES:
       messages,
     });
 
+    const assistantContent = response.response || "Sorry, I couldn't generate a response.";
+
+    // Log the conversation
+    if (context.cloudflare?.env?.CHAT_LOGS_DB && sessionId) {
+      const responseTimeMs = Date.now() - startTime;
+      logChatConversation(
+        context.cloudflare.env.CHAT_LOGS_DB,
+        context.cloudflare.ctx,
+        sessionId,
+        request,
+        prompt,
+        assistantContent,
+        { responseTimeMs, wasRedirected: false }
+      );
+    }
+
     return new Response(
       JSON.stringify({
         choices: [
           {
             message: {
-              content: response.response || "Sorry, I couldn't generate a response.",
+              content: assistantContent,
             },
           },
         ],

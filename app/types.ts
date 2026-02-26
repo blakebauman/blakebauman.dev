@@ -29,6 +29,7 @@ interface AIRunResult {
 
 export interface Env {
   RESUME_DATA_KV: KVNamespace;
+  CHAT_LOGS_DB: D1Database;
   AI: {
     run(model: string, input: AIRunInput & { stream: true }): Promise<ReadableStream>;
     run(model: string, input: AIRunInput & { stream?: false }): Promise<AIRunResult>;
@@ -53,5 +54,6 @@ export interface Env {
   CF_API_TOKEN?: string;
   VECTORIZE_INDEX?: string;
   VECTORIZE_ADMIN_KEY?: string;
+  ADMIN_API_KEY?: string;
   CHAT_ENABLED?: string;
 }
