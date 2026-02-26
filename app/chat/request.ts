@@ -54,8 +54,6 @@ export async function requestAI({
   // Validate and transform request body with Zod
   const bodyResult = ChatRequestSchema.safeParse(rawBody);
   if (!bodyResult.success) {
-    console.error('Validation error:', JSON.stringify(bodyResult.error.issues, null, 2));
-    console.error('Raw body:', JSON.stringify(rawBody, null, 2));
     return createValidationErrorResponse(bodyResult.error);
   }
 
