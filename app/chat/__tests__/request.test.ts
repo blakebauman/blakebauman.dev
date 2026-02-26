@@ -41,6 +41,13 @@ const mockResumeData = {
   },
 };
 
+// Mock execution context
+const mockCtx = {
+  waitUntil: vi.fn(),
+  passThroughOnException: vi.fn(),
+  props: {},
+};
+
 // Mock environment - request.ts uses AI.run for both embeddings and LLM (not AI_EMBEDDINGS)
 const mockEnv = {
   RESUME_DATA_KV: {
@@ -53,6 +60,7 @@ const mockEnv = {
   VECTORIZE: {
     query: vi.fn(),
   },
+  CHAT_LOGS_DB: null, // Not testing logging in these tests
 };
 
 describe('requestAI', () => {
@@ -92,7 +100,7 @@ describe('requestAI', () => {
 
     const response = await requestAI({
       request,
-      context: { cloudflare: { env: mockEnv as unknown as Env } },
+      context: { cloudflare: { env: mockEnv as unknown as Env, ctx: mockCtx } },
     });
 
     expect(response.status).toBe(200);
@@ -110,7 +118,7 @@ describe('requestAI', () => {
 
     await requestAI({
       request,
-      context: { cloudflare: { env: mockEnv as unknown as Env } },
+      context: { cloudflare: { env: mockEnv as unknown as Env, ctx: mockCtx } },
     });
 
     expect(mockEnv.RESUME_DATA_KV.put).toHaveBeenCalled();
@@ -133,7 +141,7 @@ describe('requestAI', () => {
 
     const response = await requestAI({
       request,
-      context: { cloudflare: { env: mockEnv as unknown as Env } },
+      context: { cloudflare: { env: mockEnv as unknown as Env, ctx: mockCtx } },
     });
 
     // When embeddings.data[0] is falsy, code uses full resume and continues to LLM
@@ -152,7 +160,7 @@ describe('requestAI', () => {
 
     const response = await requestAI({
       request,
-      context: { cloudflare: { env: mockEnv as unknown as Env } },
+      context: { cloudflare: { env: mockEnv as unknown as Env, ctx: mockCtx } },
     });
 
     // Vectorize failure is caught and falls back to full resume; LLM still responds
@@ -171,7 +179,7 @@ describe('requestAI', () => {
 
     const response = await requestAI({
       request,
-      context: { cloudflare: { env: mockEnv as unknown as Env } },
+      context: { cloudflare: { env: mockEnv as unknown as Env, ctx: mockCtx } },
     });
 
     expect(response.status).toBe(500);

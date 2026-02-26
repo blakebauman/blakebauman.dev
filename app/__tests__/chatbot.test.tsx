@@ -41,7 +41,7 @@ vi.mock('@/resume/chatbot-ui', () => ({
         onKeyPress={onKeyPress}
         aria-label="Chat input"
       />
-      <button type="button" data-testid="send-button" onClick={onSendMessage}>
+      <button type="button" data-testid="send-button" onClick={() => onSendMessage()}>
         Send
       </button>
     </div>

@@ -1,4 +1,5 @@
 import { lazy, Suspense, useCallback, useEffect, useRef, useState } from 'react';
+import { v7 as uuidv7 } from 'uuid';
 
 interface Message {
   role: 'assistant' | 'user';
@@ -20,8 +21,25 @@ interface StreamChunk {
   content: string;
 }
 
-// Session storage key for conversation history
+// Session storage keys
 const CHAT_HISTORY_KEY = 'blakebauman_chat_history';
+const SESSION_ID_KEY = 'blakebauman_chat_session_id';
+
+// Get or create a persistent session ID for logging (UUID7 = time-ordered, sortable)
+function getOrCreateSessionId(): string {
+  if (typeof window === 'undefined') return '';
+  try {
+    let id = sessionStorage.getItem(SESSION_ID_KEY);
+    if (!id) {
+      id = uuidv7();
+      sessionStorage.setItem(SESSION_ID_KEY, id);
+    }
+    return id;
+  } catch {
+    // Fallback if sessionStorage fails
+    return uuidv7();
+  }
+}
 
 // Stable timestamp for initial message to avoid hydration mismatch
 const INITIAL_MESSAGE_TIMESTAMP = 0;
@@ -72,7 +90,8 @@ function saveMessages(messages: Message[]): void {
 const ChatbotUI = lazy(() => import('@/resume/chatbot-ui'));
 
 export default function Chatbot() {
-  const [messages, setMessages] = useState<Message[]>(loadMessages);
+  // Initialize with stable state for SSR, then hydrate from sessionStorage
+  const [messages, setMessages] = useState<Message[]>(() => [createInitialMessage()]);
   const [input, setInput] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -85,6 +104,14 @@ export default function Chatbot() {
   const scrollToBottom = useCallback(() => {
     if (messagesContainerRef.current) {
       messagesContainerRef.current.scrollTop = messagesContainerRef.current.scrollHeight;
+    }
+  }, []);
+
+  // Hydrate from sessionStorage after mount (avoids SSR mismatch)
+  useEffect(() => {
+    const stored = loadMessages();
+    if (stored.length > 1 || stored[0]?.timestamp !== 0) {
+      setMessages(stored);
     }
   }, []);
 
@@ -143,7 +170,7 @@ export default function Chatbot() {
     const newMessage: Message = {
       role: 'user',
       content: messageText,
-      id: now.toString(),
+      id: uuidv7(),
       timestamp: now,
     };
     setMessages(prev => [...prev, newMessage]);
@@ -153,7 +180,7 @@ export default function Chatbot() {
 
     // Create a placeholder message for streaming
     const assistantTimestamp = Date.now() + 1;
-    const assistantMessageId = assistantTimestamp.toString();
+    const assistantMessageId = uuidv7();
     const placeholderMessage: Message = {
       role: 'assistant',
       content: '',
@@ -175,6 +202,7 @@ export default function Chatbot() {
         body: JSON.stringify({
           prompt: messageText,
           conversationHistory: recentMessages,
+          sessionId: getOrCreateSessionId() || undefined,
         }),
       });
 

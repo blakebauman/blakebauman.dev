@@ -38,5 +38,13 @@
       "id": "51a74b0210474ffbbc4c144e7f156187",
       "preview_id": "51a74b0210474ffbbc4c144e7f156187"
     }
+  ],
+  "d1_databases": [
+    {
+      "binding": "CHAT_LOGS_DB",
+      "database_name": "chat-logs",
+      "database_id": "e21bde82-853b-4328-86f0-9e49a2aacf7c",
+      "migrations_dir": "migrations"
+    }
   ]
 }
