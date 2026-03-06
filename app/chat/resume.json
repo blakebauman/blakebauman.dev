@@ -3,7 +3,7 @@
   "title": "Principal Technical Architect",
   "location": "Remote, Arizona",
   "hero": {
-    "headline": "Enterprise-scale systems, edge computing, and AI — that deliver.",
+    "headline": "Enterprise-scale systems, edge computing, and AI.",
     "subheadline": "Principal Technical Architect"
   },
   "email": "blake.bauman@gmail.com",
@@ -99,6 +99,13 @@
       "context": "Reference implementation for serverless REST APIs with modern tooling.",
       "tech": ["TypeScript", "Hono", "Bun", "AWS CDK", "Drizzle ORM"],
       "github": "https://github.com/blakebauman/hono-aws-lambda"
+    },
+    {
+      "name": "CaveAcoustics",
+      "description": "Suite of VST audio plugins for ambient music producers — delay, reverb, chorus, and granular synthesis",
+      "context": "Built during a sabbatical exploring DSP and real-time audio processing in C++.",
+      "tech": ["C++", "JUCE", "CMake", "DSP"],
+      "github": "https://github.com/CaveAcoustics"
     }
   ],
   "recognition": [
