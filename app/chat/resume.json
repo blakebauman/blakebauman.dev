@@ -99,28 +99,13 @@
       "context": "Reference implementation for serverless REST APIs with modern tooling.",
       "tech": ["TypeScript", "Hono", "Bun", "AWS CDK", "Drizzle ORM"],
       "github": "https://github.com/blakebauman/hono-aws-lambda"
-    },
-    {
-      "name": "nomoji.dev",
-      "description": "Emoji control platform for AI coding assistants",
-      "context": "Gives users fine-grained control over AI assistant behavior via emoji triggers.",
-      "tech": ["TypeScript", "Cloudflare Workers"],
-      "github": "https://github.com/blakebauman/nomoji.dev"
-    },
-    {
-      "name": "langchain-fastapi",
-      "description": "AI-powered content generation for e-commerce product descriptions",
-      "context": "Automates product copy at scale while maintaining brand voice and accuracy.",
-      "tech": ["JavaScript", "LangChain", "LangGraph"],
-      "github": "https://github.com/blakebauman/langchain-fastapi"
     }
   ],
   "recognition": [
     {
       "title": "2nd Place — Adobe AI Summit & Hackathon",
       "year": "2025",
-      "description": "We built a content generation plugin for Adobe DA.live that uses Adobe Commerce catalog data, multi-agent workflow using Langchain domain agents, and LLMs to generate AEM-ready product content. Features context-aware generation, real-time WebSocket streaming, batch page updates, and Adobe Firefly integration.",
-      "team": ["Terry Mah", "Karan Batra", "Akshay Patil", "Srikanth Ammineni"]
+      "description": "We built a content generation plugin for Adobe DA.live that uses Adobe Commerce catalog data, multi-agent workflow using Langchain domain agents, and LLMs to generate AEM-ready product content. Features context-aware generation, real-time WebSocket streaming, batch page updates, and Adobe Firefly integration."
     }
   ],
   "experience": [
