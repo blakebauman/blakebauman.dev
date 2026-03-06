@@ -1,5 +1,6 @@
 import { lazy, Suspense } from 'react';
 import resumeData from '../chat/resume.json';
+import { PoweredByTooltip } from './powered-by-tooltip';
 
 // Lazy load the chatbot since it's not part of the initial viewport
 const Chatbot = lazy(() => import('./chatbot'));
@@ -34,13 +35,27 @@ export function Resume({ chatEnabled }: ResumeProps) {
         <header className="flex flex-col">
           <div className="gap-0 section-padding flex flex-col md:flex-row md:items-start md:justify-between">
             <div>
-              <h1 className="text-fluid-5xl mb-4">{resumeData.name}</h1>
-              <p className="text-fluid-2xl text-zinc-700 dark:text-zinc-400 mb-2">
-                {resumeData.title} @ {resumeData.experience[0]?.company ?? 'Adobe'}
-              </p>
-              <p className="text-fluid-lg text-zinc-700 dark:text-zinc-500">
-                {resumeData.location}
-              </p>
+              {resumeData.hero ? (
+                <>
+                  <h1 className="text-fluid-5xl mb-4">{resumeData.hero.headline}</h1>
+                  <p className="text-fluid-2xl text-zinc-700 dark:text-zinc-400 mb-2">
+                    {resumeData.hero.subheadline}
+                  </p>
+                  <p className="text-fluid-lg text-zinc-700 dark:text-zinc-500">
+                    {resumeData.name} · {resumeData.location}
+                  </p>
+                </>
+              ) : (
+                <>
+                  <h1 className="text-fluid-5xl mb-4">{resumeData.name}</h1>
+                  <p className="text-fluid-2xl text-zinc-700 dark:text-zinc-400 mb-2">
+                    {resumeData.title} @ {resumeData.experience[0]?.company ?? 'Adobe'}
+                  </p>
+                  <p className="text-fluid-lg text-zinc-700 dark:text-zinc-500">
+                    {resumeData.location}
+                  </p>
+                </>
+              )}
             </div>
             <button
               type="button"
@@ -64,6 +79,23 @@ export function Resume({ chatEnabled }: ResumeProps) {
               </p>
             ))}
           </section>
+          <hr className="border-t border-zinc-200 dark:border-zinc-700" />
+          {chatEnabled && (
+            <section
+              id="ai-agent-section"
+              className="mb-4 section-padding scroll-mt-8 print:hidden"
+            >
+              <div className="flex items-center mb-4">
+                <h2 className="text-fluid-2xl">AI Agent</h2>
+                <PoweredByTooltip />
+              </div>
+              <Suspense
+                fallback={<div className="h-64 animate-pulse bg-zinc-100 dark:bg-zinc-800" />}
+              >
+                <Chatbot />
+              </Suspense>
+            </section>
+          )}
           <hr className="border-t border-zinc-200 dark:border-zinc-700" />
 
           {/* Defer loading of content below the fold */}
@@ -101,57 +133,115 @@ export function Resume({ chatEnabled }: ResumeProps) {
                 View more on my LinkedIn Profile
               </a>
             </section>
+            {resumeData.recognition && resumeData.recognition.length > 0 && (
+              <>
+                <hr className="border-t border-zinc-200 dark:border-zinc-700" />
+                <section className="mb-4 section-padding">
+                  <h2 className="text-fluid-2xl mb-8">Recognition</h2>
+                  {resumeData.recognition.map(item => (
+                    <div key={item.title} className="mb-4">
+                      <div className="flex items-baseline gap-2">
+                        <h3 className="text-fluid-lg font-semibold text-zinc-900 dark:text-white">
+                          {item.title}
+                        </h3>
+                        <span className="text-fluid-sm text-zinc-500">{item.year}</span>
+                      </div>
+                      <p className="text-fluid-base text-zinc-600 dark:text-zinc-400 mt-2">
+                        {item.description}
+                      </p>
+                      {item.team && (
+                        <p className="text-fluid-sm text-zinc-500 mt-1">
+                          Team: {item.team.join(', ')}
+                        </p>
+                      )}
+                    </div>
+                  ))}
+                </section>
+              </>
+            )}
             <hr className="border-t border-zinc-200 dark:border-zinc-700" />
             <section className="mb-4 section-padding">
-              <h2 className="text-fluid-2xl">Tools</h2>
-              <p className="text-fluid-base text-zinc-700 dark:text-zinc-500 mb-8">
-                {resumeData.sections.tools}
-              </p>
-              <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-4">
-                {resumeData.tools.map(tool => (
-                  <div key={tool} className="text-fluid-base">
-                    {tool}
-                  </div>
-                ))}
-              </div>
-            </section>
-            <hr className="border-t border-zinc-200 dark:border-zinc-700" />
-            <blockquote className="text-center text-fluid-2xl section-padding text-zinc-900 italic dark:text-white">
-              {resumeData.blockquote.text.split('{word}').map((part, i) =>
-                i === 0 ? (
-                  <span key="blockquote-before">
-                    {part}
-                    <span className="relative inline-block before:absolute before:-inset-1 before:block before:-skew-y-3 before:bg-red-500 mx-2">
-                      <span className="relative text-white dark:text-zinc-950">
-                        {resumeData.blockquote.highlight}
-                      </span>
+              <h2 className="text-fluid-2xl mb-8">Tools</h2>
+              {Array.isArray(resumeData.tools) ? (
+                <div className="flex flex-wrap gap-2">
+                  {resumeData.tools.map(tool => (
+                    <span
+                      key={tool}
+                      className="text-fluid-sm px-3 py-1.5 bg-zinc-50 dark:bg-zinc-800/50 border border-zinc-200 dark:border-zinc-700 text-zinc-700 dark:text-zinc-300"
+                    >
+                      {tool}
                     </span>
-                  </span>
-                ) : (
-                  <span key="blockquote-after">{part}</span>
-                )
+                  ))}
+                </div>
+              ) : (
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  {Object.entries(resumeData.tools).map(([group, tools]) => (
+                    <div key={group} className="p-5 border border-zinc-200 dark:border-zinc-700">
+                      <h3 className="text-fluid-base font-semibold text-zinc-900 dark:text-white mb-4 flex items-center gap-2">
+                        <span
+                          className="w-1.5 h-1.5 bg-red-400 rounded-full flex-shrink-0"
+                          aria-hidden="true"
+                        />
+                        {group}
+                      </h3>
+                      <div className="flex flex-wrap gap-2">
+                        {tools.map(tool => (
+                          <span
+                            key={tool}
+                            className="text-fluid-sm px-3 py-1.5 bg-zinc-50 dark:bg-zinc-800/50 border border-zinc-200 dark:border-zinc-700 text-zinc-700 dark:text-zinc-300"
+                          >
+                            {tool}
+                          </span>
+                        ))}
+                      </div>
+                    </div>
+                  ))}
+                </div>
               )}
-            </blockquote>
-            <hr className="border-t border-zinc-200 dark:border-zinc-700" />
-            <section className="mb-4 section-padding">
-              <h2 className="text-fluid-2xl">Exploring</h2>
-              <p className="text-fluid-base text-zinc-700 dark:text-zinc-500 mb-8">
-                {resumeData.sections.exploring}
-              </p>
-              <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-4">
-                {resumeData.exploring.map(item => (
-                  <div key={item} className="text-fluid-base">
-                    {item}
-                  </div>
-                ))}
-              </div>
             </section>
             <hr className="border-t border-zinc-200 dark:border-zinc-700" />
             <section className="mb-4 section-padding">
-              <h2 className="text-fluid-2xl">Projects</h2>
-              <p className="text-fluid-base text-zinc-700 dark:text-zinc-500 mb-8">
-                {resumeData.sections.projects}
-              </p>
+              <h2 className="text-fluid-2xl mb-8">Exploring</h2>
+              {Array.isArray(resumeData.exploring) ? (
+                <div className="flex flex-wrap gap-2">
+                  {resumeData.exploring.map(item => (
+                    <span
+                      key={item}
+                      className="text-fluid-sm px-3 py-1.5 bg-zinc-50 dark:bg-zinc-800/50 border border-zinc-200 dark:border-zinc-700 text-zinc-700 dark:text-zinc-300"
+                    >
+                      {item}
+                    </span>
+                  ))}
+                </div>
+              ) : (
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  {Object.entries(resumeData.exploring).map(([group, items]) => (
+                    <div key={group} className="p-5 border border-zinc-200 dark:border-zinc-700">
+                      <h3 className="text-fluid-base font-semibold text-zinc-900 dark:text-white mb-4 flex items-center gap-2">
+                        <span
+                          className="w-1.5 h-1.5 bg-red-400 rounded-full flex-shrink-0"
+                          aria-hidden="true"
+                        />
+                        {group}
+                      </h3>
+                      <div className="flex flex-wrap gap-2">
+                        {items.map(item => (
+                          <span
+                            key={item}
+                            className="text-fluid-sm px-3 py-1.5 bg-zinc-50 dark:bg-zinc-800/50 border border-zinc-200 dark:border-zinc-700 text-zinc-700 dark:text-zinc-300"
+                          >
+                            {item}
+                          </span>
+                        ))}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </section>
+            <hr className="border-t border-zinc-200 dark:border-zinc-700" />
+            <section className="mb-4 section-padding">
+              <h2 className="text-fluid-2xl mb-8">Projects</h2>
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
                 {resumeData.projects.map(project => (
                   <a
@@ -164,9 +254,15 @@ export function Resume({ chatEnabled }: ResumeProps) {
                     <h3 className="text-fluid-lg font-semibold text-zinc-900 dark:text-white mb-2">
                       {project.name}
                     </h3>
-                    <p className="text-fluid-sm text-zinc-600 dark:text-zinc-400 mb-3">
+                    <p className="text-fluid-sm text-zinc-600 dark:text-zinc-400 mb-1">
                       {project.description}
                     </p>
+                    {project.context && (
+                      <p className="text-fluid-sm text-zinc-500 dark:text-zinc-500 mb-3 italic">
+                        {project.context}
+                      </p>
+                    )}
+                    {!project.context && <div className="mb-3" />}
                     <div className="flex flex-wrap gap-2">
                       {project.tech.map(t => (
                         <span key={t} className="text-xs px-2 py-1 bg-zinc-100 dark:bg-zinc-800">
@@ -178,39 +274,14 @@ export function Resume({ chatEnabled }: ResumeProps) {
                 ))}
               </div>
             </section>
-            {chatEnabled && (
-              <>
-                <hr className="border-t border-zinc-200 dark:border-zinc-700" />
-                <section
-                  id="ai-agent-section"
-                  className="mb-4 section-padding scroll-mt-8 print:hidden"
-                >
-                  <h2 className="text-fluid-2xl mb-4">AI Agent</h2>
-                  <Suspense
-                    fallback={<div className="h-64 animate-pulse bg-zinc-100 dark:bg-zinc-800" />}
-                  >
-                    <Chatbot />
-                  </Suspense>
-                </section>
-              </>
-            )}
             <hr className="border-t border-zinc-200 dark:border-zinc-700" />
             <section className="mb-4 section-padding">
-              <h2 className="text-fluid-2xl">Contact</h2>
-              <p className="text-fluid-base text-zinc-700 dark:text-zinc-500 mb-8">
-                {resumeData.sections.contact}
-              </p>
-              <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+              <h2 className="text-fluid-2xl mb-8">Contact</h2>
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
                 <div className="text-fluid-base">
                   Email:{' '}
                   <a href={`mailto:${resumeData.email}`} className="text-red-400">
                     {resumeData.email}
-                  </a>
-                </div>
-                <div className="text-fluid-base">
-                  Phone:{' '}
-                  <a href={`tel:${resumeData.phone.replace(/\D/g, '')}`} className="text-red-400">
-                    {resumeData.phone}
                   </a>
                 </div>
                 <div className="text-fluid-base">

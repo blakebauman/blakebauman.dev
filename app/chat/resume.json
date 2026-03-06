@@ -2,8 +2,11 @@
   "name": "Blake Bauman",
   "title": "Principal Technical Architect",
   "location": "Remote, Arizona",
+  "hero": {
+    "headline": "Enterprise-scale systems, edge computing, and AI — that deliver.",
+    "subheadline": "Principal Technical Architect"
+  },
   "email": "blake.bauman@gmail.com",
-  "phone": "414-807-5866",
   "linkedin": "https://www.linkedin.com/in/blakebauman",
   "github": "https://github.com/blakebauman",
   "website": "https://blakebauman.dev",
@@ -13,14 +16,14 @@
     "Outside of client work, I build. I'm developing production applications on Cloudflare's edge platform — Workers, D1, Durable Objects, Workflows — and working deeply with LLMs and AI agent architectures. I'm looking for roles where technical depth and direct impact aren't mutually exclusive: forward-deployed engineering, technical product work, or founding-stage teams where the problems are genuinely hard."
   ],
   "blockquote": {
-    "text": "I'm able to adapt fast and learn {word} is needed to deliver success.",
-    "highlight": "whatever"
+    "text": "I know how large systems fail, and how to fix them.",
+    "highlight": ""
   },
   "sections": {
-    "tools": "I appreciate all things. Here are some things I'm currently using.",
-    "exploring": "Here are some things my curiosity is leading me to explore.",
-    "projects": "Open source projects and experiments.",
-    "contact": "Below are some ways we can continue the conversation."
+    "tools": "",
+    "exploring": "",
+    "projects": "",
+    "contact": ""
   },
   "skills": [
     "JavaScript",
@@ -51,85 +54,73 @@
     "WebSockets",
     "Infrastructure as Code"
   ],
-  "tools": [
-    "JavaScript",
-    "TypeScript",
-    "PHP",
-    "Edge Computing",
-    "Cloudflare Workers",
-    "Postgres",
-    "Redis",
-    "React",
-    "Hono",
-    "RPC",
-    "Python",
-    "LangChain",
-    "Agentic AI",
-    "Claude",
-    "LangGraph",
-    "LangSmith",
-    "Durable Objects",
-    "Bun",
-    "AWS Lambda",
-    "AWS CDK",
-    "Drizzle ORM",
-    "FastAPI",
-    "spaCy",
-    "Docker"
-  ],
-  "exploring": [
-    "AI",
-    "LLMs",
-    "Machine Learning",
-    "RAG",
-    "Vector Search",
-    "Prompt Engineering",
-    "Cloudflare Workflows",
-    "Cloudflare D1",
-    "Design Patterns",
-    "Claude / Anthropic",
-    "Multi-Agent Systems",
-    "Intent Classification",
-    "Reasoning Engines",
-    "Human-in-the-Loop AI",
-    "Entity Extraction"
-  ],
+  "tools": {
+    "Edge & Runtime": ["Cloudflare Workers", "Durable Objects", "Edge Computing", "Hono", "Bun"],
+    "AI & Agents": ["LangChain", "LangGraph", "LangSmith", "Agentic AI", "Claude", "Python"],
+    "Data & Backend": ["Postgres", "Redis", "Drizzle ORM"],
+    "Frontend": ["JavaScript", "TypeScript", "React"]
+  },
+  "exploring": {
+    "AI Foundations": ["LLMs", "Machine Learning", "RAG", "Vector Search", "Prompt Engineering"],
+    "Agent Systems": [
+      "Multi-Agent Systems",
+      "Intent Classification",
+      "Reasoning Engines",
+      "Human-in-the-Loop AI",
+      "Entity Extraction"
+    ],
+    "Edge Infrastructure": ["Cloudflare Workflows", "Cloudflare D1", "Design Patterns"]
+  },
   "projects": [
     {
       "name": "ecommerce-intent-reasoning-engine",
       "description": "Reasoning engine for eCommerce intent classification with LLM-powered conflict resolution",
+      "context": "Solves ambiguous customer intent when multiple signals conflict — critical for personalization and conversion.",
       "tech": ["Python", "Claude API", "FastAPI", "PostgreSQL"],
       "github": "https://github.com/blakebauman/ecommerce-intent-reasoning-engine"
     },
     {
       "name": "fleet-workspace",
       "description": "Hierarchical Durable Objects demo with infinite nesting and real-time WebSocket communication",
+      "context": "Explores scalable real-time collaboration patterns at the edge.",
       "tech": ["TypeScript", "Cloudflare Workers", "Durable Objects", "WebSockets"],
       "github": "https://github.com/blakebauman/fleet-workspace"
     },
     {
       "name": "adventure-agent",
       "description": "Multi-agent AI system for Arizona adventure planning with 17+ specialized agents",
+      "context": "Demonstrates orchestrated multi-agent workflows for complex, multi-step planning tasks.",
       "tech": ["Python", "LangChain", "LangGraph", "LangSmith"],
       "github": "https://github.com/blakebauman/adventure-agent"
     },
     {
       "name": "hono-aws-lambda",
       "description": "Production-ready Hono REST API with Bun runtime and AWS Lambda deployment",
+      "context": "Reference implementation for serverless REST APIs with modern tooling.",
       "tech": ["TypeScript", "Hono", "Bun", "AWS CDK", "Drizzle ORM"],
       "github": "https://github.com/blakebauman/hono-aws-lambda"
     },
     {
       "name": "nomoji.dev",
       "description": "Emoji control platform for AI coding assistants",
+      "context": "Gives users fine-grained control over AI assistant behavior via emoji triggers.",
       "tech": ["TypeScript", "Cloudflare Workers"],
       "github": "https://github.com/blakebauman/nomoji.dev"
     },
     {
       "name": "langchain-fastapi",
       "description": "AI-powered content generation for e-commerce product descriptions",
+      "context": "Automates product copy at scale while maintaining brand voice and accuracy.",
       "tech": ["JavaScript", "LangChain", "LangGraph"],
       "github": "https://github.com/blakebauman/langchain-fastapi"
+    }
+  ],
+  "recognition": [
+    {
+      "title": "2nd Place — Adobe AI Summit & Hackathon",
+      "year": "2025",
+      "description": "We built a content generation plugin for Adobe DA.live that uses Adobe Commerce catalog data, multi-agent workflow using Langchain domain agents, and LLMs to generate AEM-ready product content. Features context-aware generation, real-time WebSocket streaming, batch page updates, and Adobe Firefly integration.",
+      "team": ["Terry Mah", "Karan Batra", "Akshay Patil", "Srikanth Ammineni"]
     }
   ],
   "experience": [
@@ -137,19 +128,19 @@
       "company": "Adobe",
       "role": "Principal Technical Architect",
       "years": "2022-Present",
-      "description": "Contributed to the first production implementation of AEM Edge Delivery Services integrated with Adobe Commerce B2B Cloud for a Fortune 500 company. Led internal initiatives to drive adoption and support for new Adobe products and services, including hosting a webinar on Commerce with Edge Delivery. Additionally, mentored and trained team members, fostering expertise and collaboration."
+      "description": "Delivered the first production implementation of AEM Edge Delivery Services integrated with Adobe Commerce B2B Cloud for a Fortune 500 company. Led internal enablement initiatives including a webinar on Commerce with Edge Delivery that drove adoption across Adobe's enterprise customer base."
     },
     {
       "company": "Adobe",
       "role": "Technical Architect",
       "years": "2019-2022",
-      "description": "Successfully led the migration of a global Beverage company from Adobe Commerce on-prem to Adobe Commerce Cloud, ensuring a seamless transition with minimal disruption. Provided governance, best practices, and architectural reviews across multiple implementations. Additionally, mentored team members, fostering growth and knowledge sharing within the organization."
+      "description": "Led the migration of a global beverage company from Adobe Commerce on-prem to Adobe Commerce Cloud — zero downtime, minimal disruption. Established governance frameworks and architectural review processes across multiple enterprise implementations."
     },
     {
       "company": "Lyons Consulting Group (Capgemini)",
       "role": "Technical Architect",
       "years": "2017-2019",
-      "description": "Led a team in the design and implementation of Adobe Commerce (Magento Commerce) for a leading Running Shoe and Activewear company. Spearheaded the integration of Adobe Scene7 to optimize product imagery across the customer experience, enhancing visual merchandising and performance."
+      "description": "Led design and implementation of Adobe Commerce for a leading activewear company. Spearheaded Adobe Scene7 integration to optimize product imagery, improving visual merchandising and site performance."
     }
   ]
 }

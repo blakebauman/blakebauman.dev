@@ -1,3 +1,10 @@
+// AI context schemas and types
+export {
+  type AIContext,
+  type AIContextItem,
+  AIContextItemSchema,
+  AIContextSchema,
+} from './ai-context';
 // Chat schemas and types
 export {
   type ChatQueryParams,

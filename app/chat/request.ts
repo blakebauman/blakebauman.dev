@@ -134,7 +134,10 @@ export async function requestAI({
         ]);
 
         // Update KV if missing or stale (fire and forget - don't await)
-        if (!resume || !resume.projects || !resume.tools) {
+        const hasTools =
+          resume?.tools &&
+          (Array.isArray(resume.tools) ? resume.tools.length : Object.keys(resume.tools).length);
+        if (!resume || !resume.projects || !hasTools) {
           context.cloudflare.env.RESUME_DATA_KV.put('resume_json', JSON.stringify(resumeJson));
         }
 
@@ -218,14 +221,19 @@ export async function requestAI({
           relevantSections += `\nProfessional Summary:\n${resumeData.summary.join('\n\n')}`;
         }
 
-        if (resumeData.tools?.length) {
-          relevantSections += `\nTools & Technologies: ${resumeData.tools.join(', ')}`;
+        const toolsList = Array.isArray(resumeData.tools)
+          ? resumeData.tools
+          : resumeData.tools
+            ? Object.values(resumeData.tools).flat()
+            : [];
+        if (toolsList.length) {
+          relevantSections += `\nTools & Technologies: ${toolsList.join(', ')}`;
         }
 
         if (resumeData.projects?.length) {
           relevantSections += '\n\nProjects:';
           for (const project of resumeData.projects) {
-            relevantSections += `\n\nProject: ${project.name}\nDescription: ${project.description}\nTechnologies: ${project.tech.join(', ')}\nGitHub: ${project.github}`;
+            relevantSections += `\n\nProject: ${project.name}\nDescription: ${project.description}${project.context ? `\nContext: ${project.context}` : ''}\nTechnologies: ${project.tech.join(', ')}\nGitHub: ${project.github}`;
           }
         }
 
@@ -234,8 +242,13 @@ export async function requestAI({
           relevantSections += `\n\nCompany: ${exp.company}\nRole: ${exp.role}\nYears: ${exp.years}\nDescription: ${exp.description}`;
         }
 
-        if (resumeData.exploring?.length) {
-          relevantSections += `\n\nCurrently Exploring: ${resumeData.exploring.join(', ')}`;
+        if (resumeData.exploring) {
+          const exploringList = Array.isArray(resumeData.exploring)
+            ? resumeData.exploring
+            : Object.values(resumeData.exploring).flat();
+          if (exploringList.length) {
+            relevantSections += `\n\nCurrently Exploring: ${exploringList.join(', ')}`;
+          }
         }
       }
     } else {
@@ -246,14 +259,19 @@ export async function requestAI({
         relevantSections += `\nProfessional Summary:\n${resumeData.summary.join('\n\n')}`;
       }
 
-      if (resumeData.tools?.length) {
-        relevantSections += `\nTools & Technologies: ${resumeData.tools.join(', ')}`;
+      const toolsList = Array.isArray(resumeData.tools)
+        ? resumeData.tools
+        : resumeData.tools
+          ? Object.values(resumeData.tools).flat()
+          : [];
+      if (toolsList.length) {
+        relevantSections += `\nTools & Technologies: ${toolsList.join(', ')}`;
       }
 
       if (resumeData.projects?.length) {
         relevantSections += '\n\nProjects:';
         for (const project of resumeData.projects) {
-          relevantSections += `\n\nProject: ${project.name}\nDescription: ${project.description}\nTechnologies: ${project.tech.join(', ')}\nGitHub: ${project.github}`;
+          relevantSections += `\n\nProject: ${project.name}\nDescription: ${project.description}${project.context ? `\nContext: ${project.context}` : ''}\nTechnologies: ${project.tech.join(', ')}\nGitHub: ${project.github}`;
         }
       }
 
@@ -262,8 +280,13 @@ export async function requestAI({
         relevantSections += `\n\nCompany: ${exp.company}\nRole: ${exp.role}\nYears: ${exp.years}\nDescription: ${exp.description}`;
       }
 
-      if (resumeData.exploring?.length) {
-        relevantSections += `\n\nCurrently Exploring: ${resumeData.exploring.join(', ')}`;
+      if (resumeData.exploring) {
+        const exploringList = Array.isArray(resumeData.exploring)
+          ? resumeData.exploring
+          : Object.values(resumeData.exploring).flat();
+        if (exploringList.length) {
+          relevantSections += `\n\nCurrently Exploring: ${exploringList.join(', ')}`;
+        }
       }
     }
 

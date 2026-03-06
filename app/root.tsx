@@ -11,7 +11,9 @@ import type { Route } from './+types/root';
 import resumeData from './chat/resume.json';
 import './app.css';
 
-const metaTitle = `${resumeData.name} | ${resumeData.title} @ ${resumeData.experience[0]?.company ?? 'Adobe'}`;
+const metaTitle = resumeData.hero
+  ? `${resumeData.name} | ${resumeData.hero.headline}`
+  : `${resumeData.name} | ${resumeData.title} @ ${resumeData.experience[0]?.company ?? 'Adobe'}`;
 const firstSummary = resumeData.summary[0];
 const metaDescription =
   (firstSummary ? firstSummary.slice(0, 155) + (firstSummary.length > 155 ? '...' : '') : null) ??

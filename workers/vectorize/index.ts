@@ -1,3 +1,4 @@
+import aiContextData from '../../app/chat/ai-context.json';
 import resumeData from '../../app/chat/resume.json';
 import { populateVectorizeIndex } from '../../app/lib/vectorize';
 import type { Env } from '../../app/types';
@@ -89,7 +90,7 @@ export default {
           );
         }
 
-        const vectorCount = await populateVectorizeIndex(env, resumeData);
+        const vectorCount = await populateVectorizeIndex(env, resumeData, aiContextData);
 
         return new Response(
           JSON.stringify({

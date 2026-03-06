@@ -1,25 +1,8 @@
 import { config } from 'dotenv';
+import type { ResumeData } from '../app/types';
 
 // Load environment variables
 config();
-
-interface ResumeData {
-  name: string;
-  title: string;
-  location: string;
-  email: string;
-  phone: string;
-  linkedin: string;
-  github: string;
-  website: string;
-  skills: string[];
-  experience: Array<{
-    company: string;
-    role: string;
-    years: string;
-    description: string;
-  }>;
-}
 
 async function populateVectorize() {
   const accountId = process.env.CLOUDFLARE_ACCOUNT_ID;
@@ -29,8 +12,10 @@ async function populateVectorize() {
     throw new Error('CLOUDFLARE_ACCOUNT_ID and CLOUDFLARE_API_TOKEN must be set in .env file');
   }
 
-  // Import resume data
-  const resumeData = (await import('../app/chat/resume.json')) as ResumeData;
+  // Import resume data (JSON modules export as default)
+  const { default: resumeData } = (await import('../app/chat/resume.json')) as {
+    default: ResumeData;
+  };
 
   // Create chunks of resume data
   const chunks = [
@@ -39,7 +24,7 @@ async function populateVectorize() {
       text: `Name: ${resumeData.name}
 Title: ${resumeData.title}
 Location: ${resumeData.location}
-Contact: ${resumeData.email} | ${resumeData.phone}
+Contact: ${resumeData.email}${resumeData.phone ? ` | ${resumeData.phone}` : ''}
 Links: LinkedIn: ${resumeData.linkedin} | GitHub: ${resumeData.github} | Website: ${resumeData.website}`,
       metadata: {
         type: 'personal',

@@ -10,7 +10,7 @@ export function loader({ context }: Route.LoaderArgs) {
 export function meta(_: Route.MetaArgs) {
   return [
     {
-      title: 'Blake Bauman | Software Engineer/Principal Technical Architect @ Adobe',
+      title: 'Blake Bauman | Enterprise-scale systems, edge computing, and AI',
     },
     { name: 'description', content: 'Welcome to blakebauman.dev!' },
   ];
