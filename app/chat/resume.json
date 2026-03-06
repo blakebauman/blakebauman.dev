@@ -12,8 +12,8 @@
   "website": "https://blakebauman.dev",
   "bluesky": "https://bsky.app/profile/blakebauman.dev",
   "summary": [
-    "Principal Technical Architect with 8+ years building and shipping enterprise-scale e-commerce and cloud systems. At Adobe, I've led some of the first production implementations of next-generation Adobe products — working at the intersection of architecture, client strategy, and hands-on engineering. I know how large systems fail, how to migrate them without breaking things, and how to build organizations around them.",
-    "Outside of client work, I build. I'm developing production applications on Cloudflare's edge platform — Workers, D1, Durable Objects, Workflows — and working deeply with LLMs and AI agent architectures. I'm looking for roles where technical depth and direct impact aren't mutually exclusive: forward-deployed engineering, technical product work, or founding-stage teams where the problems are genuinely hard."
+    "Principal Technical Architect with 8+ years building enterprise e-commerce systems. At Adobe, I've architected and delivered production Adobe Commerce implementations for Fortune 500 companies — from complex B2B integrations to zero-downtime cloud migrations. I know how Commerce systems fail, how to migrate them, and how to build teams around them.",
+    "Outside client work, I build on Cloudflare's edge platform — Workers, D1, Durable Objects, Workflows — and work with LLMs and AI agents. I'm looking for roles where I can do real engineering: technical product work, founding teams, or companies that let architects still write code."
   ],
   "blockquote": {
     "text": "I know how large systems fail, and how to fix them.",
@@ -47,16 +47,13 @@
     "Python",
     "LangChain",
     "Claude",
-    "Agentic AI",
-    "Serverless Architecture",
-    "Real-time Systems",
     "NLP",
     "WebSockets",
     "Infrastructure as Code"
   ],
   "tools": {
     "Edge & Runtime": ["Cloudflare Workers", "Durable Objects", "Edge Computing", "Hono", "Bun"],
-    "AI & Agents": ["LangChain", "LangGraph", "LangSmith", "Agentic AI", "Claude", "Python"],
+    "AI & Agents": ["LangChain", "LangGraph", "LangSmith", "Claude", "Python"],
     "Data & Backend": ["Postgres", "Redis", "Drizzle ORM"],
     "Frontend": ["JavaScript", "TypeScript", "React"]
   },
@@ -120,13 +117,13 @@
       "company": "Adobe",
       "role": "Principal Technical Architect",
       "years": "2022-Present",
-      "description": "Delivered the first production implementation of AEM Edge Delivery Services integrated with Adobe Commerce B2B Cloud for a Fortune 500 company. Led internal enablement initiatives including a webinar on Commerce with Edge Delivery that drove adoption across Adobe's enterprise customer base."
+      "description": "Delivered the first production AEM Edge Delivery Services + Adobe Commerce B2B integration for a Fortune 500 company. Ran a webinar on Commerce with Edge Delivery that became a reference for Adobe's enterprise teams."
     },
     {
       "company": "Adobe",
       "role": "Technical Architect",
       "years": "2019-2022",
-      "description": "Led the migration of a global beverage company from Adobe Commerce on-prem to Adobe Commerce Cloud — zero downtime, minimal disruption. Established governance frameworks and architectural review processes across multiple enterprise implementations."
+      "description": "Led migration of a global beverage company from Adobe Commerce on-prem to Cloud — zero downtime. Built the architectural review process for enterprise Commerce implementations."
     },
     {
       "company": "Lyons Consulting Group (Capgemini)",
