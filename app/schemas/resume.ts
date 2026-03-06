@@ -28,7 +28,6 @@ export const RecognitionSchema = z.object({
   title: z.string(),
   year: z.string(),
   description: z.string(),
-  team: z.array(z.string()).optional(),
 });
 
 /**

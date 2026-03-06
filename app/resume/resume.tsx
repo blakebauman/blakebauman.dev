@@ -149,11 +149,6 @@ export function Resume({ chatEnabled }: ResumeProps) {
                       <p className="text-fluid-base text-zinc-600 dark:text-zinc-400 mt-2">
                         {item.description}
                       </p>
-                      {item.team && (
-                        <p className="text-fluid-sm text-zinc-500 mt-1">
-                          Team: {item.team.join(', ')}
-                        </p>
-                      )}
                     </div>
                   ))}
                 </section>

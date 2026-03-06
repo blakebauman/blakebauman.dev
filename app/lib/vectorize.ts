@@ -119,7 +119,7 @@ Description: ${exp.description}`,
         id: `recognition_${index}`,
         text: `Recognition: ${item.title}
 Year: ${item.year}
-Description: ${item.description}${item.team ? `\nTeam: ${item.team.join(', ')}` : ''}`,
+Description: ${item.description}`,
         metadata: {
           type: 'recognition' as const,
           section: 'recognition',
