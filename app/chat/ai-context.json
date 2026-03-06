@@ -1,0 +1,24 @@
+{
+  "context": [
+    {
+      "id": "availability",
+      "text": "Blake is currently open to new opportunities and actively exploring roles in forward-deployed engineering, technical product work, or founding-stage teams. He is particularly interested in positions where technical depth and direct impact are not mutually exclusive."
+    },
+    {
+      "id": "work-style",
+      "text": "Blake prefers working on genuinely hard problems where he can have direct impact. He values roles that combine architecture, client strategy, and hands-on engineering. He has experience leading cross-functional teams and internal enablement initiatives."
+    },
+    {
+      "id": "cloudflare-expertise",
+      "text": "Blake has deep expertise with Cloudflare's edge platform including Workers, D1, Durable Objects, Workflows, KV, R2, and Queues. He builds production applications on this stack and understands the nuances of edge computing patterns, real-time systems, and serverless architecture at scale."
+    },
+    {
+      "id": "ai-focus",
+      "text": "Blake is actively building with LLMs and AI agent architectures. He has hands-on experience with LangChain, LangGraph, LangSmith, and Claude. His projects include multi-agent systems, reasoning engines, and RAG implementations. He understands prompt engineering, vector search, and human-in-the-loop AI patterns."
+    },
+    {
+      "id": "enterprise-experience",
+      "text": "Blake has led production implementations for Fortune 500 companies at Adobe. He knows how large systems fail and how to migrate them without breaking things. He has experience with zero-downtime migrations, governance frameworks, and architectural review processes."
+    }
+  ]
+}

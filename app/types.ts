@@ -1,5 +1,7 @@
 // Re-export types from schemas
 export type {
+  AIContext,
+  AIContextItem,
   ChatQueryParams,
   ChatRequest,
   ChunkMetadata,

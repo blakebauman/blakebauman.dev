@@ -6,6 +6,7 @@ import { z } from 'zod';
 export const ProjectSchema = z.object({
   name: z.string(),
   description: z.string(),
+  context: z.string().optional(),
   tech: z.array(z.string()),
   github: z.string(),
 });
@@ -18,6 +19,16 @@ export const ExperienceSchema = z.object({
   role: z.string(),
   years: z.string(),
   description: z.string(),
+});
+
+/**
+ * Schema for recognition/awards entry
+ */
+export const RecognitionSchema = z.object({
+  title: z.string(),
+  year: z.string(),
+  description: z.string(),
+  team: z.array(z.string()).optional(),
 });
 
 /**
@@ -41,20 +52,27 @@ export const BlockquoteSchema = z.object({
 /**
  * Schema for the full resume data structure
  */
+export const HeroSchema = z.object({
+  headline: z.string(),
+  subheadline: z.string(),
+});
+
 export const ResumeDataSchema = z.object({
   name: z.string(),
   title: z.string(),
   location: z.string(),
+  hero: HeroSchema.optional(),
   email: z.string(),
-  phone: z.string(),
+  phone: z.string().optional(),
   linkedin: z.string(),
   github: z.string(),
   website: z.string(),
   skills: z.array(z.string()),
-  tools: z.array(z.string()),
-  exploring: z.array(z.string()),
+  tools: z.union([z.array(z.string()), z.record(z.string(), z.array(z.string()))]),
+  exploring: z.union([z.array(z.string()), z.record(z.string(), z.array(z.string()))]),
   projects: z.array(ProjectSchema),
   experience: z.array(ExperienceSchema),
+  recognition: z.array(RecognitionSchema).optional(),
   summary: z.array(z.string()),
   blockquote: BlockquoteSchema,
   sections: SectionIntrosSchema,
@@ -65,7 +83,17 @@ export const ResumeDataSchema = z.object({
  * Schema for chunk metadata used in vector storage
  */
 export const ChunkMetadataSchema = z.object({
-  type: z.enum(['personal', 'skills', 'experience', 'tools', 'exploring', 'projects', 'summary']),
+  type: z.enum([
+    'personal',
+    'skills',
+    'experience',
+    'tools',
+    'exploring',
+    'projects',
+    'summary',
+    'recognition',
+    'ai_context',
+  ]),
   section: z.string(),
   text: z.string(),
   company: z.string().optional(),
@@ -93,6 +121,7 @@ export const VectorQueryResultSchema = z.object({
 // Export inferred types
 export type Project = z.infer<typeof ProjectSchema>;
 export type Experience = z.infer<typeof ExperienceSchema>;
+export type Recognition = z.infer<typeof RecognitionSchema>;
 export type ResumeData = z.infer<typeof ResumeDataSchema>;
 export type ChunkMetadata = z.infer<typeof ChunkMetadataSchema>;
 export type VectorMatch = z.infer<typeof VectorMatchSchema>;

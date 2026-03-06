@@ -1,5 +1,5 @@
-import { ResumeDataSchema } from '../schemas';
-import type { Env, ResumeData } from '../types';
+import { AIContextSchema, ResumeDataSchema } from '../schemas';
+import type { AIContext, Env, ResumeData } from '../types';
 
 export class VectorizeError extends Error {
   constructor(message: string) {
@@ -9,9 +9,13 @@ export class VectorizeError extends Error {
 }
 
 /**
- * Populates the Vectorize index with resume data chunks
+ * Populates the Vectorize index with resume data chunks and AI context
  */
-export async function populateVectorizeIndex(env: Env, resumeData: unknown): Promise<number> {
+export async function populateVectorizeIndex(
+  env: Env,
+  resumeData: unknown,
+  aiContextData?: unknown
+): Promise<number> {
   // Validate resume data with Zod
   const parseResult = ResumeDataSchema.safeParse(resumeData);
   if (!parseResult.success) {
@@ -19,6 +23,18 @@ export async function populateVectorizeIndex(env: Env, resumeData: unknown): Pro
   }
 
   const validatedData: ResumeData = parseResult.data;
+
+  // Validate AI context data if provided
+  let validatedAIContext: AIContext | undefined;
+  if (aiContextData) {
+    const aiContextResult = AIContextSchema.safeParse(aiContextData);
+    if (!aiContextResult.success) {
+      throw new VectorizeError(
+        `Invalid AI context data: ${aiContextResult.error.issues[0]?.message}`
+      );
+    }
+    validatedAIContext = aiContextResult.data;
+  }
 
   try {
     // Create chunks of resume data
@@ -28,7 +44,7 @@ export async function populateVectorizeIndex(env: Env, resumeData: unknown): Pro
         text: `Name: ${validatedData.name}
 Title: ${validatedData.title}
 Location: ${validatedData.location}
-Contact: ${validatedData.email} | ${validatedData.phone}
+Contact: ${validatedData.email}${validatedData.phone ? ` | ${validatedData.phone}` : ''}
 Links: LinkedIn: ${validatedData.linkedin} | GitHub: ${validatedData.github} | Website: ${validatedData.website}`,
         metadata: {
           type: 'personal' as const,
@@ -56,7 +72,7 @@ Links: LinkedIn: ${validatedData.linkedin} | GitHub: ${validatedData.github} | W
       },
       {
         id: 'tools',
-        text: `Tools and technologies currently using: ${validatedData.tools.join(', ')}`,
+        text: `Tools and technologies currently using: ${Array.isArray(validatedData.tools) ? validatedData.tools.join(', ') : Object.values(validatedData.tools).flat().join(', ')}`,
         metadata: {
           type: 'tools' as const,
           section: 'tools',
@@ -65,7 +81,7 @@ Links: LinkedIn: ${validatedData.linkedin} | GitHub: ${validatedData.github} | W
       },
       {
         id: 'exploring',
-        text: `Currently exploring and learning: ${validatedData.exploring.join(', ')}`,
+        text: `Currently exploring and learning: ${Array.isArray(validatedData.exploring) ? validatedData.exploring.join(', ') : Object.values(validatedData.exploring).flat().join(', ')}`,
         metadata: {
           type: 'exploring' as const,
           section: 'exploring',
@@ -76,7 +92,7 @@ Links: LinkedIn: ${validatedData.linkedin} | GitHub: ${validatedData.github} | W
         id: `project_${index}`,
         text: `Project: ${project.name}
 Description: ${project.description}
-Technologies: ${project.tech.join(', ')}
+${project.context ? `Context: ${project.context}\n` : ''}Technologies: ${project.tech.join(', ')}
 GitHub: ${project.github}`,
         metadata: {
           type: 'projects' as const,
@@ -96,6 +112,27 @@ Description: ${exp.description}`,
           company: exp.company,
           role: exp.role,
           years: exp.years,
+          text: '', // Will be set later
+        },
+      })),
+      ...(validatedData.recognition ?? []).map((item, index) => ({
+        id: `recognition_${index}`,
+        text: `Recognition: ${item.title}
+Year: ${item.year}
+Description: ${item.description}${item.team ? `\nTeam: ${item.team.join(', ')}` : ''}`,
+        metadata: {
+          type: 'recognition' as const,
+          section: 'recognition',
+          text: '', // Will be set later
+        },
+      })),
+      // Add AI context chunks (not displayed on frontend)
+      ...(validatedAIContext?.context ?? []).map(item => ({
+        id: `ai_context_${item.id}`,
+        text: item.text,
+        metadata: {
+          type: 'ai_context' as const,
+          section: 'ai_context',
           text: '', // Will be set later
         },
       })),
