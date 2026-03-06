@@ -20,6 +20,8 @@ const metaDescription =
   `${resumeData.name} - ${resumeData.title}. Portfolio with AI-powered resume assistant.`;
 
 export const links: Route.LinksFunction = () => [
+  { rel: 'icon', href: '/favicon.svg', type: 'image/svg+xml' },
+  { rel: 'icon', href: '/favicon.ico', sizes: '32x32' },
   { rel: 'preconnect', href: 'https://fonts.googleapis.com' },
   {
     rel: 'preconnect',
