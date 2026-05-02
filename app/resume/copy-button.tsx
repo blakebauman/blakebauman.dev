@@ -13,7 +13,6 @@ export function CopyButton({ text }: CopyButtonProps) {
       setCopied(true);
       setTimeout(() => setCopied(false), 2000);
     } catch {
-      // Fallback for older browsers
       const textarea = document.createElement('textarea');
       textarea.value = text;
       document.body.appendChild(textarea);
@@ -29,10 +28,24 @@ export function CopyButton({ text }: CopyButtonProps) {
     <button
       type="button"
       onClick={handleCopy}
-      className="absolute top-1 right-1 px-2 py-1 text-xs bg-zinc-200 dark:bg-zinc-700 hover:bg-zinc-300 dark:hover:bg-zinc-600 text-zinc-600 dark:text-zinc-300 transition-colors"
-      aria-label={copied ? 'Copied!' : 'Copy code'}
+      style={{
+        position: 'absolute',
+        top: 6,
+        right: 6,
+        padding: '4px 9px',
+        font: '500 10px/1 var(--font-mono)',
+        letterSpacing: '0.16em',
+        textTransform: 'uppercase',
+        background: 'var(--plat)',
+        border: '1px solid var(--rule-strong)',
+        color: 'var(--inkpress)',
+        cursor: 'pointer',
+        opacity: copied ? 1 : 0.85,
+        transition: 'background 120ms ease, color 120ms ease',
+      }}
+      aria-label={copied ? 'Copied' : 'Copy code'}
     >
-      {copied ? 'Copied!' : 'Copy'}
+      {copied ? 'Copied' : 'Copy'}
     </button>
   );
 }

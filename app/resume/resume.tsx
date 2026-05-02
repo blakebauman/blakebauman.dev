@@ -1,316 +1,292 @@
 import { lazy, Suspense } from 'react';
 import resumeData from '../chat/resume.json';
-import { PoweredByTooltip } from './powered-by-tooltip';
 
-// Lazy load the chatbot since it's not part of the initial viewport
 const Chatbot = lazy(() => import('./chatbot'));
-
-function scrollToChat() {
-  document.getElementById('ai-agent-section')?.scrollIntoView({ behavior: 'smooth' });
-}
 
 interface ResumeProps {
   chatEnabled: boolean;
 }
 
+const SUBHEAD =
+  'Principal Technical Architect. Enterprise commerce on Adobe Commerce and AEM Edge Delivery Services. Edge-platform work on Cloudflare.';
+
+const POSITION_FOOTNOTE =
+  '8+ YEARS · ENTERPRISE COMMERCE · EDGE PLATFORMS · MULTI-AGENT AI WORKFLOWS · ZERO-DOWNTIME MIGRATIONS · COMMERCE FAILURE MODES & HOW TO FIX THEM.';
+
+function handlePrint() {
+  if (typeof window !== 'undefined') {
+    window.print();
+  }
+}
+
+interface ProjectEntry {
+  name: string;
+  description: string;
+  context?: string;
+  tech: string[];
+  github?: string;
+  year?: string;
+  status?: string;
+  visibility?: 'public' | 'private';
+}
+
 export function Resume({ chatEnabled }: ResumeProps) {
+  const projects = resumeData.projects as ProjectEntry[];
+  const todayYear = new Date().getFullYear();
+  const currentMonth = new Date().toLocaleString('en-US', { month: '2-digit', year: 'numeric' });
+  // currentMonth -> "05/2026"; reformat to YYYY-MM
+  const recStamp = (() => {
+    const d = new Date();
+    return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+  })();
+
   return (
-    <main className="w-full min-h-screen">
-      {/* Floating CTA - hidden when printing or chat disabled */}
-      {chatEnabled && (
-        <a
-          href="#ai-agent-section"
-          onClick={e => {
-            e.preventDefault();
-            scrollToChat();
-          }}
-          className="print:hidden fixed bottom-6 right-6 z-50 bg-red-500 text-white dark:text-zinc-950 px-4 py-2 font-semibold shadow-lg hover:bg-red-600 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-red-500 focus-visible:ring-offset-2"
-          aria-label="Scroll to chat with Blake's AI assistant"
-        >
-          Ask about Blake
-        </a>
-      )}
-      <div className="w-full max-w-[2000px] mx-auto px-[5vw] py-fluid-lg flex flex-col gap-fluid-xl">
-        {/* Priority content - above the fold */}
-        <header className="flex flex-col">
-          <div className="gap-0 section-padding flex flex-col md:flex-row md:items-start md:justify-between">
-            <div>
-              {resumeData.hero ? (
+    <>
+      <nav className="bb-nav print:hidden" aria-label="Primary">
+        <div className="bb-nav-inner">
+          <a className="bb-nav-mark" href="#top">
+            <span className="dot" aria-hidden="true" /> BLAKE BAUMAN
+          </a>
+          <div className="bb-nav-links">
+            <a className="current" href="#position">
+              <span className="mark" aria-hidden="true" /> Position
+            </a>
+            <a href="#record">
+              <span className="mark" aria-hidden="true" /> Record
+            </a>
+            {chatEnabled && (
+              <a href="#artifact">
+                <span className="mark" aria-hidden="true" /> Artifact
+              </a>
+            )}
+            <a href="#colophon">
+              <span className="mark" aria-hidden="true" /> Colophon
+            </a>
+          </div>
+        </div>
+      </nav>
+
+      <main className="bb-main">
+        <header className="bb-masthead" id="top">
+          <div className="bb-eyebrow">
+            <span className="mark" aria-hidden="true" />
+            <span className="num">§ 01</span> · {resumeData.name} · Rec.{' '}
+            {currentMonth.split('/').reverse().join('-')} · v0.1
+          </div>
+          <h1 className="name">{resumeData.name}</h1>
+          <p className="subhead">{SUBHEAD}</p>
+          <dl className="bb-masthead-meta">
+            <dt>Based</dt>
+            <dd>{resumeData.location}</dd>
+            <dt>Contact</dt>
+            <dd>
+              <a href={`mailto:${resumeData.email}`}>{resumeData.email}</a>
+            </dd>
+            <dt>Elsewhere</dt>
+            <dd>
+              <a href={resumeData.github}>github</a> · <a href={resumeData.linkedin}>linkedin</a>
+              {resumeData.bluesky && (
                 <>
-                  <h1 className="text-fluid-5xl mb-4">{resumeData.hero.headline}</h1>
-                  <p className="text-fluid-2xl text-zinc-700 dark:text-zinc-400 mb-2">
-                    {resumeData.hero.subheadline}
-                  </p>
-                  <p className="text-fluid-lg text-zinc-700 dark:text-zinc-500">
-                    {resumeData.name} · {resumeData.location}
-                  </p>
-                </>
-              ) : (
-                <>
-                  <h1 className="text-fluid-5xl mb-4">{resumeData.name}</h1>
-                  <p className="text-fluid-2xl text-zinc-700 dark:text-zinc-400 mb-2">
-                    {resumeData.title} @ {resumeData.experience[0]?.company ?? 'Adobe'}
-                  </p>
-                  <p className="text-fluid-lg text-zinc-700 dark:text-zinc-500">
-                    {resumeData.location}
-                  </p>
+                  {' · '}
+                  <a href={resumeData.bluesky}>bluesky</a>
                 </>
               )}
-            </div>
-            <button
-              type="button"
-              onClick={() => window.print()}
-              className="print:hidden mt-4 md:mt-0 px-4 py-2 border border-zinc-300 dark:border-zinc-600 text-zinc-700 dark:text-zinc-300 hover:bg-zinc-100 dark:hover:bg-zinc-800 transition-colors"
-            >
-              Print Resume
-            </button>
-          </div>
+            </dd>
+          </dl>
         </header>
-        <div className="w-full space-y-fluid-lg">
-          <hr className="border-t border-zinc-200 dark:border-zinc-700" />
-          <section className="mb-8 section-padding">
-            <h2 className="text-fluid-2xl">Who?</h2>
-            {resumeData.summary.map(paragraph => (
-              <p
-                key={paragraph.slice(0, 40)}
-                className="text-fluid-base text-zinc-700 dark:text-zinc-400 mt-8"
+
+        <section className="bb-position" id="position" aria-labelledby="position-label">
+          <h2 id="position-label" className="bb-eyebrow">
+            <span className="mark" aria-hidden="true" />
+            <span className="num">§ 02</span> · Position
+          </h2>
+          {resumeData.summary.map((paragraph, idx) => (
+            <p key={paragraph.slice(0, 40)} className="lede" data-idx={idx}>
+              {paragraph}
+            </p>
+          ))}
+          <p className="footnote">{POSITION_FOOTNOTE}</p>
+        </section>
+
+        <section className="bb-record" id="record" aria-labelledby="record-label">
+          <div className="bb-eyebrow">
+            <span className="mark" aria-hidden="true" />
+            <span className="num">§ 03</span> · Record
+          </div>
+          <h2 id="record-label">Record</h2>
+
+          <div className="bb-group">
+            <div className="bb-group-label">
+              <span className="mark" aria-hidden="true" /> Roles
+            </div>
+            {resumeData.experience.map((exp, idx) => (
+              <article
+                key={`${exp.company}-${exp.role}-${exp.years}`}
+                className={`bb-listing${idx === 0 ? ' first' : ''}`}
               >
-                {paragraph}
-              </p>
+                <div className="bb-listing-row">
+                  <div className="year">
+                    {exp.years.replace(/-/g, '–').replace(/Present/i, 'Present')}
+                  </div>
+                  <div className="body">
+                    <div className="head">
+                      <span className="role">{exp.role}</span>
+                      <span className="at">at</span>
+                      <span className="company">{exp.company}</span>
+                      <span className={`status${idx === 0 ? ' active' : ''}`}>
+                        {idx === 0 ? 'Active' : 'Filed'}
+                      </span>
+                    </div>
+                    <p className="desc">{exp.description}</p>
+                  </div>
+                </div>
+              </article>
             ))}
-          </section>
-          <hr className="border-t border-zinc-200 dark:border-zinc-700" />
-          {chatEnabled && (
-            <section
-              id="ai-agent-section"
-              className="mb-4 section-padding scroll-mt-8 print:hidden"
-            >
-              <div className="flex items-center mb-4">
-                <h2 className="text-fluid-2xl">AI Agent</h2>
-                <PoweredByTooltip />
+          </div>
+
+          <div className="bb-group">
+            <div className="bb-group-label">
+              <span className="mark dim" aria-hidden="true" /> Working artifacts · personal
+            </div>
+            {projects.map((project, idx) => {
+              const isActive = (project.status ?? '').toLowerCase() === 'active';
+              const year = project.year ?? '—';
+              return (
+                <article key={project.name} className={`bb-listing${idx === 0 ? ' first' : ''}`}>
+                  <div className="bb-listing-row">
+                    <div className="year">{year}</div>
+                    <div className="body">
+                      <div className="head">
+                        <span className="role">{project.name}</span>
+                        {project.visibility === 'private' && (
+                          <span className="status">Private</span>
+                        )}
+                        <span className={`status${isActive ? ' active' : ''}`}>
+                          {project.status ?? 'Filed'}
+                        </span>
+                      </div>
+                      {project.tech && project.tech.length > 0 && (
+                        <div className="stack">
+                          {project.tech.map(t => t.toUpperCase()).join(' · ')}
+                        </div>
+                      )}
+                      <p className="desc">
+                        {project.description}
+                        {project.context ? ` ${project.context}` : ''}
+                      </p>
+                      {project.github && (
+                        <div className="repo">
+                          <a href={project.github} rel="noopener noreferrer">
+                            {project.github.replace(/^https?:\/\//, '')}
+                          </a>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                </article>
+              );
+            })}
+          </div>
+
+          {resumeData.recognition && resumeData.recognition.length > 0 && (
+            <div className="bb-group">
+              <div className="bb-group-label">
+                <span className="mark dim" aria-hidden="true" /> Recognition
               </div>
+              {resumeData.recognition.map(item => (
+                <div key={item.title} className="bb-rec-block">
+                  <div className="stamp">Recognition · Rec. {item.year}</div>
+                  <p className="title">{item.title}</p>
+                  <p className="desc">{item.description}</p>
+                </div>
+              ))}
+            </div>
+          )}
+        </section>
+
+        {chatEnabled && (
+          <section className="bb-artifact" id="artifact" aria-labelledby="artifact-label">
+            <div className="bb-eyebrow">
+              <span className="mark" aria-hidden="true" />
+              <span className="num">§ 04</span> · Working artifact
+            </div>
+            <h2 id="artifact-label">Ask the resume</h2>
+            <p className="frame-text">It will tell you what I've worked on and what I haven't.</p>
+            <div className="bb-chat-frame" role="region" aria-label="Resume chatbot demonstration">
               <Suspense
-                fallback={<div className="h-64 animate-pulse bg-zinc-100 dark:bg-zinc-800" />}
+                fallback={
+                  <div
+                    style={{
+                      minHeight: 240,
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      font: '500 11px/1 var(--font-mono)',
+                      letterSpacing: '0.18em',
+                      textTransform: 'uppercase',
+                      opacity: 0.5,
+                    }}
+                  >
+                    Loading the index…
+                  </div>
+                }
               >
                 <Chatbot />
               </Suspense>
-            </section>
-          )}
-          <hr className="border-t border-zinc-200 dark:border-zinc-700" />
+            </div>
+          </section>
+        )}
 
-          {/* Defer loading of content below the fold */}
-          <Suspense fallback={<div className="h-64 animate-pulse bg-zinc-100 dark:bg-zinc-800" />}>
-            <section className="mb-4 section-padding">
-              <h2 className="text-fluid-2xl mb-8">Experience</h2>
-              <ol className="relative border-s border-zinc-200 dark:border-zinc-700 mb-8">
-                {resumeData.experience.map((exp, index) => (
-                  <li
-                    key={`${exp.company}-${exp.role}-${index}`}
-                    className={index < resumeData.experience.length - 1 ? 'mb-10 ms-4' : 'ms-4'}
-                  >
-                    <div className="absolute w-3 h-3 bg-zinc-200 mt-1.5 -start-1.5 border border-white dark:border-red-900 dark:bg-red-400" />
-                    <time className="mb-1 text-fluid-sm font-normal leading-none text-zinc-400 dark:text-zinc-500">
-                      {exp.years}
-                    </time>
-                    <h3
-                      className={`text-fluid-lg text-zinc-900 dark:text-white mt-2 mb-1 ${index === 0 ? 'font-semibold' : ''}`}
-                    >
-                      {exp.role} | {exp.company}
-                    </h3>
-                    <p
-                      className={
-                        index < resumeData.experience.length - 1
-                          ? 'mb-4 text-fluid-base font-normal text-zinc-500 dark:text-zinc-400'
-                          : 'text-fluid-base font-normal text-zinc-500 dark:text-zinc-500'
-                      }
-                    >
-                      {exp.description}
-                    </p>
-                  </li>
-                ))}
-              </ol>
-              <a href={resumeData.linkedin} className="text-red-400 text-fluid-base">
-                View more on my LinkedIn Profile
+        <section className="bb-colophon" id="colophon" aria-labelledby="colophon-label">
+          <h2 id="colophon-label" className="bb-eyebrow">
+            <span className="mark" aria-hidden="true" />
+            <span className="num">§ 05</span> · Colophon
+          </h2>
+          <div className="bb-colophon-grid">
+            <div>
+              <p>
+                The record is maintained as a record, not a marketing document. What's listed is
+                what happened.
+              </p>
+              <p>Set in IBM Plex. Cordovan accents on Slate Mist ground.</p>
+            </div>
+            <div className="cta">
+              <a className="btn" href={`mailto:${resumeData.email}`}>
+                Talk to me
               </a>
-            </section>
-            {resumeData.recognition && resumeData.recognition.length > 0 && (
-              <>
-                <hr className="border-t border-zinc-200 dark:border-zinc-700" />
-                <section className="mb-4 section-padding">
-                  <h2 className="text-fluid-2xl mb-8">Recognition</h2>
-                  {resumeData.recognition.map(item => (
-                    <div key={item.title} className="mb-4">
-                      <div className="flex items-baseline gap-2">
-                        <h3 className="text-fluid-lg font-semibold text-zinc-900 dark:text-white">
-                          {item.title}
-                        </h3>
-                        <span className="text-fluid-sm text-zinc-500">{item.year}</span>
-                      </div>
-                      <p className="text-fluid-base text-zinc-600 dark:text-zinc-400 mt-2">
-                        {item.description}
-                      </p>
-                    </div>
-                  ))}
-                </section>
-              </>
-            )}
-            <hr className="border-t border-zinc-200 dark:border-zinc-700" />
-            <section className="mb-4 section-padding">
-              <h2 className="text-fluid-2xl mb-8">Tools</h2>
-              {Array.isArray(resumeData.tools) ? (
-                <div className="flex flex-wrap gap-2">
-                  {resumeData.tools.map(tool => (
-                    <span
-                      key={tool}
-                      className="text-fluid-sm px-3 py-1.5 bg-zinc-50 dark:bg-zinc-800/50 border border-zinc-200 dark:border-zinc-700 text-zinc-700 dark:text-zinc-300"
-                    >
-                      {tool}
-                    </span>
-                  ))}
-                </div>
-              ) : (
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                  {Object.entries(resumeData.tools).map(([group, tools]) => (
-                    <div key={group} className="p-5 border border-zinc-200 dark:border-zinc-700">
-                      <h3 className="text-fluid-base font-semibold text-zinc-900 dark:text-white mb-4 flex items-center gap-2">
-                        <span
-                          className="w-1.5 h-1.5 bg-red-400 rounded-full flex-shrink-0"
-                          aria-hidden="true"
-                        />
-                        {group}
-                      </h3>
-                      <div className="flex flex-wrap gap-2">
-                        {tools.map(tool => (
-                          <span
-                            key={tool}
-                            className="text-fluid-sm px-3 py-1.5 bg-zinc-50 dark:bg-zinc-800/50 border border-zinc-200 dark:border-zinc-700 text-zinc-700 dark:text-zinc-300"
-                          >
-                            {tool}
-                          </span>
-                        ))}
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              )}
-            </section>
-            <hr className="border-t border-zinc-200 dark:border-zinc-700" />
-            <section className="mb-4 section-padding">
-              <h2 className="text-fluid-2xl mb-8">Exploring</h2>
-              {Array.isArray(resumeData.exploring) ? (
-                <div className="flex flex-wrap gap-2">
-                  {resumeData.exploring.map(item => (
-                    <span
-                      key={item}
-                      className="text-fluid-sm px-3 py-1.5 bg-zinc-50 dark:bg-zinc-800/50 border border-zinc-200 dark:border-zinc-700 text-zinc-700 dark:text-zinc-300"
-                    >
-                      {item}
-                    </span>
-                  ))}
-                </div>
-              ) : (
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                  {Object.entries(resumeData.exploring).map(([group, items]) => (
-                    <div key={group} className="p-5 border border-zinc-200 dark:border-zinc-700">
-                      <h3 className="text-fluid-base font-semibold text-zinc-900 dark:text-white mb-4 flex items-center gap-2">
-                        <span
-                          className="w-1.5 h-1.5 bg-red-400 rounded-full flex-shrink-0"
-                          aria-hidden="true"
-                        />
-                        {group}
-                      </h3>
-                      <div className="flex flex-wrap gap-2">
-                        {items.map(item => (
-                          <span
-                            key={item}
-                            className="text-fluid-sm px-3 py-1.5 bg-zinc-50 dark:bg-zinc-800/50 border border-zinc-200 dark:border-zinc-700 text-zinc-700 dark:text-zinc-300"
-                          >
-                            {item}
-                          </span>
-                        ))}
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              )}
-            </section>
-            <hr className="border-t border-zinc-200 dark:border-zinc-700" />
-            <section className="mb-4 section-padding">
-              <h2 className="text-fluid-2xl mb-8">Projects</h2>
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-                {resumeData.projects.map(project => (
-                  <a
-                    key={project.name}
-                    href={project.github}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="block p-4 border border-zinc-200 dark:border-zinc-700 hover:border-red-400 transition-colors"
-                  >
-                    <h3 className="text-fluid-lg font-semibold text-zinc-900 dark:text-white mb-2">
-                      {project.name}
-                    </h3>
-                    <p className="text-fluid-sm text-zinc-600 dark:text-zinc-400 mb-1">
-                      {project.description}
-                    </p>
-                    {project.context && (
-                      <p className="text-fluid-sm text-zinc-500 dark:text-zinc-500 mb-3 italic">
-                        {project.context}
-                      </p>
-                    )}
-                    {!project.context && <div className="mb-3" />}
-                    <div className="flex flex-wrap gap-2">
-                      {project.tech.map(t => (
-                        <span key={t} className="text-xs px-2 py-1 bg-zinc-100 dark:bg-zinc-800">
-                          {t}
-                        </span>
-                      ))}
-                    </div>
-                  </a>
-                ))}
-              </div>
-            </section>
-            <hr className="border-t border-zinc-200 dark:border-zinc-700" />
-            <section className="mb-4 section-padding">
-              <h2 className="text-fluid-2xl mb-8">Contact</h2>
-              <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-                <div className="text-fluid-base">
-                  Email:{' '}
-                  <a href={`mailto:${resumeData.email}`} className="text-red-400">
-                    {resumeData.email}
-                  </a>
-                </div>
-                <div className="text-fluid-base">
-                  Github:{' '}
-                  <a
-                    href={resumeData.github}
-                    className="text-red-400"
-                    rel="me"
-                    aria-label="GitHub profile"
-                  >
-                    {resumeData.github.split('/').filter(Boolean).pop() ?? 'GitHub'}
-                  </a>
-                </div>
-                <div className="text-fluid-base">
-                  LinkedIn:{' '}
-                  <a
-                    href={resumeData.linkedin}
-                    className="text-red-400"
-                    rel="me"
-                    aria-label="LinkedIn profile"
-                  >
-                    {resumeData.linkedin.split('/').filter(Boolean).pop() ?? 'LinkedIn'}
-                  </a>
-                </div>
-              </div>
-            </section>
-          </Suspense>
-        </div>
-        <footer className="py-4 border-t border-zinc-200 dark:border-zinc-700 text-center section-padding">
-          <p className="text-fluid-sm text-zinc-700 dark:text-zinc-700">
-            &copy; {new Date().getFullYear()} {resumeData.name}. All rights reserved.
-          </p>
+              <span className="secondary">
+                Or find me on <a href={resumeData.github}>github</a>,{' '}
+                <a href={resumeData.linkedin}>linkedin</a>
+                {resumeData.bluesky && (
+                  <>
+                    , <a href={resumeData.bluesky}>bluesky</a>
+                  </>
+                )}
+                .{' '}
+                <button
+                  type="button"
+                  className="bb-print-btn print:hidden"
+                  onClick={handlePrint}
+                  style={{ marginLeft: 8 }}
+                >
+                  Print
+                </button>
+              </span>
+            </div>
+          </div>
+        </section>
+
+        <footer className="bb-stamps print:hidden">
+          <div className="bb-stamps-row">
+            <span>Rec. {recStamp} · v0.1</span>
+            <span>Lot 0042</span>
+            <span>Set in IBM Plex</span>
+            <span>
+              © {todayYear} {resumeData.name}
+            </span>
+          </div>
         </footer>
-      </div>
-    </main>
+      </main>
+    </>
   );
 }

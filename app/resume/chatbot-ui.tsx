@@ -10,10 +10,10 @@ interface Message {
 }
 
 const SUGGESTED_PROMPTS = [
-  'What projects has Blake worked on?',
-  'Tell me about his experience at Adobe',
-  'What technologies does he use?',
-  'What is he currently exploring?',
+  'What did Blake do at Adobe?',
+  'Has he worked with Cloudflare?',
+  'What is the most recent project on the record?',
+  'What did he ship at Lyons?',
 ];
 
 function formatTimestamp(timestamp: number): string {
@@ -56,7 +56,6 @@ export default function ChatbotUI({
   onToggleExpand,
 }: ChatbotUIProps) {
   const handleKeyDown = (e: KeyboardEvent<HTMLInputElement>) => {
-    // Escape key clears input or collapses expanded view
     if (e.key === 'Escape') {
       e.preventDefault();
       if (isExpanded) {
@@ -67,226 +66,228 @@ export default function ChatbotUI({
     }
   };
 
-  // Show suggested prompts only when there's just the initial message
   const showSuggestions = messages.length === 1 && !isLoading;
 
-  const chatContent = (
-    <>
-      <div
-        ref={messagesContainerRef}
-        className={`overflow-y-auto py-4 px-0 space-y-4 border border-zinc-200 dark:border-zinc-700 ${
-          isExpanded ? 'flex-1' : 'h-64'
-        }`}
-        role="log"
-        aria-label="Chat messages"
-        aria-live="polite"
-        aria-relevant="additions"
-      >
-        <div ref={messagesContentRef} className="px-4 space-y-4">
-          {messages.map((msg, index) => {
-            const isLastMessage = index === messages.length - 1;
-            const isStreaming = isLastMessage && isLoading && msg.role === 'assistant';
+  const stream = (
+    <div
+      ref={messagesContainerRef}
+      className={`bb-chat-stream${isExpanded ? ' expanded' : ''}`}
+      role="log"
+      aria-label="Chat messages"
+      aria-live="polite"
+      aria-relevant="additions"
+    >
+      <div ref={messagesContentRef}>
+        {messages.map((msg, index) => {
+          const isLastMessage = index === messages.length - 1;
+          const isStreaming = isLastMessage && isLoading && msg.role === 'assistant';
+          const isYou = msg.role === 'user';
 
-            return (
-              <div
-                key={msg.id}
-                className={`flex flex-col ${msg.role === 'assistant' ? 'items-start' : 'items-end'}`}
-              >
-                <div
-                  className={`max-w-[80%] p-3 ${
-                    msg.role === 'assistant'
-                      ? 'bg-transparent text-zinc-900 dark:text-zinc-400'
-                      : 'bg-red-500 text-white dark:text-zinc-950'
-                  }`}
-                  role="article"
-                  aria-label={`${msg.role === 'assistant' ? 'Assistant' : 'You'}: ${msg.content}`}
-                >
-                  {msg.role === 'assistant' ? (
-                    <AssistantMessage content={msg.content} isStreaming={isStreaming} />
-                  ) : (
-                    msg.content
-                  )}
-                </div>
-                {msg.timestamp > 0 && (
-                  <span
-                    className={`text-xs text-zinc-400 dark:text-zinc-500 mt-1 ${
-                      msg.role === 'assistant' ? 'ml-3' : 'mr-3'
-                    }`}
-                  >
-                    {formatTimestamp(msg.timestamp)}
-                  </span>
+          return (
+            <div
+              key={msg.id}
+              className={`bb-chat-msg ${isYou ? 'you' : 'blake'}`}
+              style={{ marginBottom: 22 }}
+            >
+              <div className="who">
+                <span className="mark" aria-hidden="true" /> {isYou ? 'You' : 'Blake (the index)'}
+              </div>
+              <div className="text">
+                {msg.role === 'assistant' ? (
+                  <AssistantMessage content={msg.content} isStreaming={isStreaming} />
+                ) : (
+                  msg.content
                 )}
               </div>
-            );
-          })}
-          {/* Show typing indicator when loading and streaming hasn't started */}
-          {isLoading && messages[messages.length - 1]?.role !== 'assistant' && (
-            <div className="flex justify-start" role="status" aria-label="Assistant is thinking">
-              <div className="bg-transparent p-3">
-                <TypingIndicator />
-              </div>
+              {msg.timestamp > 0 && (
+                <div className="timestamp">{formatTimestamp(msg.timestamp)}</div>
+              )}
             </div>
-          )}
-          {error && (
-            <div className="flex justify-start" role="alert" aria-live="assertive">
-              <div className="bg-transparent text-red-400 p-3">{error}</div>
+          );
+        })}
+        {isLoading && messages[messages.length - 1]?.role !== 'assistant' && (
+          <div className="bb-chat-msg blake" role="status" aria-label="Assistant is thinking">
+            <div className="who">
+              <span className="mark" aria-hidden="true" /> Blake (the index)
             </div>
-          )}
-        </div>
+            <TypingIndicator />
+          </div>
+        )}
+        {error && (
+          <div className="bb-chat-error" role="alert" aria-live="assertive">
+            {error}
+          </div>
+        )}
       </div>
+    </div>
+  );
 
-      {/* Suggested prompts */}
-      {showSuggestions && (
-        <div className="flex flex-wrap gap-2 mt-3 px-0">
-          {SUGGESTED_PROMPTS.map(prompt => (
-            <button
-              key={prompt}
-              type="button"
-              onClick={() => onSuggestedPrompt(prompt)}
-              className="text-xs px-3 py-1.5 border border-zinc-200 dark:border-zinc-700 text-zinc-600 dark:text-zinc-400 hover:border-red-400 hover:text-red-500 dark:hover:border-red-400 dark:hover:text-red-400 transition-colors"
-            >
-              {prompt}
-            </button>
-          ))}
-        </div>
-      )}
-
-      <div className="flex mt-4 gap-2 px-0">
-        <label htmlFor="chat-input" className="sr-only">
-          Ask a question about Blake's experience
-        </label>
-        <input
-          id="chat-input"
-          ref={inputRef}
-          className="flex-1 p-2 bg-transparent border border-zinc-200 dark:border-zinc-700 text-zinc-900 dark:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-red-500 focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:focus-visible:ring-offset-zinc-950 disabled:opacity-50"
-          value={input}
-          onChange={onInputChange}
-          onKeyPress={onKeyPress}
-          onKeyDown={handleKeyDown}
-          placeholder="Ask my agent about my experience..."
-          disabled={isLoading}
-          aria-label="Ask a question about Blake's experience"
-          aria-describedby="chat-hint"
-          autoComplete="off"
-        />
-        <span id="chat-hint" className="sr-only">
-          Press Enter to send your message, Escape to clear
-        </span>
+  const promptChips = showSuggestions && (
+    <div className="bb-chat-prompts">
+      {SUGGESTED_PROMPTS.map(prompt => (
         <button
+          key={prompt}
           type="button"
-          onClick={onSendMessage}
-          disabled={isLoading || !input.trim()}
-          className="bg-red-500 text-white dark:text-zinc-950 p-2 font-semibold hover:bg-red-600 disabled:opacity-50 disabled:cursor-not-allowed transition-colors flex items-center gap-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-red-500 focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:focus-visible:ring-offset-zinc-950"
-          aria-label={isLoading ? 'Sending message' : 'Send message'}
+          onClick={() => onSuggestedPrompt(prompt)}
+          className="bb-chat-prompt"
         >
-          {isLoading ? (
-            <>
-              <div
-                className="animate-spin h-4 w-4 border-2 border-white dark:border-zinc-950 border-t-transparent"
-                aria-hidden="true"
-              />
-              <span>Sending...</span>
-            </>
-          ) : (
-            'Send'
-          )}
+          {prompt}
         </button>
-      </div>
-    </>
+      ))}
+    </div>
+  );
+
+  const inputRow = (
+    <form
+      className="bb-chat-input"
+      onSubmit={e => {
+        e.preventDefault();
+        onSendMessage();
+      }}
+      aria-label="Ask the resume"
+    >
+      <label htmlFor="chat-input" className="sr-only">
+        Ask a question about Blake's experience
+      </label>
+      <input
+        id="chat-input"
+        ref={inputRef}
+        type="text"
+        value={input}
+        onChange={onInputChange}
+        onKeyPress={onKeyPress}
+        onKeyDown={handleKeyDown}
+        placeholder="What did Blake do at <company>?"
+        disabled={isLoading}
+        aria-label="Ask a question about Blake's experience"
+        aria-describedby="chat-hint"
+        autoComplete="off"
+        autoCapitalize="sentences"
+        autoCorrect="on"
+        spellCheck="true"
+        enterKeyHint="send"
+        inputMode="text"
+        maxLength={500}
+      />
+      <span id="chat-hint" className="sr-only">
+        Press Enter to send your message, Escape to clear
+      </span>
+      <button
+        type="submit"
+        disabled={isLoading || !input.trim()}
+        aria-label={isLoading ? 'Sending message' : 'Send message'}
+      >
+        {isLoading ? (
+          <>
+            <span className="bb-chat-spinner" aria-hidden="true" />
+            <span>Sending</span>
+          </>
+        ) : (
+          'Ask'
+        )}
+      </button>
+    </form>
+  );
+
+  const actions = (
+    <div className="bb-chat-actions">
+      <button
+        type="button"
+        className="bb-chat-action"
+        onClick={onToggleExpand}
+        aria-label={isExpanded ? 'Close expanded chat' : 'Expand chat'}
+      >
+        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+          <path
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            strokeWidth={2}
+            d={
+              isExpanded
+                ? 'M6 18L18 6M6 6l12 12'
+                : 'M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4'
+            }
+          />
+        </svg>
+        {isExpanded ? 'Close' : 'Expand'}
+      </button>
+    </div>
   );
 
   return (
     <>
-      {/* Normal inline chat */}
       <div
-        className={`w-full mx-auto p-0 pb-4 bg-transparent ${isExpanded ? 'invisible' : ''}`}
+        className={isExpanded ? 'invisible' : ''}
         role="region"
-        aria-label="AI Chat Assistant"
+        aria-label="Resume chat assistant"
         aria-hidden={isExpanded}
       >
-        {/* Expand button */}
-        <div className="flex justify-end mb-2">
+        {actions}
+        {stream}
+        {promptChips}
+        {inputRow}
+      </div>
+
+      {isExpanded && (
+        <div className="bb-chat-modal" aria-hidden={!isExpanded}>
           <button
             type="button"
             onClick={onToggleExpand}
-            className="text-xs text-zinc-500 hover:text-zinc-700 dark:text-zinc-400 dark:hover:text-zinc-200 transition-colors flex items-center gap-1"
-            aria-label="Expand chat"
+            aria-label="Close expanded chat"
+            className="absolute"
+            style={{
+              position: 'absolute',
+              inset: 0,
+              background: 'transparent',
+              border: 0,
+              zIndex: 0,
+            }}
+          />
+          <div
+            className="bb-chat-modal-card"
+            role="dialog"
+            aria-label="Expanded chat"
+            aria-modal="true"
+            style={{ position: 'relative', zIndex: 1 }}
           >
-            <svg
-              className="w-4 h-4"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-              aria-hidden="true"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4"
-              />
-            </svg>
-            Expand
-          </button>
-        </div>
-        {!isExpanded && chatContent}
-      </div>
-
-      {/* Expanded modal overlay */}
-      <div
-        className={`fixed inset-0 z-50 transition-opacity duration-200 ${
-          isExpanded ? 'opacity-100' : 'opacity-0 pointer-events-none'
-        }`}
-        aria-hidden={!isExpanded}
-      >
-        {/* Backdrop */}
-        <div
-          className="absolute inset-0 bg-black/50 dark:bg-black/70"
-          onClick={onToggleExpand}
-          aria-hidden="true"
-        />
-
-        {/* Modal content */}
-        <div
-          className={`absolute inset-4 sm:inset-8 bg-white dark:bg-zinc-950 border border-zinc-200 dark:border-zinc-700 shadow-2xl flex flex-col transition-transform duration-200 ${
-            isExpanded ? 'scale-100' : 'scale-95'
-          }`}
-          role="dialog"
-          aria-label="Expanded chat"
-          aria-modal="true"
-        >
-          {/* Close button */}
-          <div className="flex justify-end p-3 border-b border-zinc-200 dark:border-zinc-700">
-            <button
-              type="button"
-              onClick={onToggleExpand}
-              className="text-xs text-zinc-500 hover:text-zinc-700 dark:text-zinc-400 dark:hover:text-zinc-200 transition-colors flex items-center gap-1"
-              aria-label="Close expanded chat"
-            >
-              <svg
-                className="w-4 h-4"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-                aria-hidden="true"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M6 18L18 6M6 6l12 12"
+            <div className="bb-chat-modal-head">
+              <span className="bb-chat-modal-title">
+                <span
+                  style={{
+                    width: 7,
+                    height: 7,
+                    background: 'var(--cordovan)',
+                    display: 'inline-block',
+                    marginRight: 10,
+                  }}
                 />
-              </svg>
-              Close
-            </button>
-          </div>
-
-          {/* Chat content in modal */}
-          <div className="flex-1 flex flex-col p-4 overflow-hidden">
-            {isExpanded && chatContent}
+                Ask the resume
+              </span>
+              <button
+                type="button"
+                onClick={onToggleExpand}
+                className="bb-chat-action"
+                aria-label="Close expanded chat"
+              >
+                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M6 18L18 6M6 6l12 12"
+                  />
+                </svg>
+                Close
+              </button>
+            </div>
+            <div className="bb-chat-modal-body">
+              {stream}
+              {promptChips}
+              {inputRow}
+            </div>
           </div>
         </div>
-      </div>
+      )}
     </>
   );
 }

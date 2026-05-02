@@ -1,62 +1,119 @@
 import type { Components } from 'react-markdown';
 import { CodeBlock } from './code-block';
 
-/**
- * Custom Tailwind-styled components for rendering markdown in chat messages.
- * Designed for compact display within a chatbot context.
- */
 export const markdownComponents: Components = {
   h1: ({ children }) => (
-    <h1 className="text-lg font-bold mb-2 text-zinc-900 dark:text-zinc-100">{children}</h1>
+    <h1
+      style={{
+        font: '600 18px/1.25 var(--font-cond)',
+        margin: '0 0 8px',
+        letterSpacing: '-0.005em',
+      }}
+    >
+      {children}
+    </h1>
   ),
   h2: ({ children }) => (
-    <h2 className="text-base font-bold mb-2 text-zinc-900 dark:text-zinc-100">{children}</h2>
+    <h2
+      style={{
+        font: '600 16px/1.25 var(--font-cond)',
+        margin: '0 0 8px',
+        letterSpacing: '-0.005em',
+      }}
+    >
+      {children}
+    </h2>
   ),
   h3: ({ children }) => (
-    <h3 className="text-sm font-bold mb-1 text-zinc-900 dark:text-zinc-100">{children}</h3>
+    <h3
+      style={{
+        font: '600 14px/1.25 var(--font-cond)',
+        margin: '0 0 4px',
+      }}
+    >
+      {children}
+    </h3>
   ),
-  p: ({ children }) => <p className="mb-2 last:mb-0">{children}</p>,
-  ul: ({ children }) => <ul className="list-disc list-inside mb-2 space-y-1">{children}</ul>,
-  ol: ({ children }) => <ol className="list-decimal list-inside mb-2 space-y-1">{children}</ol>,
-  li: ({ children }) => <li className="text-zinc-900 dark:text-zinc-400">{children}</li>,
   blockquote: ({ children }) => (
-    <blockquote className="border-l-2 border-red-400 pl-3 italic text-zinc-600 dark:text-zinc-400 my-2">
+    <blockquote
+      style={{
+        borderLeft: 0,
+        paddingLeft: 14,
+        position: 'relative',
+        fontStyle: 'italic',
+        opacity: 0.85,
+        margin: '8px 0',
+      }}
+    >
+      <span
+        style={{
+          position: 'absolute',
+          left: 0,
+          top: '0.4em',
+          width: 4,
+          height: 4,
+          background: 'var(--cordovan)',
+        }}
+      />
       {children}
     </blockquote>
   ),
   a: ({ href, children }) => (
-    <a
-      href={href}
-      target="_blank"
-      rel="noopener noreferrer"
-      className="text-red-500 hover:text-red-600 dark:text-red-400 dark:hover:text-red-300 underline"
-    >
+    <a href={href} target="_blank" rel="noopener noreferrer">
       {children}
     </a>
   ),
   code: ({ className, children }) => <CodeBlock className={className}>{children}</CodeBlock>,
-  pre: ({ children }) => <pre className="mb-2 last:mb-0">{children}</pre>,
   table: ({ children }) => (
-    <div className="overflow-x-auto mb-2">
-      <table className="min-w-full border border-zinc-200 dark:border-zinc-700">{children}</table>
+    <div style={{ overflowX: 'auto', margin: '8px 0' }}>
+      <table
+        style={{
+          minWidth: '100%',
+          borderCollapse: 'collapse',
+          font: '500 12px/1.5 var(--font-mono)',
+        }}
+      >
+        {children}
+      </table>
     </div>
   ),
-  thead: ({ children }) => <thead className="bg-zinc-100 dark:bg-zinc-800">{children}</thead>,
-  tbody: ({ children }) => <tbody>{children}</tbody>,
-  tr: ({ children }) => (
-    <tr className="border-b border-zinc-200 dark:border-zinc-700">{children}</tr>
+  thead: ({ children }) => (
+    <thead
+      style={{
+        background: 'var(--plat)',
+        borderBottom: '1px solid var(--rule-strong)',
+      }}
+    >
+      {children}
+    </thead>
   ),
+  tbody: ({ children }) => <tbody>{children}</tbody>,
+  tr: ({ children }) => <tr style={{ borderBottom: '1px solid var(--rule)' }}>{children}</tr>,
   th: ({ children }) => (
-    <th className="px-2 py-1 text-left text-sm font-semibold text-zinc-900 dark:text-zinc-100">
+    <th
+      style={{
+        padding: '6px 10px',
+        textAlign: 'left',
+        textTransform: 'uppercase',
+        letterSpacing: '0.08em',
+        fontSize: 11,
+        fontWeight: 500,
+        opacity: 0.75,
+      }}
+    >
       {children}
     </th>
   ),
-  td: ({ children }) => (
-    <td className="px-2 py-1 text-sm text-zinc-900 dark:text-zinc-400">{children}</td>
+  td: ({ children }) => <td style={{ padding: '6px 10px', verticalAlign: 'top' }}>{children}</td>,
+  strong: ({ children }) => <strong style={{ fontWeight: 600 }}>{children}</strong>,
+  hr: () => (
+    <hr
+      style={{
+        border: 0,
+        height: 1,
+        background: 'var(--rule)',
+        margin: '14px 0',
+      }}
+    />
   ),
-  strong: ({ children }) => (
-    <strong className="font-bold text-zinc-900 dark:text-zinc-100">{children}</strong>
-  ),
-  em: ({ children }) => <em className="italic">{children}</em>,
-  hr: () => <hr className="my-3 border-zinc-200 dark:border-zinc-700" />,
 };
