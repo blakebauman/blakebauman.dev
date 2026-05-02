@@ -1,0 +1,295 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-05-02T03:50:00Z",
+  "title": "Design System: blakebauman.dev",
+  "extensions": {
+    "colorMeta": {
+      "slate-mist": {
+        "role": "neutral",
+        "displayName": "Slate Mist",
+        "canonical": "oklch(91% 0.005 250)",
+        "tonalRamp": [
+          "oklch(15% 0.005 250)",
+          "oklch(28% 0.005 250)",
+          "oklch(42% 0.005 250)",
+          "oklch(56% 0.005 250)",
+          "oklch(70% 0.005 250)",
+          "oklch(82% 0.005 250)",
+          "oklch(91% 0.005 250)",
+          "oklch(97% 0.005 250)"
+        ]
+      },
+      "plat-deep": {
+        "role": "neutral",
+        "displayName": "Plat Deep",
+        "canonical": "oklch(87% 0.005 250)",
+        "tonalRamp": [
+          "oklch(15% 0.005 250)",
+          "oklch(28% 0.005 250)",
+          "oklch(42% 0.005 250)",
+          "oklch(56% 0.005 250)",
+          "oklch(70% 0.005 250)",
+          "oklch(80% 0.005 250)",
+          "oklch(87% 0.005 250)",
+          "oklch(94% 0.005 250)"
+        ]
+      },
+      "inkpress": {
+        "role": "neutral",
+        "displayName": "Inked Espresso",
+        "canonical": "oklch(13% 0.04 30)",
+        "tonalRamp": [
+          "oklch(13% 0.04 30)",
+          "oklch(22% 0.05 30)",
+          "oklch(32% 0.06 30)",
+          "oklch(44% 0.05 30)",
+          "oklch(58% 0.04 30)",
+          "oklch(72% 0.03 30)",
+          "oklch(85% 0.02 30)",
+          "oklch(95% 0.01 30)"
+        ]
+      },
+      "cordovan": {
+        "role": "primary",
+        "displayName": "Cordovan",
+        "canonical": "oklch(38% 0.16 25)",
+        "tonalRamp": [
+          "oklch(15% 0.05 25)",
+          "oklch(25% 0.10 25)",
+          "oklch(38% 0.16 25)",
+          "oklch(50% 0.18 25)",
+          "oklch(60% 0.16 25)",
+          "oklch(72% 0.12 25)",
+          "oklch(84% 0.07 25)",
+          "oklch(95% 0.02 25)"
+        ]
+      },
+      "vermilion": {
+        "role": "secondary",
+        "displayName": "Vermilion",
+        "canonical": "oklch(56% 0.13 15)",
+        "tonalRamp": [
+          "oklch(18% 0.06 15)",
+          "oklch(30% 0.10 15)",
+          "oklch(42% 0.12 15)",
+          "oklch(56% 0.13 15)",
+          "oklch(68% 0.12 15)",
+          "oklch(78% 0.09 15)",
+          "oklch(88% 0.05 15)",
+          "oklch(96% 0.02 15)"
+        ]
+      },
+      "margin-rose": {
+        "role": "tertiary",
+        "displayName": "Margin Rose",
+        "canonical": "oklch(75% 0.06 25)",
+        "tonalRamp": [
+          "oklch(20% 0.04 25)",
+          "oklch(35% 0.05 25)",
+          "oklch(48% 0.06 25)",
+          "oklch(60% 0.07 25)",
+          "oklch(75% 0.06 25)",
+          "oklch(85% 0.04 25)",
+          "oklch(92% 0.03 25)",
+          "oklch(97% 0.01 25)"
+        ]
+      }
+    },
+    "typographyMeta": {
+      "display": {
+        "displayName": "Display",
+        "purpose": "Masthead name only. One per page."
+      },
+      "headline": {
+        "displayName": "Headline",
+        "purpose": "Section h2 (Position, Record, Ask the resume, Colophon). Set tight."
+      },
+      "title": {
+        "displayName": "Title",
+        "purpose": "Listing role names, project entry names, callout titles inside listing blocks."
+      },
+      "body": {
+        "displayName": "Body",
+        "purpose": "Prose copy. IBM Plex Serif, full ink, capped at 60–70ch measure."
+      },
+      "label": {
+        "displayName": "Label",
+        "purpose": "Eyebrows, group labels, recordation stamps, mono metadata. The Plex Mono voice."
+      },
+      "button": {
+        "displayName": "Button",
+        "purpose": "Button labels. Plex Sans Condensed 600, 0.04em letter-spacing."
+      }
+    },
+    "shadows": [],
+    "motion": [
+      {
+        "name": "ease-state",
+        "value": "120ms ease",
+        "purpose": "Default transition for color and border-color state changes (hover, focus). Short, no overshoot."
+      }
+    ],
+    "breakpoints": [
+      { "name": "sm", "value": "700px" },
+      { "name": "md", "value": "760px" },
+      { "name": "lg", "value": "800px" },
+      { "name": "xl", "value": "900px" }
+    ]
+  },
+  "components": [
+    {
+      "name": "Cordovan Button (signature)",
+      "kind": "button",
+      "refersTo": "button-cordovan",
+      "description": "The brand's headline action. Used for 'Talk to me' — the primary outbound action. One per page.",
+      "html": "<button class=\"ds-btn-cordovan\">Talk to me</button>",
+      "css": ".ds-btn-cordovan { background: #890620; color: #E5E7EA; padding: 16px 28px; border: 0; border-radius: 2px; font: 600 14px/1 'IBM Plex Sans Condensed', 'Helvetica Neue', Arial, sans-serif; letter-spacing: 0.05em; text-transform: uppercase; cursor: pointer; transition: background 120ms ease; } .ds-btn-cordovan:hover { background: #B6465F; } .ds-btn-cordovan:focus-visible { outline: 2px solid #890620; outline-offset: 2px; }"
+    },
+    {
+      "name": "Inked Button (default)",
+      "kind": "button",
+      "refersTo": "button-inked",
+      "description": "The default in-page action button. Inkpress fill, transitions to Cordovan on hover.",
+      "html": "<button class=\"ds-btn-inked\">Read the case study</button>",
+      "css": ".ds-btn-inked { background: #2C0703; color: #E5E7EA; padding: 11px 19px; border: 1px solid #2C0703; border-radius: 2px; font: 600 14px/1 'IBM Plex Sans Condensed', 'Helvetica Neue', Arial, sans-serif; letter-spacing: 0.04em; cursor: pointer; transition: background 120ms ease, border-color 120ms ease; } .ds-btn-inked:hover { background: #890620; border-color: #890620; } .ds-btn-inked:focus-visible { outline: 2px solid #890620; outline-offset: 2px; }"
+    },
+    {
+      "name": "Ghost Button (outline)",
+      "kind": "button",
+      "refersTo": "button-ghost",
+      "description": "Lowest-emphasis action. Transparent fill, ink border, fills with ink on hover.",
+      "html": "<button class=\"ds-btn-ghost\">Read more</button>",
+      "css": ".ds-btn-ghost { background: transparent; color: #2C0703; padding: 9px 17px; border: 1px solid #2C0703; border-radius: 2px; font: 600 14px/1 'IBM Plex Sans Condensed', 'Helvetica Neue', Arial, sans-serif; letter-spacing: 0.04em; cursor: pointer; transition: background 120ms ease, color 120ms ease; } .ds-btn-ghost:hover { background: #2C0703; color: #E5E7EA; } .ds-btn-ghost:focus-visible { outline: 2px solid #890620; outline-offset: 2px; }"
+    },
+    {
+      "name": "Listing Block (signature)",
+      "kind": "card",
+      "refersTo": "listing-block",
+      "description": "The brand's primary content motif. Real-estate-listing-derived metadata block: year column on the left, body column on the right.",
+      "html": "<article class=\"ds-listing\"><div class=\"ds-listing-row\"><div class=\"ds-year\">2022–Present</div><div class=\"ds-body\"><div class=\"ds-head\"><span class=\"ds-role\">Principal Technical Architect</span><span class=\"ds-at\">at</span><span class=\"ds-company\">Adobe</span><span class=\"ds-status ds-status-active\">Active</span></div><div class=\"ds-stack\">ADOBE COMMERCE · AEM EDGE DELIVERY SERVICES · B2B</div><p class=\"ds-desc\">Delivered one of the first production AEM Edge Delivery Services plus Adobe Commerce B2B integrations, for a Fortune 500 company.</p></div></div></article>",
+      "css": ".ds-listing { padding: 28px 0; border-top: 1px solid rgba(44, 7, 3, 0.55); font-family: 'IBM Plex Serif', Georgia, serif; color: #2C0703; } .ds-listing-row { display: grid; grid-template-columns: 110px 1fr; gap: 12px 32px; } .ds-year { font: 500 13px/1.4 'IBM Plex Mono', ui-monospace, monospace; letter-spacing: 0.08em; opacity: 0.62; } .ds-body { display: grid; gap: 12px; } .ds-head { display: flex; flex-wrap: wrap; align-items: baseline; gap: 12px 18px; } .ds-role, .ds-company { font: 600 22px/1.25 'IBM Plex Sans Condensed', sans-serif; letter-spacing: -0.005em; } .ds-at { opacity: 0.55; font: 500 16px/1 'IBM Plex Sans Condensed', sans-serif; } .ds-status { font: 500 10.5px/1 'IBM Plex Mono', monospace; letter-spacing: 0.16em; text-transform: uppercase; padding: 4px 8px; border: 1px solid rgba(44, 7, 3, 0.55); opacity: 0.7; } .ds-status-active { border-color: #890620; color: #890620; opacity: 1; } .ds-stack { font: 500 12px/1.5 'IBM Plex Mono', monospace; letter-spacing: 0.06em; opacity: 0.7; } .ds-desc { font: 400 17px/1.6 'IBM Plex Serif', serif; max-width: 70ch; opacity: 0.92; margin: 4px 0 0; }"
+    },
+    {
+      "name": "Enamel Mark (signature)",
+      "kind": "custom",
+      "refersTo": "enamel-mark",
+      "description": "The brand's load-bearing indicator. A 6–8px Cordovan square that recurs across nav, listings, eyebrows, footer.",
+      "html": "<div class=\"ds-enamel-row\"><div class=\"ds-enamel\"><span class=\"ds-mark ds-mark-active\"></span> Cloudflare-platform commerce</div><div class=\"ds-enamel ds-dim\"><span class=\"ds-mark\"></span> Edge AI</div><div class=\"ds-enamel ds-dim\"><span class=\"ds-mark\"></span> Working notes</div></div>",
+      "css": ".ds-enamel-row { display: flex; flex-direction: column; gap: 10px; font-family: 'IBM Plex Sans Condensed', sans-serif; color: #2C0703; } .ds-enamel { display: flex; align-items: center; gap: 10px; font: 500 14px/1 'IBM Plex Sans Condensed', sans-serif; } .ds-enamel.ds-dim { opacity: 0.4; } .ds-mark { width: 8px; height: 8px; background: transparent; border: 1px solid rgba(44, 7, 3, 0.55); flex: 0 0 8px; } .ds-mark-active { background: #890620; border-color: #890620; }"
+    },
+    {
+      "name": "Recordation Stamp",
+      "kind": "chip",
+      "refersTo": "recordation-stamp",
+      "description": "Small mono metadata. Format: 'Rec. YYYY-MM-DD · v0.1', 'Lot 0042', 'Filed 2026-05-01'. Used in footer stamps row.",
+      "html": "<div class=\"ds-stamps-row\"><span class=\"ds-stamp\">Rec. 2026-05-01 · v0.1</span><span class=\"ds-stamp\">Lot 0042</span><span class=\"ds-stamp\">Set in IBM Plex</span></div>",
+      "css": ".ds-stamps-row { display: flex; flex-wrap: wrap; gap: 8px; } .ds-stamp { font: 500 11px/1.5 'IBM Plex Mono', ui-monospace, monospace; letter-spacing: 0.12em; text-transform: uppercase; opacity: 0.6; padding: 4px 10px; border: 1px solid rgba(44, 7, 3, 0.55); color: #2C0703; }"
+    },
+    {
+      "name": "Status Badge",
+      "kind": "chip",
+      "refersTo": "status-badge",
+      "description": "Hairline-bordered mono label. 'Active' uses Cordovan border + Cordovan text. 'Filed' / 'Private' use ink at 70% opacity.",
+      "html": "<div class=\"ds-badges\"><span class=\"ds-status ds-status-active\">Active</span><span class=\"ds-status\">Filed</span><span class=\"ds-status\">Private</span></div>",
+      "css": ".ds-badges { display: flex; gap: 8px; } .ds-status { font: 500 10.5px/1 'IBM Plex Mono', ui-monospace, monospace; letter-spacing: 0.16em; text-transform: uppercase; padding: 4px 8px; border: 1px solid rgba(44, 7, 3, 0.55); color: #2C0703; opacity: 0.7; } .ds-status-active { border-color: #890620; color: #890620; opacity: 1; }"
+    }
+  ],
+  "narrative": {
+    "northStar": "The Listing Office",
+    "overview": "The site is a 1960s real-estate listing office, transposed to a senior engineer's portfolio. The page reads as a platted document with five lettered sections (§ 01 Masthead, § 02 Position, § 03 Record, § 04 Working artifact, § 05 Colophon). Every entry is filed, dated, stamped. Type carries hierarchy; color punctuates. The voice is considered, exact, dry. The system rejects the SaaS / Vercel-template default (cream ground, gradient blob hero, three-card feature grid, Inter-everywhere typography). Cream is substituted for cool monochrome-tint Slate Mist to escape the warm-on-warm archival-editorial reflex. Inter is rejected for IBM Plex Serif as the body face. The signature gesture is the Enamel Mark — a 6–8px Cordovan square that recurs as a load-bearing indicator across the system.",
+    "keyCharacteristics": [
+      "Type carries hierarchy; color punctuates ≤10% of any given screen.",
+      "Single committed light theme. No dark mode. The Slate Mist ground is the brand decision.",
+      "Hairline-only rounding: 0px (display, marks, masthead) and 2px (buttons, tinted surfaces). No SaaS-default 8–12px radii.",
+      "Real-estate-listing register: listing block, plat rule, enamel mark, recordation stamp are the four signature motifs.",
+      "IBM Plex three-voice: Sans Condensed (display), Serif (body, anchoring the editorial register), Mono (eyebrows, metadata, code).",
+      "Motion budget: state transitions only (120ms ease-out). No scroll choreography, no parallax, no autoplay, no 'wow on load.'"
+    ],
+    "rules": [
+      {
+        "name": "The One Voice Rule",
+        "body": "Cordovan is the single committed accent. It carries CTAs, links, the Enamel Mark, and current-state indicators. No second saturated accent enters the system. Vermilion is its hover, not a peer.",
+        "section": "colors"
+      },
+      {
+        "name": "The Cool-Ground Rule",
+        "body": "The page ground is cool monochrome-tint, never cream or any cream rebrand (vellum, kami, bone, ivory, eggshell, oatmeal). The cream-ground default is the editorial-archival reflex this brand explicitly rejects.",
+        "section": "colors"
+      },
+      {
+        "name": "The Punctuation Rule",
+        "body": "Color punctuates ≤10% of pixel surface. If color reaches 30%+, something is wrong with the typesetting. Restraint as competence signal.",
+        "section": "colors"
+      },
+      {
+        "name": "The Warm-Cool Inversion Rule",
+        "body": "Warm-saturated accents sit on a cool-neutral ground. Never invert this — warm ground with warm accents collapses into the archival-editorial default.",
+        "section": "colors"
+      },
+      {
+        "name": "The Body-Serif Rule",
+        "body": "Body sets in Plex Serif, never Plex Sans. The serif anchor pulls the site out of the saturated 'developer-who-picked-Inter' lane. This is the single most load-bearing typographic decision in the system.",
+        "section": "typography"
+      },
+      {
+        "name": "The Mono-Reserved Rule",
+        "body": "Plex Mono is for metadata, eyebrows, recordation stamps, and code only. Mono-as-body is on the watch list ('developer who just discovered IBM Plex Mono').",
+        "section": "typography"
+      },
+      {
+        "name": "The No-Em-Dash Rule",
+        "body": "Em dashes are not used in copy. Year ranges use en dashes. Sentence interruptions use commas, colons, semicolons, parentheses. Also not '--'.",
+        "section": "typography"
+      },
+      {
+        "name": "The Italic-One-Word Rule",
+        "body": "Italic accent is one word per heading at most; usually zero. Italic is for actual emphasis, not decoration.",
+        "section": "typography"
+      },
+      {
+        "name": "The Tabular-Numerals Rule",
+        "body": "Numerals are tabular in tables, listings, and metadata; proportional in prose.",
+        "section": "typography"
+      },
+      {
+        "name": "The Flat-By-Default Rule",
+        "body": "Surfaces are flat at rest. No box-shadow. The chat frame and recognition block lift off ground via Plat Deep tint, not via shadow.",
+        "section": "elevation"
+      },
+      {
+        "name": "The Plat-Rule Rule",
+        "body": "Horizontal rules are the divider vocabulary. They use rgba ink at 18% (rule) for fine subdivisions and 55% (rule-strong) for major section borders. Never thicker than 1px. Never in saturated color.",
+        "section": "elevation"
+      }
+    ],
+    "dos": [
+      "Do carry the Enamel Mark consistently as a load-bearing indicator. It marks meaning (current, primary, latest), never decoration.",
+      "Do use Plex Serif for body. The serif is the anchor that pulls the site out of the 'developer who picked Inter' lane.",
+      "Do name systems precisely in copy. 'A queue' becomes 'a Cloudflare Queue with a 30-second visibility window.' Specificity is the dominant rhetorical move.",
+      "Do use full ink for body text. Opacity-softened body (e.g., body at 65%) is on the watch list.",
+      "Do keep year ranges in en dashes (2022–Present), not em dashes or hyphens.",
+      "Do lift surfaces via Plat Deep tint, never via box-shadow.",
+      "Do cap body measure at 60–70ch.",
+      "Do use tabular numerals in listings and tables; proportional in prose.",
+      "Do verify every claim names the system, the constraint, or the number that backs it up."
+    ],
+    "donts": [
+      "Don't use cream or any cream rebrand (vellum, kami, bone, ivory, eggshell, oatmeal, parchment, washi, biscuit) as the page ground. The Slate Mist ground is committed.",
+      "Don't use Inter, Helvetica Neue, or any neutral grotesque as the primary face. IBM Plex is the brand commitment.",
+      "Don't add gradient backgrounds, glassmorphism, blur effects, or background-clip: text gradient text. All on the absolute ban list.",
+      "Don't use border-left or border-right greater than 1px as a colored stripe accent. Side-stripe borders are an absolute ban.",
+      "Don't add the hero-metric template (big number + small label + supporting stats + gradient accent). SaaS cliché.",
+      "Don't stack identical card grids. Three identical icon+heading+text cards in a row is a watch-list pattern.",
+      "Don't ship dark mode without a designed dark variant. Single-mode commitment is the brand decision.",
+      "Don't add scroll choreography, parallax, autoplay video, or 'wow on load' animations.",
+      "Don't use exclamation points outside of quoted speech.",
+      "Don't use em dashes in copy.",
+      "Don't use marketing adjectives: artisanal, crafted, premium, curated, beloved, cozy, warm, inviting, thoughtfully, delightfully, lovingly, uncompromising, bespoke, leveraging, passionate.",
+      "Don't invent 'Tools' or 'Skills' walls. Logo grids of every tool are an explicit anti-reference.",
+      "Don't add a floating 'Talk to me' FAB. The colophon CTA + masthead email is sufficient.",
+      "Don't soften the 'first production' claim back to 'the first production.' The line is 'one of the first production AEM Edge Delivery Services plus Adobe Commerce B2B integrations.' Specificity is honesty.",
+      "Don't add sticky bottom CTAs, intercom-style chat bubbles, or banner cookie consents that violate the document register.",
+      "Don't rename the six DESIGN.md sections."
+    ]
+  }
+}

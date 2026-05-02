@@ -1,0 +1,605 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<!-- stardust:provenance
+  generated_by: prototype
+  date: 2026-05-01
+  variant: b
+  variant_direction: "catalog-compressed — dense real-estate-catalog opening, tighter rhythm, year-as-left-rail listings, more plat rules"
+  imagery_mode: placeholder
+  synthesized_inputs:
+    - resume entries — pulled from app/chat/resume.json (existing site data), reformatted into the catalog-listing motif
+    - position copy — adjusted from briefing to honestly reflect Adobe day job + Cloudflare sandbox split
+    - subhead — uses real title "Principal Technical Architect"
+    - "Talk to me" CTA destination — defaulted to mailto:blake.bauman@gmail.com (briefing TBD)
+    - chatbot framing copy used verbatim from briefing
+    - colophon body, recordation stamps, eyebrow labels — synthesized on-brand per brand-profile.json
+  note: density choices follow the briefing's "real-estate listing" register at full strength.
+-->
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Blake Bauman · Principal Technical Architect</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans+Condensed:wght@400;500;600;700&family=IBM+Plex+Serif:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --plat: #E5E7EA;
+    --plat-deep: #D9DCE0;
+    --inkpress: #2C0703;
+    --cordovan: #890620;
+    --vermilion: #B6465F;
+    --margin: #DA9F93;
+    --rule: rgba(44, 7, 3, 0.18);
+    --rule-strong: rgba(44, 7, 3, 0.55);
+    --rule-faint: rgba(44, 7, 3, 0.10);
+
+    --serif: "IBM Plex Serif", Georgia, serif;
+    --cond: "IBM Plex Sans Condensed", "Helvetica Neue", Arial, sans-serif;
+    --mono: "IBM Plex Mono", ui-monospace, "SF Mono", Menlo, monospace;
+
+    --max-w: 1200px;
+    --gutter: clamp(20px, 3vw, 40px);
+    --section-pad-y: clamp(48px, 6vw, 88px);
+
+    /* Type scale (variant B — tighter) */
+    --display: clamp(48px, 6.6vw, 96px);
+    --h1: clamp(36px, 4.4vw, 56px);
+    --h2: clamp(26px, 3vw, 38px);
+    --h3: clamp(18px, 2vw, 22px);
+    --body-lg: 17px;
+    --body: 15.5px;
+    --body-sm: 13.5px;
+    --eyebrow: 11px;
+    --micro: 10.5px;
+  }
+
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  html, body { margin: 0; padding: 0; }
+  body {
+    background: var(--plat);
+    color: var(--inkpress);
+    font: 400 var(--body)/1.55 var(--serif);
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+
+  ::selection { background: var(--cordovan); color: var(--plat); }
+
+  a { color: var(--cordovan); text-decoration: none; border-bottom: 1px solid var(--cordovan); transition: color 120ms ease, border-color 120ms ease; }
+  a:hover { color: var(--vermilion); border-color: var(--vermilion); }
+  a:focus-visible { outline: 2px solid var(--cordovan); outline-offset: 2px; }
+
+  hr { border: 0; height: 1px; background: var(--rule-strong); margin: 0; }
+
+  /* Sticky nav (catalog header) */
+  .nav {
+    position: sticky; top: 0; z-index: 20;
+    background: var(--plat);
+    border-bottom: 1px solid var(--rule-strong);
+  }
+  .nav-inner {
+    max-width: var(--max-w); margin: 0 auto;
+    padding: 12px var(--gutter);
+    display: flex; align-items: center; justify-content: space-between;
+    gap: 24px; flex-wrap: wrap;
+  }
+  .nav-mark {
+    display: flex; align-items: center; gap: 10px;
+    font: 700 12px/1 var(--cond); letter-spacing: 0.08em; text-transform: uppercase;
+    color: var(--inkpress);
+  }
+  .nav-mark .dot { width: 6px; height: 6px; background: var(--cordovan); }
+  .nav-mark .ver { font-family: var(--mono); font-weight: 500; opacity: 0.55; padding-left: 10px; border-left: 1px solid var(--rule-strong); margin-left: 6px; }
+  .nav-links {
+    display: flex; flex-wrap: wrap; gap: 22px;
+    font: 500 10px/1 var(--mono); letter-spacing: 0.18em; text-transform: uppercase;
+  }
+  .nav-links a { color: var(--inkpress); border: none; opacity: 0.62; display: flex; align-items: center; gap: 7px; }
+  .nav-links a:hover { opacity: 1; }
+  .nav-links a .mark { width: 5px; height: 5px; background: transparent; border: 1px solid var(--rule-strong); display: inline-block; }
+  .nav-links a.current { opacity: 1; }
+  .nav-links a.current .mark { background: var(--cordovan); border-color: var(--cordovan); }
+
+  main { max-width: var(--max-w); margin: 0 auto; padding: 0 var(--gutter); }
+
+  /* Catalog masthead — tighter, document-shaped */
+  .masthead {
+    padding: clamp(40px, 5vw, 72px) 0 clamp(40px, 5vw, 72px);
+    border-bottom: 1px solid var(--rule-strong);
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 28px;
+  }
+  @media (min-width: 760px) {
+    .masthead { grid-template-columns: 1.4fr 1fr; gap: 56px; }
+  }
+  .masthead .doc-stamp {
+    display: flex; flex-wrap: wrap; gap: 10px;
+    font: 500 var(--micro)/1.4 var(--mono); letter-spacing: 0.16em; text-transform: uppercase;
+    opacity: 0.65; margin-bottom: 24px;
+  }
+  .masthead .doc-stamp span { padding: 3px 8px; border: 1px solid var(--rule-strong); }
+  .masthead .doc-stamp span.mark { background: var(--cordovan); color: var(--plat); border-color: var(--cordovan); }
+  .masthead .name {
+    font: 700 var(--display)/0.95 var(--cond);
+    letter-spacing: -0.02em;
+    margin: 0;
+  }
+  .masthead .subhead {
+    font: 400 clamp(17px, 1.7vw, 19px)/1.5 var(--serif);
+    margin: 18px 0 0; max-width: 36ch;
+  }
+  .masthead-meta {
+    border: 1px solid var(--rule-strong);
+    padding: 18px 22px;
+    display: grid; grid-template-columns: 95px 1fr; gap: 6px 18px;
+    font: 500 11.5px/1.5 var(--mono); letter-spacing: 0.06em;
+    align-self: start;
+  }
+  .masthead-meta dt { text-transform: uppercase; opacity: 0.55; margin: 0; }
+  .masthead-meta dd { margin: 0; color: var(--inkpress); }
+  .masthead-meta dd a { color: var(--inkpress); border-bottom: 1px solid var(--rule-strong); }
+  .masthead-meta dd a:hover { color: var(--cordovan); border-color: var(--cordovan); }
+
+  .eyebrow {
+    display: flex; align-items: center; gap: 10px;
+    font: 500 var(--eyebrow)/1 var(--mono); letter-spacing: 0.2em; text-transform: uppercase;
+    opacity: 0.62; margin-bottom: 18px;
+  }
+  .eyebrow .mark { width: 6px; height: 6px; background: var(--cordovan); display: inline-block; }
+  .eyebrow .num { opacity: 0.85; }
+
+  /* Position — tighter, two-column when wide */
+  .position { padding: var(--section-pad-y) 0; border-bottom: 1px solid var(--rule-strong); }
+  .position-grid {
+    display: grid; gap: 28px; grid-template-columns: 1fr;
+  }
+  @media (min-width: 800px) {
+    .position-grid { grid-template-columns: 0.8fr 1.2fr; gap: 56px; }
+  }
+  .position .label { display: flex; align-items: center; gap: 10px; font: 500 var(--eyebrow)/1 var(--mono); letter-spacing: 0.2em; text-transform: uppercase; opacity: 0.62; }
+  .position .label .mark { width: 7px; height: 7px; background: var(--cordovan); display: inline-block; }
+  .position .lede {
+    font: 400 17px/1.55 var(--serif);
+    margin: 0; max-width: 65ch;
+  }
+  .position .footnote {
+    font: 500 var(--micro)/1.5 var(--mono); letter-spacing: 0.1em;
+    opacity: 0.62; margin-top: 22px; max-width: 70ch;
+    padding-top: 18px; border-top: 1px solid var(--rule);
+  }
+
+  /* Record — catalog density, year as left rail */
+  .record { padding: var(--section-pad-y) 0; border-bottom: 1px solid var(--rule-strong); }
+  .record-head {
+    display: flex; flex-wrap: wrap; align-items: baseline; gap: 16px 28px;
+    margin-bottom: 32px;
+  }
+  .record h2 {
+    font: 600 var(--h2)/1.05 var(--cond); letter-spacing: -0.012em;
+    margin: 0;
+  }
+  .record-counts {
+    font: 500 var(--micro)/1 var(--mono); letter-spacing: 0.18em; text-transform: uppercase;
+    opacity: 0.62;
+  }
+
+  .group-strip {
+    display: flex; align-items: center; gap: 12px;
+    margin: 36px 0 14px;
+    font: 500 var(--eyebrow)/1 var(--mono); letter-spacing: 0.2em; text-transform: uppercase;
+    opacity: 0.6;
+  }
+  .group-strip .mark { width: 6px; height: 6px; background: var(--cordovan); }
+  .group-strip .mark.dim { background: transparent; border: 1px solid var(--rule-strong); }
+  .group-strip .count { padding-left: 12px; border-left: 1px solid var(--rule); opacity: 0.8; }
+
+  .ledger { border-top: 1px solid var(--rule-strong); }
+  .ledger-row {
+    display: grid;
+    grid-template-columns: 100px 1fr 110px;
+    gap: 16px 24px;
+    padding: 18px 0;
+    border-bottom: 1px solid var(--rule);
+    align-items: baseline;
+  }
+  .ledger-row:hover { background: rgba(44, 7, 3, 0.02); }
+  .ledger-row .y {
+    font: 500 12px/1.4 var(--mono); letter-spacing: 0.08em;
+    opacity: 0.62;
+    align-self: start;
+  }
+  .ledger-row .body { display: grid; gap: 6px; }
+  .ledger-row .head {
+    display: flex; flex-wrap: wrap; align-items: baseline; gap: 8px 14px;
+  }
+  .ledger-row .role {
+    font: 600 18px/1.25 var(--cond); letter-spacing: -0.005em;
+  }
+  .ledger-row .at { opacity: 0.5; font-size: 14px; font-family: var(--mono); letter-spacing: 0.08em; text-transform: uppercase; }
+  .ledger-row .company {
+    font: 600 18px/1.25 var(--cond); letter-spacing: -0.005em;
+  }
+  .ledger-row .stack {
+    font: 500 11.5px/1.5 var(--mono); letter-spacing: 0.06em;
+    opacity: 0.7;
+  }
+  .ledger-row .desc {
+    font: 400 14.5px/1.55 var(--serif);
+    max-width: 70ch; opacity: 0.92; margin: 4px 0 0;
+  }
+  .ledger-row .status {
+    justify-self: end; align-self: start;
+    font: 500 10px/1 var(--mono); letter-spacing: 0.16em; text-transform: uppercase;
+    padding: 4px 7px; border: 1px solid var(--rule-strong);
+    opacity: 0.7;
+  }
+  .ledger-row .status.active { border-color: var(--cordovan); color: var(--cordovan); opacity: 1; }
+
+  /* Recognition mini-listing */
+  .rec-block {
+    margin-top: 36px;
+    padding: 22px 26px;
+    background: var(--plat-deep);
+    display: grid; grid-template-columns: 1fr; gap: 8px;
+  }
+  @media (min-width: 700px) { .rec-block { grid-template-columns: 100px 1fr; gap: 8px 28px; } }
+  .rec-block .stamp {
+    font: 500 var(--micro)/1.4 var(--mono); letter-spacing: 0.16em; text-transform: uppercase;
+    opacity: 0.62;
+  }
+  .rec-block .title {
+    font: 600 17px/1.3 var(--cond); margin: 0 0 4px;
+  }
+  .rec-block .desc {
+    font: 400 var(--body-sm)/1.55 var(--serif);
+    margin: 0; opacity: 0.88; max-width: 78ch;
+  }
+
+  /* Artifact (chatbot) — compact frame */
+  .artifact { padding: var(--section-pad-y) 0; border-bottom: 1px solid var(--rule-strong); }
+  .artifact-head {
+    display: flex; flex-wrap: wrap; align-items: baseline; gap: 16px 28px; margin-bottom: 22px;
+  }
+  .artifact h2 {
+    font: 600 var(--h2)/1.05 var(--cond); letter-spacing: -0.012em; margin: 0;
+  }
+  .artifact .frame-text {
+    font: 400 16px/1.55 var(--serif);
+    max-width: 65ch; margin: 0 0 26px; opacity: 0.92;
+  }
+  .chat-frame {
+    background: var(--plat-deep);
+    padding: 24px 26px;
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 22px;
+  }
+  @media (min-width: 800px) {
+    .chat-frame { grid-template-columns: 1.5fr 1fr; gap: 32px; }
+  }
+  .chat-stream {
+    display: grid; gap: 16px;
+    min-height: 180px;
+  }
+  .chat-msg .who {
+    font: 500 var(--micro)/1 var(--mono); letter-spacing: 0.18em; text-transform: uppercase;
+    opacity: 0.6; margin-bottom: 6px;
+    display: flex; align-items: center; gap: 8px;
+  }
+  .chat-msg .who .mark { width: 5px; height: 5px; background: var(--cordovan); }
+  .chat-msg.you .who .mark { background: transparent; border: 1px solid var(--rule-strong); }
+  .chat-msg .text {
+    font: 400 14.5px/1.55 var(--serif); max-width: 60ch;
+  }
+  .chat-msg .text em { font-style: italic; }
+
+  .chat-side { display: grid; gap: 18px; align-content: start; }
+  .chat-input {
+    display: flex; align-items: stretch;
+    border: 1px solid var(--rule-strong);
+    background: var(--plat);
+  }
+  .chat-input input {
+    flex: 1; border: 0; background: transparent;
+    padding: 12px 14px;
+    font: 400 14px/1.4 var(--serif); color: var(--inkpress);
+    min-width: 0;
+  }
+  .chat-input input::placeholder { color: var(--inkpress); opacity: 0.42; }
+  .chat-input input:focus { outline: 0; }
+  .chat-input button {
+    border: 0; background: var(--cordovan); color: var(--plat);
+    padding: 0 16px;
+    font: 600 12px/1 var(--cond); letter-spacing: 0.05em; text-transform: uppercase;
+    cursor: pointer;
+  }
+  .chat-input button:hover { background: var(--vermilion); }
+  .chat-spec {
+    font: 500 var(--micro)/1.55 var(--mono); letter-spacing: 0.1em;
+    opacity: 0.62;
+    border: 1px solid var(--rule);
+    padding: 14px 16px;
+    display: grid; gap: 4px;
+  }
+  .chat-spec b { color: var(--inkpress); opacity: 0.85; font-weight: 500; }
+
+  /* Colophon */
+  .colophon { padding: var(--section-pad-y) 0; border-bottom: 1px solid var(--rule-strong); }
+  .colophon-head {
+    display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 16px;
+    margin-bottom: 22px;
+  }
+  .colophon h2 { font: 600 var(--h2)/1.05 var(--cond); letter-spacing: -0.012em; margin: 0; }
+  .colophon-grid {
+    display: grid; grid-template-columns: 1fr; gap: 28px;
+  }
+  @media (min-width: 760px) {
+    .colophon-grid { grid-template-columns: 1.6fr 1fr; gap: 56px; align-items: end; }
+  }
+  .colophon p {
+    font: 400 16px/1.55 var(--serif); margin: 0; max-width: 60ch;
+  }
+  .colophon p + p { margin-top: 12px; }
+  .colophon p em { font-style: italic; }
+  .colophon .cta a.btn {
+    display: inline-block;
+    background: var(--cordovan); color: var(--plat);
+    padding: 13px 22px;
+    font: 600 13px/1 var(--cond); letter-spacing: 0.05em; text-transform: uppercase;
+    border: 0; border-bottom: 0;
+    transition: background 120ms ease;
+  }
+  .colophon .cta a.btn:hover { background: var(--vermilion); }
+  .colophon .cta .secondary {
+    display: block; margin-top: 14px;
+    font: 500 var(--micro)/1.5 var(--mono); letter-spacing: 0.1em;
+    opacity: 0.7;
+  }
+  .colophon .cta .secondary a { color: var(--inkpress); border-bottom-color: var(--rule-strong); }
+  .colophon .cta .secondary a:hover { color: var(--cordovan); border-color: var(--cordovan); }
+
+  footer.stamps {
+    padding: 24px 0 56px;
+  }
+  .stamps-row {
+    display: flex; flex-wrap: wrap; gap: 6px;
+    font: 500 var(--micro)/1.5 var(--mono); letter-spacing: 0.12em; text-transform: uppercase;
+    opacity: 0.6;
+  }
+  .stamps-row span {
+    padding: 3px 9px;
+    border: 1px solid var(--rule-strong);
+  }
+
+  .talk-fab {
+    position: fixed; bottom: 20px; right: 20px;
+    background: var(--cordovan); color: var(--plat);
+    padding: 10px 16px;
+    font: 600 11px/1 var(--cond); letter-spacing: 0.1em; text-transform: uppercase;
+    z-index: 25; transition: background 120ms ease;
+    border-bottom: 0;
+  }
+  .talk-fab:hover { background: var(--vermilion); }
+  @media print { .talk-fab, .nav { display: none; } }
+
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after { transition: none !important; animation: none !important; }
+    html { scroll-behavior: auto; }
+  }
+</style>
+</head>
+<body>
+
+<nav class="nav" aria-label="Primary">
+  <div class="nav-inner">
+    <a class="nav-mark" href="#top" style="border-bottom: 0;">
+      <span class="dot"></span> BLAKE BAUMAN <span class="ver">REC. 2026-05 · v0.1</span>
+    </a>
+    <div class="nav-links">
+      <a class="current" href="#position"><span class="mark"></span> § 02 Position</a>
+      <a href="#record"><span class="mark"></span> § 03 Record</a>
+      <a href="#artifact"><span class="mark"></span> § 04 Artifact</a>
+      <a href="#colophon"><span class="mark"></span> § 05 Colophon</a>
+    </div>
+  </div>
+</nav>
+
+<main>
+
+<header class="masthead" id="top">
+  <div>
+    <div class="doc-stamp">
+      <span class="mark">§ 01 · Masthead</span>
+      <span>Filed 2026-05-01</span>
+      <span>Lot 0001</span>
+      <span>Index · Active</span>
+    </div>
+    <h1 class="name">Blake Bauman</h1>
+    <p class="subhead">Principal Technical Architect. Enterprise commerce on Adobe Commerce and AEM Edge Delivery Services. Edge-platform work on Cloudflare.</p>
+  </div>
+  <dl class="masthead-meta">
+    <dt>Based</dt><dd>Remote · Arizona</dd>
+    <dt>Role</dt><dd>Principal Technical Architect</dd>
+    <dt>Tenure</dt><dd>8+ years, enterprise commerce</dd>
+    <dt>Open to</dt><dd>Technical product, founding teams, architects who still code</dd>
+    <dt>Email</dt><dd><a href="mailto:blake.bauman@gmail.com">blake.bauman@gmail.com</a></dd>
+    <dt>Github</dt><dd><a href="https://github.com/blakebauman">blakebauman</a></dd>
+    <dt>LinkedIn</dt><dd><a href="https://www.linkedin.com/in/blakebauman">in/blakebauman</a></dd>
+    <dt>Bluesky</dt><dd><a href="https://bsky.app/profile/blakebauman.dev">@blakebauman.dev</a></dd>
+  </dl>
+</header>
+
+<section class="position" id="position" aria-labelledby="position-label">
+  <h2 id="position-label" style="position:absolute;left:-9999px;">Position</h2>
+  <div class="position-grid">
+    <div class="label"><span class="mark"></span> § 02 · Position</div>
+    <div>
+      <p class="lede">I'm a Principal Technical Architect at Adobe. For Fortune 500 clients I architect and ship enterprise commerce on Adobe Commerce and AEM Edge Delivery Services, including the first production EDS plus Commerce B2B integration. Outside client work I build on the Cloudflare edge platform: Workers, Durable Objects, Queues, Vectorize, R2, KV. The list below is the live record. The chatbot below it answers questions about that record on the same edge it was built on.</p>
+      <p class="footnote">8+ YEARS · ENTERPRISE COMMERCE · EDGE PLATFORMS · MULTI-AGENT AI WORKFLOWS · ZERO-DOWNTIME MIGRATIONS · COMMERCE FAILURE MODES &amp; HOW TO FIX THEM.</p>
+    </div>
+  </div>
+</section>
+
+<section class="record" id="record" aria-labelledby="record-label">
+  <div class="record-head">
+    <div class="eyebrow"><span class="mark"></span> <span class="num">§ 03</span> · Record</div>
+    <h2 id="record-label">Record</h2>
+    <span class="record-counts">3 roles · 4 working artifacts · 1 recognition</span>
+  </div>
+
+  <div class="group-strip">
+    <span class="mark"></span> Roles <span class="count">3 entries</span>
+  </div>
+  <div class="ledger">
+    <div class="ledger-row">
+      <div class="y">2022 — present</div>
+      <div class="body">
+        <div class="head"><span class="role">Principal Technical Architect</span><span class="at">at</span><span class="company">Adobe</span></div>
+        <div class="stack">ADOBE COMMERCE · AEM EDGE DELIVERY SERVICES · B2B · ENTERPRISE</div>
+        <p class="desc">Delivered the first production AEM Edge Delivery Services plus Adobe Commerce B2B integration for a Fortune 500 client. Ran a webinar on Commerce with Edge Delivery that became a reference for Adobe's enterprise teams.</p>
+      </div>
+      <div class="status active">Active</div>
+    </div>
+    <div class="ledger-row">
+      <div class="y">2019 — 2022</div>
+      <div class="body">
+        <div class="head"><span class="role">Technical Architect</span><span class="at">at</span><span class="company">Adobe</span></div>
+        <div class="stack">ADOBE COMMERCE · ON-PREM TO CLOUD · ARCHITECTURAL REVIEW</div>
+        <p class="desc">Led migration of a global beverage company from Adobe Commerce on-prem to Cloud with zero downtime. Built the architectural review process for enterprise Commerce implementations.</p>
+      </div>
+      <div class="status">Filed</div>
+    </div>
+    <div class="ledger-row">
+      <div class="y">2017 — 2019</div>
+      <div class="body">
+        <div class="head"><span class="role">Technical Architect</span><span class="at">at</span><span class="company">Lyons Consulting Group (Capgemini)</span></div>
+        <div class="stack">ADOBE COMMERCE · ADOBE SCENE7 · VISUAL MERCHANDISING</div>
+        <p class="desc">Led design and implementation of Adobe Commerce for a leading activewear company. Spearheaded Adobe Scene7 integration to optimize product imagery and site performance.</p>
+      </div>
+      <div class="status">Filed</div>
+    </div>
+  </div>
+
+  <div class="group-strip">
+    <span class="mark dim"></span> Working artifacts &middot; personal <span class="count">4 entries</span>
+  </div>
+  <div class="ledger">
+    <div class="ledger-row">
+      <div class="y">2024 — present</div>
+      <div class="body">
+        <div class="head"><span class="role">ecommerce-intent-reasoning-engine</span></div>
+        <div class="stack">PYTHON · CLAUDE API · FASTAPI · POSTGRESQL</div>
+        <p class="desc">Reasoning engine for eCommerce intent classification with LLM-powered conflict resolution. Solves ambiguous customer intent when multiple signals conflict.</p>
+      </div>
+      <div class="status active">Active</div>
+    </div>
+    <div class="ledger-row">
+      <div class="y">2024</div>
+      <div class="body">
+        <div class="head"><span class="role">fleet-workspace</span></div>
+        <div class="stack">TYPESCRIPT · CLOUDFLARE WORKERS · DURABLE OBJECTS · WEBSOCKETS</div>
+        <p class="desc">Hierarchical Durable Objects demo with infinite nesting and real-time WebSocket communication. Explores scalable real-time collaboration patterns at the edge.</p>
+      </div>
+      <div class="status">Filed</div>
+    </div>
+    <div class="ledger-row">
+      <div class="y">2024</div>
+      <div class="body">
+        <div class="head"><span class="role">adventure-agent</span></div>
+        <div class="stack">PYTHON · LANGCHAIN · LANGGRAPH · LANGSMITH</div>
+        <p class="desc">Multi-agent AI system for Arizona adventure planning with 17+ specialized agents. Orchestrated multi-agent workflows for complex, multi-step planning.</p>
+      </div>
+      <div class="status">Filed</div>
+    </div>
+    <div class="ledger-row">
+      <div class="y">2023</div>
+      <div class="body">
+        <div class="head"><span class="role">CaveAcoustics</span></div>
+        <div class="stack">C++ · JUCE · CMAKE · DSP</div>
+        <p class="desc">Suite of VST audio plugins for ambient music producers: delay, reverb, chorus, granular synthesis. Built during a sabbatical exploring DSP and real-time audio in C++.</p>
+      </div>
+      <div class="status">Filed</div>
+    </div>
+  </div>
+
+  <div class="group-strip">
+    <span class="mark dim"></span> Recognition <span class="count">1 entry</span>
+  </div>
+  <div class="rec-block">
+    <div class="stamp">2025 · 2nd place</div>
+    <div>
+      <p class="title">Adobe AI Summit &amp; Hackathon</p>
+      <p class="desc">A content-generation plugin for Adobe DA.live that uses Adobe Commerce catalog data, a multi-agent LangChain workflow of domain agents, and LLMs to produce AEM-ready product content. Context-aware generation, real-time WebSocket streaming, batch page updates, Adobe Firefly integration.</p>
+    </div>
+  </div>
+</section>
+
+<section class="artifact" id="artifact" aria-labelledby="artifact-label">
+  <div class="artifact-head">
+    <div class="eyebrow"><span class="mark"></span> <span class="num">§ 04</span> · Working artifact</div>
+    <h2 id="artifact-label">Ask the resume</h2>
+  </div>
+  <p class="frame-text">This runs on the same edge as the site, against a 768-dimensional vector index of the record above. It will tell you what I've worked on and what I haven't.</p>
+  <div class="chat-frame" role="region" aria-label="Resume chatbot demonstration">
+    <div class="chat-stream">
+      <div class="chat-msg you">
+        <div class="who"><span class="mark"></span> You</div>
+        <div class="text">What did Blake do at Adobe with Edge Delivery Services?</div>
+      </div>
+      <div class="chat-msg blake">
+        <div class="who"><span class="mark"></span> Blake (the index)</div>
+        <div class="text">He delivered the first production AEM Edge Delivery Services plus Adobe Commerce B2B integration for a Fortune 500 client. Then ran a webinar on the architecture that became a reference for Adobe's enterprise teams. <em>Source: Record · Adobe · 2022—Present.</em></div>
+      </div>
+    </div>
+    <div class="chat-side">
+      <form class="chat-input" onsubmit="event.preventDefault();" aria-label="Ask the resume">
+        <label for="chat-input-b" style="position:absolute;left:-9999px;">Your question</label>
+        <input id="chat-input-b" type="text" placeholder="What did Blake do at <company>?" autocomplete="off">
+        <button type="submit">Ask</button>
+      </form>
+      <div class="chat-spec">
+        <div><b>Workers AI</b> · @cf/baai/bge-base-en-v1.5</div>
+        <div><b>Vectorize</b> · 768d index</div>
+        <div><b>Rate-limit</b> · 20 req / min, edge-enforced</div>
+        <div><b>Fallback</b> · KV when index is unreachable</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="colophon" id="colophon" aria-labelledby="colophon-label">
+  <div class="colophon-head">
+    <div class="eyebrow"><span class="mark"></span> <span class="num">§ 05</span> · Colophon</div>
+    <h2 id="colophon-label" style="position:absolute;left:-9999px;">Colophon</h2>
+  </div>
+  <div class="colophon-grid">
+    <div>
+      <p>Set in IBM Plex. Cordovan accents on Slate Mist ground.</p>
+      <p>The site is the artifact: edge-rendered on Cloudflare Workers, vectorized at <em>768d</em>, rate-limited at the edge, semantic-marked-up, no autoplay, no third-party trackers.</p>
+    </div>
+    <div class="cta">
+      <a class="btn" href="mailto:blake.bauman@gmail.com">Talk to me</a>
+      <span class="secondary">Or find me on <a href="https://github.com/blakebauman">github</a>, <a href="https://www.linkedin.com/in/blakebauman">linkedin</a>, <a href="https://bsky.app/profile/blakebauman.dev">bluesky</a>.</span>
+    </div>
+  </div>
+</section>
+
+<footer class="stamps">
+  <div class="stamps-row">
+    <span>Rec. 2026-05-01 · v0.1</span>
+    <span>Lot 0042 · Vectorize-768</span>
+    <span>Set in IBM Plex</span>
+    <span>Edge-rendered</span>
+    <span>© Blake Bauman</span>
+  </div>
+</footer>
+
+</main>
+
+<a class="talk-fab" href="mailto:blake.bauman@gmail.com" aria-label="Email Blake">Talk to me</a>
+
+</body>
+</html>
