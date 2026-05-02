@@ -31,7 +31,8 @@ interface ProjectEntry {
 }
 
 export function Resume({ chatEnabled }: ResumeProps) {
-  const projects = resumeData.projects as ProjectEntry[];
+  // Filter to public projects only for display; private projects remain in JSON for vectorize/chatbot
+  const projects = (resumeData.projects as ProjectEntry[]).filter(p => p.visibility !== 'private');
   const todayYear = new Date().getFullYear();
   const currentMonth = new Date().toLocaleString('en-US', { month: '2-digit', year: 'numeric' });
   // currentMonth -> "05/2026"; reformat to YYYY-MM
@@ -158,9 +159,6 @@ export function Resume({ chatEnabled }: ResumeProps) {
                     <div className="body">
                       <div className="head">
                         <span className="role">{project.name}</span>
-                        {project.visibility === 'private' && (
-                          <span className="status">Private</span>
-                        )}
                         <span className={`status${isActive ? ' active' : ''}`}>
                           {project.status ?? 'Filed'}
                         </span>
