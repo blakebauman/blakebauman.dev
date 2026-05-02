@@ -12,8 +12,8 @@
   "website": "https://blakebauman.dev",
   "bluesky": "https://bsky.app/profile/blakebauman.dev",
   "summary": [
-    "Principal Technical Architect with 8+ years building enterprise e-commerce systems. At Adobe, I've architected and delivered production Adobe Commerce implementations for Fortune 500 companies — from complex B2B integrations to zero-downtime cloud migrations. I know how Commerce systems fail, how to migrate them, and how to build teams around them.",
-    "Outside client work, I build on Cloudflare's edge platform — Workers, D1, Durable Objects, Workflows — and work with LLMs and AI agents. I'm looking for roles where I can do real engineering: technical product work, founding teams, or companies that let architects still write code."
+    "I'm a Principal Technical Architect at Adobe. For Fortune 500 clients I architect and ship enterprise commerce on Adobe Commerce and AEM Edge Delivery Services, including one of the first production EDS plus Commerce B2B integrations. I know how Commerce systems fail, how to migrate them, and how to build teams around them.",
+    "Outside client work I build on the Cloudflare edge platform: Workers, Durable Objects, Queues, Vectorize, R2, KV. The list below is the live record of what I've worked on; the chatbot below it answers questions about it."
   ],
   "blockquote": {
     "text": "I know how large systems fail, and how to fix them.",
@@ -70,44 +70,142 @@
   },
   "projects": [
     {
+      "name": "commerceworker",
+      "year": "2026",
+      "status": "Active",
+      "visibility": "private",
+      "description": "Magento2-parity e-commerce on Cloudflare Workers.",
+      "context": "Edge-resident commerce that reproduces Magento2 capabilities on the Workers platform.",
+      "tech": ["TypeScript", "Cloudflare Workers", "Durable Objects", "D1", "Queues"]
+    },
+    {
+      "name": "timetracker-app",
+      "year": "2026",
+      "status": "Active",
+      "visibility": "public",
+      "description": "Toggl-like time tracking app on Cloudflare Workers, Hono, React 19, and Shadcn UI.",
+      "tech": ["TypeScript", "Cloudflare Workers", "Hono", "React 19", "Shadcn UI"],
+      "github": "https://github.com/blakebauman/timetracker-app"
+    },
+    {
+      "name": "nomoji.dev",
+      "year": "2025–2026",
+      "status": "Active",
+      "visibility": "public",
+      "description": "Configures granular emoji control across AI coding assistants. Stops emojis from cluttering documentation, console logs, CLI tools, and commit messages.",
+      "context": "A tool for engineers who want their machine output to stay legible.",
+      "tech": ["TypeScript", "CLI"],
+      "github": "https://github.com/blakebauman/nomoji.dev"
+    },
+    {
+      "name": "CaveAcoustics",
+      "year": "2025–2026",
+      "status": "Active",
+      "visibility": "public",
+      "description": "Org for a suite of JUCE audio plugins for ambient music producers: Cave Delay, Cave Reverb, Cave Chorus, Cave Granular, plus a shared GUI module and licensing system.",
+      "context": "Built alongside client work, exploring DSP and real-time audio processing in C++.",
+      "tech": ["C++", "JUCE", "CMake", "DSP"],
+      "github": "https://github.com/CaveAcoustics"
+    },
+    {
       "name": "ecommerce-intent-reasoning-engine",
-      "description": "Reasoning engine for eCommerce intent classification with LLM-powered conflict resolution",
-      "context": "Solves ambiguous customer intent when multiple signals conflict — critical for personalization and conversion.",
+      "year": "2026",
+      "status": "Filed",
+      "visibility": "public",
+      "description": "Reasoning engine for eCommerce intent classification and resolution. Decomposes compound intents, resolves conflicts, outputs structured action plans.",
+      "context": "Not a simple classifier: it handles ambiguous customer intent when multiple signals conflict.",
       "tech": ["Python", "Claude API", "FastAPI", "PostgreSQL"],
       "github": "https://github.com/blakebauman/ecommerce-intent-reasoning-engine"
     },
     {
+      "name": "catalog-normalize",
+      "year": "2026",
+      "status": "Filed",
+      "visibility": "private",
+      "description": "Cloudflare-native product catalog normalization platform. Handles identity resolution and unified attribute schemas across heterogeneous catalogs.",
+      "context": "The data plumbing under the visible commerce layer.",
+      "tech": ["TypeScript", "Cloudflare Workers", "D1"]
+    },
+    {
+      "name": "felix",
+      "year": "2026",
+      "status": "Filed",
+      "visibility": "private",
+      "description": "AI product (felix-workspace, felix.run, felix-ai-agent). A multi-repo workspace exploring agent-driven workflows.",
+      "tech": ["TypeScript", "Python", "LangChain", "Cloudflare Workers"]
+    },
+    {
+      "name": "aem-local-cloud-service",
+      "year": "2026",
+      "status": "Filed",
+      "visibility": "public",
+      "description": "Adobe Experience Manager Author, Publish, and (optionally) Dispatcher running locally in Docker.",
+      "context": "Tooling for AEM developers who want a faithful local environment without paying the configuration tax.",
+      "tech": ["Docker", "AEM"],
+      "github": "https://github.com/blakebauman/aem-local-cloud-service"
+    },
+    {
       "name": "fleet-workspace",
-      "description": "Hierarchical Durable Objects demo with infinite nesting and real-time WebSocket communication",
+      "year": "2025–2026",
+      "status": "Filed",
+      "visibility": "public",
+      "description": "Hierarchical Durable Objects on Cloudflare Workers, with infinite nesting of manager/agent relationships through URL paths.",
       "context": "Explores scalable real-time collaboration patterns at the edge.",
       "tech": ["TypeScript", "Cloudflare Workers", "Durable Objects", "WebSockets"],
       "github": "https://github.com/blakebauman/fleet-workspace"
     },
     {
       "name": "adventure-agent",
-      "description": "Multi-agent AI system for Arizona adventure planning with 17+ specialized agents",
-      "context": "Demonstrates orchestrated multi-agent workflows for complex, multi-step planning tasks.",
+      "year": "2025–2026",
+      "status": "Filed",
+      "visibility": "public",
+      "description": "Multi-agent AI system for Arizona adventure planning with 17+ specialized agents.",
+      "context": "Orchestrated multi-agent workflows for complex, multi-step planning tasks.",
       "tech": ["Python", "LangChain", "LangGraph", "LangSmith"],
       "github": "https://github.com/blakebauman/adventure-agent"
     },
     {
       "name": "hono-aws-lambda",
-      "description": "Production-ready Hono REST API with Bun runtime and AWS Lambda deployment",
+      "year": "2025–2026",
+      "status": "Filed",
+      "visibility": "public",
+      "description": "Production-ready Hono REST API with Bun runtime and AWS Lambda deployment.",
       "context": "Reference implementation for serverless REST APIs with modern tooling.",
       "tech": ["TypeScript", "Hono", "Bun", "AWS CDK", "Drizzle ORM"],
       "github": "https://github.com/blakebauman/hono-aws-lambda"
     },
     {
-      "name": "CaveAcoustics",
-      "description": "Suite of VST audio plugins for ambient music producers — delay, reverb, chorus, and granular synthesis",
-      "context": "Built during a sabbatical exploring DSP and real-time audio processing in C++.",
-      "tech": ["C++", "JUCE", "CMake", "DSP"],
-      "github": "https://github.com/CaveAcoustics"
+      "name": "contentworker-workspace",
+      "year": "2025",
+      "status": "Filed",
+      "visibility": "public",
+      "description": "Production-ready RAG system on Cloudflare Workers and Hono. Document processing, semantic search, AI-powered query responses.",
+      "context": "Reference implementation for retrieval-augmented systems at the edge.",
+      "tech": ["TypeScript", "Cloudflare Workers", "Hono", "Vectorize", "RAG"],
+      "github": "https://github.com/blakebauman/contentworker-workspace"
+    },
+    {
+      "name": "cf-monorepo",
+      "year": "2025",
+      "status": "Filed",
+      "visibility": "public",
+      "description": "Production-ready monorepo template for building Cloudflare Workers applications, with shared packages, consistent tooling, and modern development practices.",
+      "tech": ["TypeScript", "Cloudflare Workers", "Monorepo"],
+      "github": "https://github.com/blakebauman/cf-monorepo"
+    },
+    {
+      "name": "edgeconfig-monorepo",
+      "year": "2025",
+      "status": "Filed",
+      "visibility": "public",
+      "description": "Multi-format configuration management platform on Cloudflare Workers. Includes the API server, client libraries, and shared utilities.",
+      "tech": ["TypeScript", "Cloudflare Workers"],
+      "github": "https://github.com/blakebauman/edgeconfig-monorepo"
     }
   ],
   "recognition": [
     {
-      "title": "2nd Place — Adobe AI Summit & Hackathon",
+      "title": "2nd Place: Adobe AI Summit & Hackathon",
       "year": "2025",
       "description": "We built a content generation plugin for Adobe DA.live that uses Adobe Commerce catalog data, multi-agent workflow using Langchain domain agents, and LLMs to generate AEM-ready product content. Features context-aware generation, real-time WebSocket streaming, batch page updates, and Adobe Firefly integration."
     }
@@ -116,19 +214,19 @@
     {
       "company": "Adobe",
       "role": "Principal Technical Architect",
-      "years": "2022-Present",
-      "description": "Delivered the first production AEM Edge Delivery Services + Adobe Commerce B2B integration for a Fortune 500 company. Ran a webinar on Commerce with Edge Delivery that became a reference for Adobe's enterprise teams."
+      "years": "2022–Present",
+      "description": "Delivered one of the first production AEM Edge Delivery Services plus Adobe Commerce B2B integrations, for a Fortune 500 company. Ran a webinar on Commerce with Edge Delivery that became a reference for Adobe's enterprise teams."
     },
     {
       "company": "Adobe",
       "role": "Technical Architect",
-      "years": "2019-2022",
-      "description": "Led migration of a global beverage company from Adobe Commerce on-prem to Cloud — zero downtime. Built the architectural review process for enterprise Commerce implementations."
+      "years": "2019–2022",
+      "description": "Led migration of a global beverage company from Adobe Commerce on-prem to Cloud, with zero downtime. Built the architectural review process for enterprise Commerce implementations."
     },
     {
       "company": "Lyons Consulting Group (Capgemini)",
       "role": "Technical Architect",
-      "years": "2017-2019",
+      "years": "2017–2019",
       "description": "Led design and implementation of Adobe Commerce for a leading activewear company. Spearheaded Adobe Scene7 integration to optimize product imagery, improving visual merchandising and site performance."
     }
   ]

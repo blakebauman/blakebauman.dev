@@ -19,26 +19,12 @@ const metaDescription =
   (firstSummary ? firstSummary.slice(0, 155) + (firstSummary.length > 155 ? '...' : '') : null) ??
   `${resumeData.name} - ${resumeData.title}. Portfolio with AI-powered resume assistant.`;
 
+// IBM Plex is self-hosted via @fontsource (see app.css @font-face imports).
+// Latin subset only, 5 cuts: Serif 400 + 400i, Sans Condensed 600 + 700, Mono 500.
+// Vite bundles the woff2 files into the build output, served same-origin.
 export const links: Route.LinksFunction = () => [
   { rel: 'icon', href: '/favicon.svg', type: 'image/svg+xml' },
   { rel: 'icon', href: '/favicon.ico', sizes: '32x32' },
-  { rel: 'preconnect', href: 'https://fonts.googleapis.com' },
-  {
-    rel: 'preconnect',
-    href: 'https://fonts.gstatic.com',
-    crossOrigin: 'anonymous',
-  },
-  {
-    rel: 'preload',
-    href: 'https://fonts.gstatic.com/s/inter/v13/UcCO3FwrK3iLTeHuS_fvQtMwCp50KnMw2boKoduKmMEVuLyfAZ9hiA.woff2',
-    as: 'font',
-    type: 'font/woff2',
-    crossOrigin: 'anonymous',
-  },
-  {
-    rel: 'stylesheet',
-    href: 'https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap&display=swap',
-  },
 ];
 
 export function Layout({ children }: { children: React.ReactNode }) {
@@ -47,8 +33,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
       <head>
         <meta charSet="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
-        <meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)" />
-        <meta name="theme-color" content="#18181b" media="(prefers-color-scheme: dark)" />
+        <meta name="theme-color" content="#E5E7EA" />
         <meta name="description" content={metaDescription} />
 
         {/* Open Graph */}
@@ -75,8 +60,6 @@ export function Layout({ children }: { children: React.ReactNode }) {
         <meta name="apple-mobile-web-app-title" content={resumeData.name} />
 
         {/* Resource hints */}
-        <link rel="dns-prefetch" href="https://fonts.googleapis.com" />
-        <link rel="dns-prefetch" href="https://fonts.gstatic.com" />
 
         {/* JSON-LD structured data for Person */}
         <script
@@ -132,25 +115,75 @@ export function ErrorBoundary({ error }: Route.ErrorBoundaryProps) {
   }
 
   return (
-    <main className="w-full min-h-screen flex flex-col items-center justify-center px-[5vw] py-fluid-lg bg-white dark:bg-zinc-950">
+    <main
+      className="flex min-h-screen w-full flex-col items-center justify-center"
+      style={{ padding: 'clamp(48px, 6vw, 96px) var(--gutter)' }}
+    >
       <div className="w-full max-w-2xl text-center">
-        <h1 className="text-fluid-5xl font-bold text-zinc-900 dark:text-white mb-2">{message}</h1>
-        <p className="text-fluid-base text-zinc-600 dark:text-zinc-400 mb-6">{details}</p>
+        <div
+          className="mb-6 inline-flex items-center gap-2"
+          style={{
+            font: '500 11px/1 var(--font-mono)',
+            letterSpacing: '0.18em',
+            textTransform: 'uppercase',
+            opacity: 0.65,
+          }}
+        >
+          <span
+            style={{ width: 7, height: 7, background: 'var(--cordovan)', display: 'inline-block' }}
+          />
+          {message}
+        </div>
+        <h1
+          className="mb-4"
+          style={{
+            font: '700 var(--h1)/1.05 var(--font-cond)',
+            letterSpacing: '-0.012em',
+          }}
+        >
+          {details}
+        </h1>
         {stack && (
-          <pre className="w-full p-4 overflow-x-auto text-left text-fluid-sm text-zinc-500 dark:text-zinc-500 bg-zinc-100 dark:bg-zinc-800 mb-6">
+          <pre
+            className="mb-8 w-full overflow-x-auto p-4 text-left"
+            style={{
+              font: '400 var(--body-sm)/1.55 var(--font-mono)',
+              background: 'var(--plat-deep)',
+              color: 'var(--inkpress)',
+              opacity: 0.85,
+            }}
+          >
             <code>{stack}</code>
           </pre>
         )}
-        <div className="flex flex-col sm:flex-row gap-3 justify-center">
+        <div className="flex flex-col justify-center gap-3 sm:flex-row">
           <a
             href="/"
-            className="inline-flex items-center justify-center px-4 py-2 bg-red-500 text-white dark:text-zinc-950 font-semibold hover:bg-red-600 transition-colors text-fluid-base"
+            className="inline-flex items-center justify-center"
+            style={{
+              padding: '13px 22px',
+              background: 'var(--cordovan)',
+              color: 'var(--plat)',
+              font: '600 13px/1 var(--font-cond)',
+              letterSpacing: '0.05em',
+              textTransform: 'uppercase',
+              borderBottom: 0,
+            }}
           >
             Back to home
           </a>
           <a
             href={`mailto:${resumeData.email}?subject=Error%20on%20blakebauman.dev`}
-            className="inline-flex items-center justify-center px-4 py-2 border border-zinc-300 dark:border-zinc-600 text-zinc-700 dark:text-zinc-300 hover:bg-zinc-100 dark:hover:bg-zinc-800 transition-colors text-fluid-base"
+            className="inline-flex items-center justify-center"
+            style={{
+              padding: '12px 21px',
+              border: '1px solid var(--inkpress)',
+              color: 'var(--inkpress)',
+              font: '600 13px/1 var(--font-cond)',
+              letterSpacing: '0.05em',
+              textTransform: 'uppercase',
+              borderBottom: '1px solid var(--inkpress)',
+            }}
           >
             Report an issue
           </a>

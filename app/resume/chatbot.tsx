@@ -48,8 +48,7 @@ const INITIAL_MESSAGE_TIMESTAMP = 0;
 function createInitialMessage(): Message {
   return {
     role: 'assistant',
-    content:
-      "Hi! I'm Blake's conversational AI agent. I can help you learn about his professional experience, skills, and background. What would you like to know?",
+    content: "I read Blake's record. Ask me what he's worked on, where, and with what.",
     id: '1',
     timestamp: INITIAL_MESSAGE_TIMESTAMP,
   };
@@ -207,7 +206,13 @@ export default function Chatbot() {
       });
 
       if (!res.ok) {
-        throw new Error(`Failed to get response: ${res.statusText}`);
+        if (res.status === 429) {
+          throw new Error('Rate limit reached. Wait a minute and try again.');
+        }
+        if (res.status >= 500) {
+          throw new Error('The index is unreachable. Try again in a moment.');
+        }
+        throw new Error(`Request failed (${res.status}).`);
       }
 
       // Check if response is streaming
@@ -275,8 +280,16 @@ export default function Chatbot() {
         }
       }
     } catch (err) {
-      const errorMessage = err instanceof Error ? err.message : 'An unexpected error occurred';
-      setError(`Sorry, I encountered an error: ${errorMessage}`);
+      let errorMessage: string;
+      if (err instanceof TypeError) {
+        // Fetch network failure (offline, DNS, CORS, etc.)
+        errorMessage = 'No network. Check your connection.';
+      } else if (err instanceof Error) {
+        errorMessage = err.message;
+      } else {
+        errorMessage = 'Unknown error.';
+      }
+      setError(`The index couldn't answer. ${errorMessage}`);
       // Remove placeholder message on error
       setMessages(prev => prev.filter(msg => msg.id !== assistantMessageId));
       console.error('Chat error:', err);
