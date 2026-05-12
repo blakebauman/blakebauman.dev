@@ -135,16 +135,6 @@
       "tech": ["TypeScript", "Python", "LangChain", "Cloudflare Workers"]
     },
     {
-      "name": "aem-local-cloud-service",
-      "year": "2026",
-      "status": "Filed",
-      "visibility": "public",
-      "description": "Adobe Experience Manager Author, Publish, and (optionally) Dispatcher running locally in Docker.",
-      "context": "Tooling for AEM developers who want a faithful local environment without paying the configuration tax.",
-      "tech": ["Docker", "AEM"],
-      "github": "https://github.com/blakebauman/aem-local-cloud-service"
-    },
-    {
       "name": "fleet-workspace",
       "year": "2025–2026",
       "status": "Filed",
@@ -183,24 +173,6 @@
       "context": "Reference implementation for retrieval-augmented systems at the edge.",
       "tech": ["TypeScript", "Cloudflare Workers", "Hono", "Vectorize", "RAG"],
       "github": "https://github.com/blakebauman/contentworker-workspace"
-    },
-    {
-      "name": "cf-monorepo",
-      "year": "2025",
-      "status": "Filed",
-      "visibility": "public",
-      "description": "Production-ready monorepo template for building Cloudflare Workers applications, with shared packages, consistent tooling, and modern development practices.",
-      "tech": ["TypeScript", "Cloudflare Workers", "Monorepo"],
-      "github": "https://github.com/blakebauman/cf-monorepo"
-    },
-    {
-      "name": "edgeconfig-monorepo",
-      "year": "2025",
-      "status": "Filed",
-      "visibility": "public",
-      "description": "Multi-format configuration management platform on Cloudflare Workers. Includes the API server, client libraries, and shared utilities.",
-      "tech": ["TypeScript", "Cloudflare Workers"],
-      "github": "https://github.com/blakebauman/edgeconfig-monorepo"
     }
   ],
   "recognition": [

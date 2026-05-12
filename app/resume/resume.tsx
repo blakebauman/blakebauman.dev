@@ -71,7 +71,7 @@ export function Resume({ chatEnabled }: ResumeProps) {
         <header className="bb-masthead" id="top">
           <div className="bb-eyebrow">
             <span className="mark" aria-hidden="true" />
-            <span className="num">§ 01</span> · {resumeData.name} · Rec.{' '}
+            <span className="num">01</span> · {resumeData.name} · Rec.{' '}
             {currentMonth.split('/').reverse().join('-')} · v0.1
           </div>
           <h1 className="name">{resumeData.name}</h1>
@@ -99,7 +99,7 @@ export function Resume({ chatEnabled }: ResumeProps) {
         <section className="bb-position" id="position" aria-labelledby="position-label">
           <h2 id="position-label" className="bb-eyebrow">
             <span className="mark" aria-hidden="true" />
-            <span className="num">§ 02</span> · Position
+            <span className="num">02</span> · Position
           </h2>
           {resumeData.summary.map((paragraph, idx) => (
             <p key={paragraph.slice(0, 40)} className="lede" data-idx={idx}>
@@ -112,7 +112,7 @@ export function Resume({ chatEnabled }: ResumeProps) {
         <section className="bb-record" id="record" aria-labelledby="record-label">
           <div className="bb-eyebrow">
             <span className="mark" aria-hidden="true" />
-            <span className="num">§ 03</span> · Record
+            <span className="num">03</span> · Record
           </div>
           <h2 id="record-label">Record</h2>
 
@@ -206,7 +206,7 @@ export function Resume({ chatEnabled }: ResumeProps) {
           <section className="bb-artifact" id="artifact" aria-labelledby="artifact-label">
             <div className="bb-eyebrow">
               <span className="mark" aria-hidden="true" />
-              <span className="num">§ 04</span> · Working artifact
+              <span className="num">04</span> · Working artifact
             </div>
             <h2 id="artifact-label">Ask the resume</h2>
             <p className="frame-text">It will tell you what I've worked on and what I haven't.</p>
@@ -238,7 +238,7 @@ export function Resume({ chatEnabled }: ResumeProps) {
         <section className="bb-colophon" id="colophon" aria-labelledby="colophon-label">
           <h2 id="colophon-label" className="bb-eyebrow">
             <span className="mark" aria-hidden="true" />
-            <span className="num">§ 05</span> · Colophon
+            <span className="num">05</span> · Colophon
           </h2>
           <div className="bb-colophon-grid">
             <div>
@@ -246,7 +246,6 @@ export function Resume({ chatEnabled }: ResumeProps) {
                 The record is maintained as a record, not a marketing document. What's listed is
                 what happened.
               </p>
-              <p>Set in IBM Plex. Cordovan accents on Slate Mist ground.</p>
             </div>
             <div className="cta">
               <a className="btn" href={`mailto:${resumeData.email}`}>

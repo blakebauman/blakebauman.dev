@@ -17,31 +17,32 @@
 
   --color-plat: #E5E7EA;
   --color-plat-deep: #D9DCE0;
-  --color-inkpress: #2C0703;
-  --color-cordovan: #890620;
-  --color-vermilion: #B6465F;
-  --color-margin-rose: #DA9F93;
+  --color-inkpress: #22252A;
+  --color-cordovan: #11141A;
+  --color-vermilion: #3D4148;
+  --color-margin-rose: #7E8289;
 }
 
 :root {
+  /* Monotone palette. Cool-tinted ink scale on Slate Mist ground.
+     Token names preserved from the original Recordation palette so component
+     CSS keeps working unchanged; the values now express emphasis through
+     lightness on a single 250° hue, not warm-saturated accent. */
   --plat: #E5E7EA;
   --plat-deep: #D9DCE0;
-  --inkpress: #2C0703;
-  --cordovan: #890620;
-  --vermilion: #B6465F;
-  /* Margin Rose: brand commits to it for marginalia in long-form notes pages.
-     Defined for forward use; not yet applied in the current single-page layout. */
-  --margin-rose: #DA9F93;
-  /* Soft-ink token: deliberate AA-compliant value for metadata text (eyebrows,
-     year, stack, status, group labels). Replaces opacity-based softening which
-     was contrast-borderline. ~5:1 on Slate Mist. */
-  --ink-soft: oklch(40% 0.04 30);
-  --rule: rgba(44, 7, 3, 0.18);
-  --rule-strong: rgba(44, 7, 3, 0.55);
-  --rule-faint: rgba(44, 7, 3, 0.10);
+  --inkpress: #22252A;        /* body text, headings — oklch(18% 0.005 250) */
+  --cordovan: #11141A;        /* emphasis: links, CTAs, marks — oklch(10% 0.005 250) */
+  --vermilion: #3D4148;       /* hover lift — oklch(30% 0.005 250) */
+  --margin-rose: #7E8289;     /* rare tertiary for marginalia — oklch(55% 0.005 250) */
+  /* Soft-ink token: AA-compliant metadata text (eyebrows, year, stack, status,
+     group labels). ~5.4:1 on Slate Mist. */
+  --ink-soft: oklch(42% 0.005 250);
+  --rule: rgba(34, 37, 42, 0.18);
+  --rule-strong: rgba(34, 37, 42, 0.55);
+  --rule-faint: rgba(34, 37, 42, 0.10);
 
-  --max-w: 1200px;
-  --gutter: clamp(24px, 4vw, 56px);
+  --max-w: 100%;
+  --gutter: clamp(24px, 4vw, 96px);
   --section-pad-y: clamp(72px, 9vw, 144px);
 
   --display: clamp(60px, 8vw, 120px);
@@ -366,7 +367,7 @@ hr { border: 0; height: 1px; background: var(--rule-strong); margin: 0; }
 .bb-chat-msg .text li { margin-bottom: 4px; }
 .bb-chat-msg .text code {
   font: 500 0.9em/1.4 var(--font-mono);
-  background: rgba(44, 7, 3, 0.06);
+  background: rgba(34, 37, 42, 0.06);
   padding: 1px 6px;
   border-radius: 2px;
 }
@@ -508,7 +509,7 @@ hr { border: 0; height: 1px; background: var(--rule-strong); margin: 0; }
   display: flex;
   align-items: stretch;
   justify-content: stretch;
-  background: rgba(44, 7, 3, 0.55);
+  background: rgba(34, 37, 42, 0.55);
   padding: clamp(16px, 3vw, 40px);
 }
 .bb-chat-modal-card {
