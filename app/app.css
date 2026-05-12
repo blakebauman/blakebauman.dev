@@ -41,8 +41,8 @@
   --rule-strong: rgba(34, 37, 42, 0.55);
   --rule-faint: rgba(34, 37, 42, 0.10);
 
-  --max-w: 100%;
-  --gutter: clamp(24px, 4vw, 96px);
+  --max-w: 1200px;
+  --gutter: clamp(24px, 4vw, 56px);
   --section-pad-y: clamp(72px, 9vw, 144px);
 
   --display: clamp(60px, 8vw, 120px);
