@@ -7,12 +7,6 @@ interface ResumeProps {
   chatEnabled: boolean;
 }
 
-const SUBHEAD =
-  'Principal Technical Architect. Enterprise commerce on Adobe Commerce and AEM Edge Delivery Services. Edge-platform work on Cloudflare.';
-
-const POSITION_FOOTNOTE =
-  '8+ YEARS · ENTERPRISE COMMERCE · EDGE PLATFORMS · MULTI-AGENT AI WORKFLOWS · ZERO-DOWNTIME MIGRATIONS · COMMERCE FAILURE MODES & HOW TO FIX THEM.';
-
 function handlePrint() {
   if (typeof window !== 'undefined') {
     window.print();
@@ -75,7 +69,7 @@ export function Resume({ chatEnabled }: ResumeProps) {
             {currentMonth.split('/').reverse().join('-')} · v0.1
           </div>
           <h1 className="name">{resumeData.name}</h1>
-          <p className="subhead">{SUBHEAD}</p>
+          <p className="subhead">{resumeData.copy.subhead}</p>
           <dl className="bb-masthead-meta">
             <dt>Based</dt>
             <dd>{resumeData.location}</dd>
@@ -106,7 +100,7 @@ export function Resume({ chatEnabled }: ResumeProps) {
               {paragraph}
             </p>
           ))}
-          <p className="footnote">{POSITION_FOOTNOTE}</p>
+          <p className="footnote">{resumeData.copy.positionFootnote}</p>
         </section>
 
         <section className="bb-record" id="record" aria-labelledby="record-label">
@@ -208,8 +202,8 @@ export function Resume({ chatEnabled }: ResumeProps) {
               <span className="mark" aria-hidden="true" />
               <span className="num">04</span> · Working artifact
             </div>
-            <h2 id="artifact-label">Ask the resume</h2>
-            <p className="frame-text">It will tell you what I've worked on and what I haven't.</p>
+            <h2 id="artifact-label">{resumeData.copy.artifactHeading}</h2>
+            <p className="frame-text">{resumeData.copy.artifactSubhead}</p>
             <div className="bb-chat-frame" role="region" aria-label="Resume chatbot demonstration">
               <Suspense
                 fallback={
@@ -242,10 +236,7 @@ export function Resume({ chatEnabled }: ResumeProps) {
           </h2>
           <div className="bb-colophon-grid">
             <div>
-              <p>
-                The record is maintained as a record, not a marketing document. What's listed is
-                what happened.
-              </p>
+              <p>{resumeData.copy.colophon}</p>
             </div>
             <div className="cta">
               <a className="btn" href={`mailto:${resumeData.email}`}>

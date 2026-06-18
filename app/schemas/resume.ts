@@ -59,6 +59,17 @@ export const HeroSchema = z.object({
   subheadline: z.string(),
 });
 
+/**
+ * Schema for editorial copy used in the resume UI
+ */
+export const CopySchema = z.object({
+  subhead: z.string(),
+  positionFootnote: z.string(),
+  artifactHeading: z.string(),
+  artifactSubhead: z.string(),
+  colophon: z.string(),
+});
+
 export const ResumeDataSchema = z.object({
   name: z.string(),
   title: z.string(),
@@ -78,6 +89,7 @@ export const ResumeDataSchema = z.object({
   summary: z.array(z.string()),
   blockquote: BlockquoteSchema,
   sections: SectionIntrosSchema,
+  copy: CopySchema.optional(),
   bluesky: z.string().optional(),
 });
 

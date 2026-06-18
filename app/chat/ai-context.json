@@ -14,7 +14,7 @@
     },
     {
       "id": "ai-focus",
-      "text": "Blake is actively building with LLMs and AI agent architectures. He has hands-on experience with LangChain, LangGraph, LangSmith, and Claude. His projects include multi-agent systems, reasoning engines, and RAG implementations. He understands prompt engineering, vector search, and human-in-the-loop AI patterns."
+      "text": "Blake is actively building agentic AI systems on both AWS and Adobe stacks. On AWS he builds with Bedrock and AgentCore (durable memory, checkpointing), composing agents in LangGraph with manifest-driven configuration and exposing them over A2A, Model Context Protocol (MCP), and OpenAI-compatible surfaces behind a FastAPI gateway. At Adobe he works with Agent Orchestrator, the agentic layer in Experience Platform. His projects include multi-agent orchestration patterns (ReAct, deep planning, router, parallel fan-out, group-chat), reasoning engines, and RAG implementations, plus hands-on experience with LangChain, LangGraph, LangSmith, and Claude. He understands prompt engineering, vector search, durable agent memory, human-in-the-loop workflows, and protocol-based agent interop."
     },
     {
       "id": "enterprise-experience",
