@@ -1,10 +1,14 @@
 import { lazy, Suspense } from 'react';
 import resumeData from '../chat/resume.json';
+import { orderProjects, type Persona } from '../lib/persona';
 
 const Chatbot = lazy(() => import('./chatbot'));
 
 interface ResumeProps {
   chatEnabled: boolean;
+  persona: Persona;
+  chatGreeting: string;
+  suggestedPrompts: string[];
 }
 
 function handlePrint() {
@@ -24,9 +28,13 @@ interface ProjectEntry {
   visibility?: 'public' | 'private';
 }
 
-export function Resume({ chatEnabled }: ResumeProps) {
-  // Filter to public projects only for display; private projects remain in JSON for vectorize/chatbot
-  const projects = (resumeData.projects as ProjectEntry[]).filter(p => p.visibility !== 'private');
+export function Resume({ chatEnabled, persona, chatGreeting, suggestedPrompts }: ResumeProps) {
+  // Filter to public projects only for display; private projects remain in JSON for vectorize/chatbot.
+  // Reorder by the visitor's persona (signal-aware, deterministic) — falls back to canonical order.
+  const projects = orderProjects(
+    (resumeData.projects as ProjectEntry[]).filter(p => p.visibility !== 'private'),
+    persona
+  );
   const todayYear = new Date().getFullYear();
   const currentMonth = new Date().toLocaleString('en-US', { month: '2-digit', year: 'numeric' });
   // currentMonth -> "05/2026"; reformat to YYYY-MM
@@ -223,7 +231,7 @@ export function Resume({ chatEnabled }: ResumeProps) {
                   </div>
                 }
               >
-                <Chatbot />
+                <Chatbot greeting={chatGreeting} suggestedPrompts={suggestedPrompts} />
               </Suspense>
             </div>
           </section>

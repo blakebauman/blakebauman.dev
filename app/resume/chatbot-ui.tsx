@@ -9,7 +9,7 @@ interface Message {
   timestamp: number;
 }
 
-const SUGGESTED_PROMPTS = [
+const DEFAULT_SUGGESTED_PROMPTS = [
   'What did Blake do at Adobe?',
   'Has he worked with Cloudflare?',
   'What is the most recent project on the record?',
@@ -23,6 +23,7 @@ function formatTimestamp(timestamp: number): string {
 
 interface ChatbotUIProps {
   messages: Message[];
+  suggestedPrompts?: string[];
   input: string;
   isLoading: boolean;
   error: string | null;
@@ -41,6 +42,7 @@ interface ChatbotUIProps {
 
 export default function ChatbotUI({
   messages,
+  suggestedPrompts = DEFAULT_SUGGESTED_PROMPTS,
   input,
   isLoading,
   error,
@@ -124,7 +126,7 @@ export default function ChatbotUI({
 
   const promptChips = showSuggestions && (
     <div className="bb-chat-prompts">
-      {SUGGESTED_PROMPTS.map(prompt => (
+      {suggestedPrompts.map(prompt => (
         <button
           key={prompt}
           type="button"
