@@ -8,6 +8,17 @@ interface CloudflareEnvironment extends Env {}
 const RATE_LIMIT_WINDOW_SEC = 60; // 1 minute
 const RATE_LIMIT_MAX_REQUESTS = 20; // 20 requests per minute
 
+function hasSeenCookie(request: Request): boolean {
+  const cookie = request.headers.get('Cookie');
+  return cookie ? /(?:^|;\s*)bb_seen=1(?:;|$)/.test(cookie) : false;
+}
+
+function isDocumentRequest(request: Request): boolean {
+  // React Router data requests append ?_data / .data; only stamp top-level navigations.
+  if (request.headers.get('Sec-Fetch-Dest') === 'document') return true;
+  return (request.headers.get('Accept') || '').includes('text/html');
+}
+
 function getClientIP(request: Request): string {
   return (
     request.headers.get('CF-Connecting-IP') ||
@@ -261,8 +272,21 @@ export default {
     }
 
     // Handle all other routes with React Router
-    return requestHandler(request, {
+    const response = await requestHandler(request, {
       cloudflare: { env, ctx },
     });
+
+    // Mark first-time visitors so loaders can detect returning visitors (signal-aware
+    // personalization). Only on document GETs that didn't already carry the cookie.
+    if (request.method === 'GET' && !hasSeenCookie(request) && isDocumentRequest(request)) {
+      const withCookie = new Response(response.body, response);
+      withCookie.headers.append(
+        'Set-Cookie',
+        'bb_seen=1; Path=/; Max-Age=15552000; HttpOnly; SameSite=Lax; Secure'
+      );
+      return withCookie;
+    }
+
+    return response;
   },
 } satisfies ExportedHandler<CloudflareEnvironment>;
