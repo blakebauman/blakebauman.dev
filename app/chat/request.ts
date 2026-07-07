@@ -8,6 +8,10 @@ import { checkTopicRelevance, REDIRECT_MESSAGE } from './guardrails';
 import { hashIP, type LogMessageMetadata, logConversation } from './logger';
 import resumeJson from './resume.json';
 
+// Workers AI text-generation model for chat responses. The previous
+// @cf/meta/llama-3.1-8b-instruct was deprecated by Cloudflare on 2026-05-30.
+const CHAT_MODEL = '@cf/meta/llama-3.3-70b-instruct-fp8-fast';
+
 function getClientIP(request: Request): string {
   return (
     request.headers.get('CF-Connecting-IP') ||
@@ -337,7 +341,7 @@ RULES:
 
     if (streamRequested) {
       // Use Workers AI streaming with low temperature to reduce hallucinations
-      const stream = (await context.cloudflare.env.AI.run('@cf/meta/llama-3.1-8b-instruct', {
+      const stream = (await context.cloudflare.env.AI.run(CHAT_MODEL, {
         messages,
         stream: true,
         temperature: 0.3,
@@ -417,7 +421,7 @@ RULES:
     }
 
     // Non-streaming response (fallback) with low temperature to reduce hallucinations
-    const response = await context.cloudflare.env.AI.run('@cf/meta/llama-3.1-8b-instruct', {
+    const response = await context.cloudflare.env.AI.run(CHAT_MODEL, {
       messages,
       temperature: 0.3,
       max_tokens: 512,
