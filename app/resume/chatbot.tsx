@@ -44,19 +44,22 @@ function getOrCreateSessionId(): string {
 // Stable timestamp for initial message to avoid hydration mismatch
 const INITIAL_MESSAGE_TIMESTAMP = 0;
 
-// Create initial welcome message with stable timestamp
-function createInitialMessage(): Message {
+const DEFAULT_GREETING = "I read Blake's record. Ask me what he's worked on, where, and with what.";
+
+// Create initial welcome message with stable timestamp.
+// The greeting comes from serialized loader data, so SSR and hydration match.
+function createInitialMessage(greeting: string = DEFAULT_GREETING): Message {
   return {
     role: 'assistant',
-    content: "I read Blake's record. Ask me what he's worked on, where, and with what.",
+    content: greeting,
     id: '1',
     timestamp: INITIAL_MESSAGE_TIMESTAMP,
   };
 }
 
 // Load messages from sessionStorage
-function loadMessages(): Message[] {
-  if (typeof window === 'undefined') return [createInitialMessage()];
+function loadMessages(greeting: string = DEFAULT_GREETING): Message[] {
+  if (typeof window === 'undefined') return [createInitialMessage(greeting)];
   try {
     const stored = sessionStorage.getItem(CHAT_HISTORY_KEY);
     if (stored) {
@@ -72,7 +75,7 @@ function loadMessages(): Message[] {
   } catch {
     // Ignore parse errors
   }
-  return [createInitialMessage()];
+  return [createInitialMessage(greeting)];
 }
 
 // Save messages to sessionStorage
@@ -88,9 +91,14 @@ function saveMessages(messages: Message[]): void {
 // Lazy load the chatbot UI
 const ChatbotUI = lazy(() => import('@/resume/chatbot-ui'));
 
-export default function Chatbot() {
+interface ChatbotProps {
+  greeting?: string;
+  suggestedPrompts?: string[];
+}
+
+export default function Chatbot({ greeting, suggestedPrompts }: ChatbotProps = {}) {
   // Initialize with stable state for SSR, then hydrate from sessionStorage
-  const [messages, setMessages] = useState<Message[]>(() => [createInitialMessage()]);
+  const [messages, setMessages] = useState<Message[]>(() => [createInitialMessage(greeting)]);
   const [input, setInput] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -107,8 +115,9 @@ export default function Chatbot() {
   }, []);
 
   // Hydrate from sessionStorage after mount (avoids SSR mismatch)
+  // biome-ignore lint/correctness/useExhaustiveDependencies: run once on mount; greeting is stable from loader data
   useEffect(() => {
-    const stored = loadMessages();
+    const stored = loadMessages(greeting);
     if (stored.length > 1 || stored[0]?.timestamp !== 0) {
       setMessages(stored);
     }
@@ -330,6 +339,7 @@ export default function Chatbot() {
     >
       <ChatbotUI
         messages={messages}
+        suggestedPrompts={suggestedPrompts}
         input={input}
         isLoading={isLoading}
         error={error}
