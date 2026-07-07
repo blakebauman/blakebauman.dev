@@ -1,17 +1,15 @@
 import { lazy, Suspense } from 'react';
 import resumeData from '../chat/resume.json';
+import { orderProjects, type Persona } from '../lib/persona';
 
 const Chatbot = lazy(() => import('./chatbot'));
 
 interface ResumeProps {
   chatEnabled: boolean;
+  persona: Persona;
+  chatGreeting: string;
+  suggestedPrompts: string[];
 }
-
-const SUBHEAD =
-  'Principal Technical Architect. Enterprise commerce on Adobe Commerce and AEM Edge Delivery Services. Edge-platform work on Cloudflare.';
-
-const POSITION_FOOTNOTE =
-  '8+ YEARS · ENTERPRISE COMMERCE · EDGE PLATFORMS · MULTI-AGENT AI WORKFLOWS · ZERO-DOWNTIME MIGRATIONS · COMMERCE FAILURE MODES & HOW TO FIX THEM.';
 
 function handlePrint() {
   if (typeof window !== 'undefined') {
@@ -30,9 +28,13 @@ interface ProjectEntry {
   visibility?: 'public' | 'private';
 }
 
-export function Resume({ chatEnabled }: ResumeProps) {
-  // Filter to public projects only for display; private projects remain in JSON for vectorize/chatbot
-  const projects = (resumeData.projects as ProjectEntry[]).filter(p => p.visibility !== 'private');
+export function Resume({ chatEnabled, persona, chatGreeting, suggestedPrompts }: ResumeProps) {
+  // Filter to public projects only for display; private projects remain in JSON for vectorize/chatbot.
+  // Reorder by the visitor's persona (signal-aware, deterministic) — falls back to canonical order.
+  const projects = orderProjects(
+    (resumeData.projects as ProjectEntry[]).filter(p => p.visibility !== 'private'),
+    persona
+  );
   const todayYear = new Date().getFullYear();
   const currentMonth = new Date().toLocaleString('en-US', { month: '2-digit', year: 'numeric' });
   // currentMonth -> "05/2026"; reformat to YYYY-MM
@@ -71,11 +73,11 @@ export function Resume({ chatEnabled }: ResumeProps) {
         <header className="bb-masthead" id="top">
           <div className="bb-eyebrow">
             <span className="mark" aria-hidden="true" />
-            <span className="num">§ 01</span> · {resumeData.name} · Rec.{' '}
+            <span className="num">01</span> · {resumeData.name} · Rec.{' '}
             {currentMonth.split('/').reverse().join('-')} · v0.1
           </div>
           <h1 className="name">{resumeData.name}</h1>
-          <p className="subhead">{SUBHEAD}</p>
+          <p className="subhead">{resumeData.copy.subhead}</p>
           <dl className="bb-masthead-meta">
             <dt>Based</dt>
             <dd>{resumeData.location}</dd>
@@ -99,20 +101,20 @@ export function Resume({ chatEnabled }: ResumeProps) {
         <section className="bb-position" id="position" aria-labelledby="position-label">
           <h2 id="position-label" className="bb-eyebrow">
             <span className="mark" aria-hidden="true" />
-            <span className="num">§ 02</span> · Position
+            <span className="num">02</span> · Position
           </h2>
           {resumeData.summary.map((paragraph, idx) => (
             <p key={paragraph.slice(0, 40)} className="lede" data-idx={idx}>
               {paragraph}
             </p>
           ))}
-          <p className="footnote">{POSITION_FOOTNOTE}</p>
+          <p className="footnote">{resumeData.copy.positionFootnote}</p>
         </section>
 
         <section className="bb-record" id="record" aria-labelledby="record-label">
           <div className="bb-eyebrow">
             <span className="mark" aria-hidden="true" />
-            <span className="num">§ 03</span> · Record
+            <span className="num">03</span> · Record
           </div>
           <h2 id="record-label">Record</h2>
 
@@ -206,10 +208,10 @@ export function Resume({ chatEnabled }: ResumeProps) {
           <section className="bb-artifact" id="artifact" aria-labelledby="artifact-label">
             <div className="bb-eyebrow">
               <span className="mark" aria-hidden="true" />
-              <span className="num">§ 04</span> · Working artifact
+              <span className="num">04</span> · Working artifact
             </div>
-            <h2 id="artifact-label">Ask the resume</h2>
-            <p className="frame-text">It will tell you what I've worked on and what I haven't.</p>
+            <h2 id="artifact-label">{resumeData.copy.artifactHeading}</h2>
+            <p className="frame-text">{resumeData.copy.artifactSubhead}</p>
             <div className="bb-chat-frame" role="region" aria-label="Resume chatbot demonstration">
               <Suspense
                 fallback={
@@ -229,7 +231,7 @@ export function Resume({ chatEnabled }: ResumeProps) {
                   </div>
                 }
               >
-                <Chatbot />
+                <Chatbot greeting={chatGreeting} suggestedPrompts={suggestedPrompts} />
               </Suspense>
             </div>
           </section>
@@ -238,15 +240,11 @@ export function Resume({ chatEnabled }: ResumeProps) {
         <section className="bb-colophon" id="colophon" aria-labelledby="colophon-label">
           <h2 id="colophon-label" className="bb-eyebrow">
             <span className="mark" aria-hidden="true" />
-            <span className="num">§ 05</span> · Colophon
+            <span className="num">05</span> · Colophon
           </h2>
           <div className="bb-colophon-grid">
             <div>
-              <p>
-                The record is maintained as a record, not a marketing document. What's listed is
-                what happened.
-              </p>
-              <p>Set in IBM Plex. Cordovan accents on Slate Mist ground.</p>
+              <p>{resumeData.copy.colophon}</p>
             </div>
             <div className="cta">
               <a className="btn" href={`mailto:${resumeData.email}`}>

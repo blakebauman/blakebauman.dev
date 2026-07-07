@@ -1,9 +1,14 @@
+import { chatGreetingFor, derivePersona, suggestedPromptsFor } from '../lib/persona';
 import { Resume } from '../resume/resume';
 import type { Route } from './+types/home';
 
-export function loader({ context }: Route.LoaderArgs) {
+export function loader({ context, request }: Route.LoaderArgs) {
+  const persona = derivePersona(request);
   return {
     chatEnabled: context.cloudflare.env.CHAT_ENABLED === 'true',
+    persona,
+    chatGreeting: chatGreetingFor(persona),
+    suggestedPrompts: suggestedPromptsFor(persona),
   };
 }
 
@@ -17,5 +22,12 @@ export function meta(_: Route.MetaArgs) {
 }
 
 export default function Home({ loaderData }: Route.ComponentProps) {
-  return <Resume chatEnabled={loaderData.chatEnabled} />;
+  return (
+    <Resume
+      chatEnabled={loaderData.chatEnabled}
+      persona={loaderData.persona}
+      chatGreeting={loaderData.chatGreeting}
+      suggestedPrompts={loaderData.suggestedPrompts}
+    />
+  );
 }

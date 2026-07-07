@@ -64,7 +64,7 @@ describe('Chatbot', () => {
     });
 
     expect(screen.getByTestId('message-assistant')).toHaveTextContent(
-      "Hi! I'm Blake's conversational AI agent"
+      "I read Blake's record. Ask me what he's worked on, where, and with what."
     );
   });
 
@@ -176,13 +176,13 @@ describe('AssistantMessage', () => {
 
   it('shows streaming cursor when isStreaming is true', () => {
     render(<AssistantMessage content="Loading..." isStreaming={true} />);
-    const cursor = document.querySelector('.animate-pulse');
+    const cursor = document.querySelector('.bb-chat-cursor');
     expect(cursor).toBeInTheDocument();
   });
 
   it('hides streaming cursor when isStreaming is false', () => {
     render(<AssistantMessage content="Done" isStreaming={false} />);
-    const cursor = document.querySelector('.animate-pulse');
+    const cursor = document.querySelector('.bb-chat-cursor');
     expect(cursor).not.toBeInTheDocument();
   });
 

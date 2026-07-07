@@ -4,10 +4,10 @@ description: A senior engineer's portfolio. Cloudflare-platform commerce and edg
 colors:
   slate-mist: "#E5E7EA"
   plat-deep: "#D9DCE0"
-  inkpress: "#2C0703"
-  cordovan: "#890620"
-  vermilion: "#B6465F"
-  margin-rose: "#DA9F93"
+  inkpress: "#22252A"
+  cordovan: "#11141A"
+  vermilion: "#3D4148"
+  margin-rose: "#7E8289"
 typography:
   display:
     fontFamily: "IBM Plex Sans Condensed, Helvetica Neue, Arial, sans-serif"
@@ -89,15 +89,15 @@ components:
 
 **Creative North Star: "The Listing Office"**
 
-The site is a 1960s real-estate listing office, transposed to a senior engineer's portfolio. The page reads as a platted document with five lettered sections (§ 01 Masthead, § 02 Position, § 03 Record, § 04 Working artifact, § 05 Colophon). Every entry is filed, dated, stamped. Type carries hierarchy; color punctuates. The voice is considered, exact, dry.
+The site is a 1960s real-estate listing office, transposed to a senior engineer's portfolio. The page reads as a platted document with five numbered sections (01 Masthead, 02 Position, 03 Record, 04 Working artifact, 05 Colophon). Every entry is filed, dated, stamped. Type carries hierarchy; lightness punctuates. The voice is considered, exact, dry.
 
-What the system explicitly rejects: the SaaS / Vercel-template default (cream ground, gradient blob hero, three-card feature grid, Inter-everywhere typography). Cream is substituted for cool monochrome-tint Slate Mist to escape the warm-on-warm archival-editorial reflex (the saturated default for "tasteful engineer site" in 2024–2026). Inter is rejected for IBM Plex Serif as the body face. Skill walls are absent: stack information lives inline in each record entry, never in a logo grid.
+What the system explicitly rejects: the SaaS / Vercel-template default (cream ground, gradient blob hero, three-card feature grid, Inter-everywhere typography). Cream is substituted for cool monochrome Slate Mist to escape the warm-on-warm archival-editorial reflex (the saturated default for "tasteful engineer site" in 2024–2026). Inter is rejected for IBM Plex Serif as the body face. Skill walls are absent: stack information lives inline in each record entry, never in a logo grid.
 
-The signature gesture is the **Enamel Mark**, a 6–8px Cordovan square that recurs as a load-bearing indicator across the system — current section in nav, active listing entry, group label, section eyebrow, colophon stamp. Single-purpose, single-color, derived from the seed's enamel-sign craft. It carries meaning, not decoration.
+The signature gesture is the **Enamel Mark**, a 6–8px solid-ink square that recurs as a load-bearing indicator across the system — current section in nav, active listing entry, group label, section eyebrow, colophon stamp. Single-purpose, single-tone, derived from the seed's enamel-sign craft. It carries meaning, not decoration. The mark renders in the system's deepest ink (Cordovan in the token graph) so it always reads as the strongest tone in any composition.
 
 **Key Characteristics:**
 
-- Type carries hierarchy; color punctuates ≤10% of any given screen.
+- Type carries hierarchy; ink-weight punctuates. The system is monochromatic: a single cool-tinted hue (~250°) at five lightness stops.
 - Single committed light theme. No dark mode. The Slate Mist ground is the brand decision.
 - Hairline-only rounding: 0px (display, marks, masthead) and 2px (buttons, tinted surfaces). No SaaS-default 8–12px radii.
 - Real-estate-listing register: **listing block**, **plat rule**, **enamel mark**, **recordation stamp** are the four signature motifs.
@@ -106,35 +106,35 @@ The signature gesture is the **Enamel Mark**, a 6–8px Cordovan square that rec
 
 ## 2. Colors: The Recordation Palette
 
-A cool monochrome-tint substrate carries warm-saturated accents. The warm/cool inversion is the brand's escape from the warm-on-warm archival-editorial default. The palette is restrained: Cordovan is the single committed accent.
+A monochromatic ink scale on a cool-tinted ground. Every value sits on the same 250° hue with chroma ≤0.005 — pure neutrals, no saturated accent. Emphasis is carried by lightness alone, the way ink weight differentiates type in a printed document. The token names from the prior warm-accent system (Cordovan, Vermilion, Margin Rose) are preserved as scale labels; their values now express ink depth, not hue.
 
 ### Primary
 
-- **Cordovan** (`#890620` / `oklch(38% 0.16 25)`): The load-bearing accent. Default link color, CTA fill, the Enamel Mark, current-page indicator, signature button. Used at ≤10% of any given screen surface.
+- **Cordovan** (`#11141A` / `oklch(10% 0.005 250)`): The deepest ink in the system. Links, CTA fill, the Enamel Mark, current-page indicator, signature button. The visual role of the load-bearing accent, expressed as the strongest lightness step rather than a saturated hue. Used at ≤10% of any given screen surface.
 
 ### Secondary
 
-- **Vermilion** (`#B6465F` / `oklch(56% 0.13 15)`): Hover and focus states for Cordovan elements. Lifted markers and callouts in dense lists. Never a primary fill.
+- **Vermilion** (`#3D4148` / `oklch(30% 0.005 250)`): Hover and focus states for Cordovan elements. The hover lifts: ink lightens from 10% to 30% on interaction — print-document feedback, not a saturation swap. Never a primary fill.
 
 ### Tertiary
 
-- **Margin Rose** (`#DA9F93` / `oklch(75% 0.06 25)`): Muted tertiary for marginalia, low-emphasis annotations, quiet panels in long-form. Rare appearances.
+- **Margin Rose** (`#7E8289` / `oklch(55% 0.005 250)`): Mid-grey for marginalia, low-emphasis annotations, quiet panels in long-form. Rare appearances.
 
 ### Neutral
 
 - **Slate Mist** (`#E5E7EA` / `oklch(91% 0.005 250)`): Page ground. The substrate the listing is set on. ~85% of pixel surface.
 - **Plat Deep** (`#D9DCE0` / `oklch(87% 0.005 250)`): Secondary surface. Recognition blocks, the chat frame, type-row demonstrations. Low-contrast lift on the ground.
-- **Inked Espresso** (`#2C0703` / `oklch(13% 0.04 30)`): Body text, headings, primary text. Near-black with warm undertone, not pure black.
+- **Inkpress** (`#22252A` / `oklch(18% 0.005 250)`): Body text, headings, primary text. Cool-tinted near-black, never pure `#000`.
 
 ### Named Rules
 
-**The One Voice Rule.** Cordovan is the single committed accent. It carries CTAs, links, the Enamel Mark, and current-state indicators. No second saturated accent enters the system. Vermilion is its hover, not a peer.
+**The One Voice Rule.** Cordovan (the deepest-ink stop) is the single committed emphasis tone. It carries CTAs, links, the Enamel Mark, and current-state indicators. No second hue enters the system. Vermilion is its hover lift, not a peer.
 
 **The Cool-Ground Rule.** The page ground is cool monochrome-tint, never cream or any cream rebrand (vellum, kami, bone, ivory, eggshell, oatmeal). The cream-ground default is the editorial-archival reflex this brand explicitly rejects. If a designer is tempted to "warm the ground a touch," that's the reflex.
 
-**The Punctuation Rule.** Color punctuates ≤10% of pixel surface. If color reaches 30%+, something is wrong with the typesetting. Restraint as competence signal.
+**The Punctuation Rule.** Cordovan-stop ink punctuates ≤10% of pixel surface. The body sits at Inkpress (18% ink); Cordovan (10% ink) is reserved for marks, links, CTAs, and current-state indicators. If the deepest stop reaches 30%+, something is wrong with the typesetting.
 
-**The Warm-Cool Inversion Rule.** Warm-saturated accents (Cordovan, Vermilion, Margin Rose) sit on a cool-neutral ground (Slate Mist, Plat Deep, Inked Espresso has a warm undertone but reads cool-adjacent against Cordovan). Never invert this — warm ground with warm accents collapses into the archival-editorial default.
+**The Single-Hue Rule.** Every color in the system sits on hue 250° with chroma ≤0.005. No saturated accent, no warm-cool contrast, no second hue. The brand commits to monochrome; emphasis is lightness, not saturation. If a designer reaches for a saturated value to "add warmth" or "make it pop," that's the reflex this rule exists to refuse. The rule replaces the prior Warm-Cool Inversion Rule, which was retired with the move to monochrome.
 
 ## 3. Typography
 
@@ -286,4 +286,4 @@ A small 1px-bordered mono label sitting inside the listing-block header.
 - **Don't** add sticky bottom CTAs, intercom-style chat bubbles, or banner cookie consents that violate the document register. The page is a record, not a funnel.
 - **Don't** rename the six DESIGN.md sections. Tooling parses Overview / Colors / Typography / Elevation / Components / Do's and Don'ts character-for-character.
 
-If someone could look at this interface and say "AI made that," it has failed. The category-reflex test for this brand: a peer engineer, given just the category ("personal portfolio for a Cloudflare-platform commerce engineer"), should NOT be able to predict the palette + theme. If their guess is "cream + serif + warm accent," the design has slipped into the saturated editorial-typographic default the brand exists to escape.
+If someone could look at this interface and say "AI made that," it has failed. The category-reflex test for this brand: a peer engineer, given just the category ("personal portfolio for a Cloudflare-platform commerce engineer"), should NOT be able to predict the palette + theme. The brand now commits to monochrome — that has its own saturated reflex (the "minimal-monochrome editorial" lane: Helvetica or grotesque-on-white, no accent, lots of whitespace). The escape hatch from THAT reflex is the load-bearing IBM Plex three-voice system, the listing-block document register, and the Enamel Mark as a consistent meaning-bearing element. Without those, monochrome would collapse into the next default. With them, it reads as committed.

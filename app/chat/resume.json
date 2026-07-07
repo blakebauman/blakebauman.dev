@@ -12,9 +12,16 @@
   "website": "https://blakebauman.dev",
   "bluesky": "https://bsky.app/profile/blakebauman.dev",
   "summary": [
-    "I'm a Principal Technical Architect at Adobe. For Fortune 500 clients I architect and ship enterprise commerce on Adobe Commerce and AEM Edge Delivery Services, including one of the first production EDS plus Commerce B2B integrations. I know how Commerce systems fail, how to migrate them, and how to build teams around them.",
-    "Outside client work I build on the Cloudflare edge platform: Workers, Durable Objects, Queues, Vectorize, R2, KV. The list below is the live record of what I've worked on; the chatbot below it answers questions about it."
+    "I'm a Principal Technical Architect at Adobe. For Fortune 500 clients I architect and ship enterprise commerce on Adobe Commerce and AEM Edge Delivery Services — including one of the first production EDS plus Commerce B2B integrations — and increasingly the agentic layer on top of it via Adobe Agent Orchestrator. I know how Commerce systems fail, how to migrate them, and how to build teams around them.",
+    "Outside client work I build on two stacks: the Cloudflare edge platform (Workers, Durable Objects, Queues, Vectorize, R2, KV), and agentic AI on AWS — Bedrock, AgentCore for durable memory and checkpointing, LangGraph runtimes compiled from YAML manifests, and protocol surfaces (A2A, MCP, OpenAI-compatible) behind a single FastAPI gateway. The list below is the live record; the chatbot below it answers questions about it."
   ],
+  "copy": {
+    "subhead": "Principal Technical Architect. Enterprise commerce on Adobe Commerce and AEM Edge Delivery Services. Edge-platform work on Cloudflare. Agentic AI on Adobe Agent Orchestrator and AWS Bedrock/AgentCore.",
+    "positionFootnote": "8+ YEARS · ENTERPRISE COMMERCE · EDGE PLATFORMS · MULTI-AGENT AI WORKFLOWS · ZERO-DOWNTIME MIGRATIONS · COMMERCE FAILURE MODES & HOW TO FIX THEM.",
+    "artifactHeading": "Ask the resume",
+    "artifactSubhead": "It will tell you what I've worked on and what I haven't.",
+    "colophon": "The record is maintained as a record, not a marketing document. What's listed is what happened."
+  },
   "blockquote": {
     "text": "I know how large systems fail, and how to fix them.",
     "highlight": ""
@@ -46,14 +53,31 @@
     "AEM Edge Delivery Services",
     "Python",
     "LangChain",
+    "LangGraph",
     "Claude",
     "NLP",
     "WebSockets",
-    "Infrastructure as Code"
+    "Infrastructure as Code",
+    "AWS Bedrock",
+    "Amazon Bedrock AgentCore",
+    "Model Context Protocol",
+    "Agent-to-Agent (A2A)",
+    "Adobe Agent Orchestrator"
   ],
   "tools": {
     "Edge & Runtime": ["Cloudflare Workers", "Durable Objects", "Edge Computing", "Hono", "Bun"],
-    "AI & Agents": ["LangChain", "LangGraph", "LangSmith", "Claude", "Python"],
+    "AI & Agents": [
+      "LangChain",
+      "LangGraph",
+      "LangSmith",
+      "Claude",
+      "Python",
+      "AWS Bedrock",
+      "AgentCore",
+      "MCP",
+      "A2A",
+      "Adobe Agent Orchestrator"
+    ],
     "Data & Backend": ["Postgres", "Redis", "Drizzle ORM"],
     "Frontend": ["JavaScript", "TypeScript", "React"]
   },
@@ -64,7 +88,10 @@
       "Intent Classification",
       "Reasoning Engines",
       "Human-in-the-Loop AI",
-      "Entity Extraction"
+      "Entity Extraction",
+      "Manifest-driven agents",
+      "Protocol gateways (A2A / MCP / OpenAI-compat)",
+      "Durable agent memory"
     ],
     "Edge Infrastructure": ["Cloudflare Workflows", "Cloudflare D1", "Design Patterns"]
   },
@@ -127,22 +154,24 @@
       "tech": ["TypeScript", "Cloudflare Workers", "D1"]
     },
     {
-      "name": "felix",
-      "year": "2026",
-      "status": "Filed",
-      "visibility": "private",
-      "description": "AI product (felix-workspace, felix.run, felix-ai-agent). A multi-repo workspace exploring agent-driven workflows.",
-      "tech": ["TypeScript", "Python", "LangChain", "Cloudflare Workers"]
-    },
-    {
-      "name": "aem-local-cloud-service",
-      "year": "2026",
-      "status": "Filed",
+      "name": "felix-agents",
+      "year": "2025–2026",
+      "status": "Active",
       "visibility": "public",
-      "description": "Adobe Experience Manager Author, Publish, and (optionally) Dispatcher running locally in Docker.",
-      "context": "Tooling for AEM developers who want a faithful local environment without paying the configuration tax.",
-      "tech": ["Docker", "AEM"],
-      "github": "https://github.com/blakebauman/aem-local-cloud-service"
+      "description": "Agent framework on AWS Bedrock. Manifest-driven agents compiled into LangGraph runtimes, exposed simultaneously over A2A, MCP, OpenAI-compatible chat, and REST/SSE behind a single FastAPI gateway.",
+      "context": "Five orchestration patterns (ReAct, Deep, Router, Parallel fan-out, GroupChat), AgentCore-backed durable memory and checkpointing, DynamoDB plan artifacts, human-in-the-loop approvals, multi-channel gateway.",
+      "tech": [
+        "Python",
+        "AWS Bedrock",
+        "AgentCore",
+        "LangGraph",
+        "LangChain",
+        "MCP",
+        "A2A",
+        "FastAPI",
+        "DynamoDB",
+        "Terraform"
+      ]
     },
     {
       "name": "fleet-workspace",
@@ -183,24 +212,6 @@
       "context": "Reference implementation for retrieval-augmented systems at the edge.",
       "tech": ["TypeScript", "Cloudflare Workers", "Hono", "Vectorize", "RAG"],
       "github": "https://github.com/blakebauman/contentworker-workspace"
-    },
-    {
-      "name": "cf-monorepo",
-      "year": "2025",
-      "status": "Filed",
-      "visibility": "public",
-      "description": "Production-ready monorepo template for building Cloudflare Workers applications, with shared packages, consistent tooling, and modern development practices.",
-      "tech": ["TypeScript", "Cloudflare Workers", "Monorepo"],
-      "github": "https://github.com/blakebauman/cf-monorepo"
-    },
-    {
-      "name": "edgeconfig-monorepo",
-      "year": "2025",
-      "status": "Filed",
-      "visibility": "public",
-      "description": "Multi-format configuration management platform on Cloudflare Workers. Includes the API server, client libraries, and shared utilities.",
-      "tech": ["TypeScript", "Cloudflare Workers"],
-      "github": "https://github.com/blakebauman/edgeconfig-monorepo"
     }
   ],
   "recognition": [
