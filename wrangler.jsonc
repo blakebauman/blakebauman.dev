@@ -15,7 +15,10 @@
   // OPENAI_API_KEY: wrangler secret put OPENAI_API_KEY
   // VECTORIZE_ADMIN_KEY: wrangler secret put VECTORIZE_ADMIN_KEY (required for /api/populate-vectorize)
   "vars": {
-    "NODE_ENV": "development",
+    // Deployed (production) value. Local dev sets NODE_ENV=development via the dev
+    // server. request.ts gates Vectorize search on process.env.NODE_ENV (baked at
+    // build time), so this must not read "development" in production.
+    "NODE_ENV": "production",
     "CHAT_ENABLED": "true"
   },
   "ai": {
