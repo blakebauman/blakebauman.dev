@@ -148,7 +148,7 @@ export async function requestAI({
         if (embeddings.data?.[0]) {
           // Query Vectorize to find relevant resume sections
           const vectorResults = await context.cloudflare.env.VECTORIZE.query(embeddings.data[0], {
-            topK: 5, // Increased from 3 to get more context
+            topK: 8, // Broaden recall so short prompts still surface relevant chunks
             returnMetadata: 'all',
           });
 
@@ -294,9 +294,11 @@ export async function requestAI({
       }
     }
 
-    // Build experience summary from resume data for context
+    // Build experience summary from resume data for context. Include each role's
+    // description so questions about what Blake did at a specific company always have
+    // grounding, even when vector search doesn't surface that experience chunk.
     const experienceSummary = resumeData.experience
-      .map(exp => `${exp.role} at ${exp.company} (${exp.years})`)
+      .map(exp => `${exp.role} at ${exp.company} (${exp.years}): ${exp.description}`)
       .join('\n');
 
     // Build system message with concise guardrails
