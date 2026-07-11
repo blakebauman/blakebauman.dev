@@ -1,8 +1,0 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 64" role="img" aria-label="Blake Bauman">
-  <style>
-    .wm { font: 700 28px "IBM Plex Sans Condensed", "Helvetica Neue", Arial, sans-serif; fill: #2C0703; letter-spacing: 0.04em; }
-    .dot { fill: #890620; }
-  </style>
-  <text class="wm" x="0" y="42">BLAKE BAUMAN</text>
-  <rect class="dot" x="262" y="36" width="6" height="6"/>
-</svg>

@@ -18,3 +18,9 @@ coverage/
 
 # Logs
 *.log
+
+# Local AI/design tooling (not part of the public repo)
+/.claude/
+/.cursor/
+/stardust/
+/.impeccable.md

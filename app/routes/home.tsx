@@ -1,5 +1,5 @@
+import { Resume } from '../components/resume';
 import { chatGreetingFor, derivePersona, suggestedPromptsFor } from '../lib/persona';
-import { Resume } from '../resume/resume';
 import type { Route } from './+types/home';
 
 export function loader({ context, request }: Route.LoaderArgs) {
