@@ -19,6 +19,24 @@ describe('checkTopicRelevance', () => {
     });
   });
 
+  describe('allows prompts naming resume projects', () => {
+    it.each([
+      'What is Fold and what is Memoturn?',
+      'What exactly does Felix do and how does it compare to other frameworks?',
+      'Can you explain what nomoji is and why someone would want to use it?',
+      'What is memoturn-db and what problem does it solve for AI agents?',
+      'I heard about something called commerceworker, what can you tell me about that?',
+    ])('allows: %s', prompt => {
+      expect(checkTopicRelevance(prompt)).toBeNull();
+    });
+
+    it('does not match project names inside other words', () => {
+      const prompt =
+        'Explain how scaffolding works in construction and why manifolds matter in engines';
+      expect(checkTopicRelevance(prompt)).toBe(REDIRECT_MESSAGE);
+    });
+  });
+
   describe('allows short follow-up prompts', () => {
     it.each([
       'Tell me more',
