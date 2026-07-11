@@ -13,10 +13,10 @@
   "bluesky": "https://bsky.app/profile/blakebauman.dev",
   "summary": [
     "I'm a Principal Technical Architect at Adobe. For Fortune 500 clients I architect and ship enterprise commerce on Adobe Commerce and AEM Edge Delivery Services — including one of the first production EDS plus Commerce B2B integrations — and increasingly the agentic layer on top of it via Adobe Agent Orchestrator. I know how Commerce systems fail, how to migrate them, and how to build teams around them.",
-    "Outside client work I build on two stacks: the Cloudflare edge platform (Workers, Durable Objects, Queues, Vectorize, R2, KV), and agentic AI on AWS — Bedrock, AgentCore for durable memory and checkpointing, LangGraph runtimes compiled from YAML manifests, and protocol surfaces (A2A, MCP, OpenAI-compatible) behind a single FastAPI gateway. The list below is the live record; the chatbot below it answers questions about it."
+    "Outside client work I build agent infrastructure across three layers: the harness (Felix, a managed-agents harness on Cloudflare Workers with manifest-defined agents, swappable session strategies, and an agentic commerce layer), the memory (Memoturn, a Rust agent-memory database with typed memories, supersession, and hybrid recall), and the runtime (Fold, a Go platform that runs any container as a Firecracker microVM with scale-to-zero — built for AI agents and MCP servers). Earlier iterations of this work ran on AWS Bedrock, AgentCore, and LangGraph. The list below is the live record; the chatbot below it answers questions about it."
   ],
   "copy": {
-    "subhead": "Principal Technical Architect. Enterprise commerce on Adobe Commerce and AEM Edge Delivery Services. Edge-platform work on Cloudflare. Agentic AI on Adobe Agent Orchestrator and AWS Bedrock/AgentCore.",
+    "subhead": "Principal Technical Architect. Enterprise commerce on Adobe Commerce and AEM Edge Delivery Services. Edge-platform work on Cloudflare. Agentic AI on Adobe Agent Orchestrator, plus independent agent infrastructure: Felix (harness), Memoturn (memory), Fold (runtime).",
     "positionFootnote": "8+ YEARS · ENTERPRISE COMMERCE · EDGE PLATFORMS · MULTI-AGENT AI WORKFLOWS · ZERO-DOWNTIME MIGRATIONS · COMMERCE FAILURE MODES & HOW TO FIX THEM.",
     "artifactHeading": "Ask the resume",
     "artifactSubhead": "It will tell you what I've worked on and what I haven't.",
@@ -62,7 +62,13 @@
     "Amazon Bedrock AgentCore",
     "Model Context Protocol",
     "Agent-to-Agent (A2A)",
-    "Adobe Agent Orchestrator"
+    "Adobe Agent Orchestrator",
+    "Go",
+    "Rust",
+    "Firecracker",
+    "OpenTelemetry",
+    "Cloudflare Durable Objects",
+    "Cloudflare Vectorize"
   ],
   "tools": {
     "Edge & Runtime": ["Cloudflare Workers", "Durable Objects", "Edge Computing", "Hono", "Bun"],
@@ -79,6 +85,7 @@
       "Adobe Agent Orchestrator"
     ],
     "Data & Backend": ["Postgres", "Redis", "Drizzle ORM"],
+    "Systems & Infra": ["Go", "Rust", "Firecracker", "libSQL", "OpenTelemetry", "Terraform"],
     "Frontend": ["JavaScript", "TypeScript", "React"]
   },
   "exploring": {
@@ -91,11 +98,66 @@
       "Entity Extraction",
       "Manifest-driven agents",
       "Protocol gateways (A2A / MCP / OpenAI-compat)",
-      "Durable agent memory"
+      "Durable agent memory",
+      "Agentic commerce (ACP)",
+      "Agent memory with supersession",
+      "MicroVM isolation for agent workloads"
     ],
     "Edge Infrastructure": ["Cloudflare Workflows", "Cloudflare D1", "Design Patterns"]
   },
   "projects": [
+    {
+      "name": "felix",
+      "year": "2025–2026",
+      "status": "Active",
+      "visibility": "public",
+      "description": "Managed agents harness on Cloudflare Workers, shaped after Anthropic's Managed Agents architecture. Manifest-defined agents compile into runnable agents exposed over OpenAI-compatible chat, A2A, MCP, and REST/SSE — with Felix Commerce, an agentic commerce layer (Agentic Commerce Protocol merchant endpoint, approval-gated Stripe checkout, per-brand D2C storefronts, B2B quote-to-cash), on top.",
+      "context": "Three swappable seams: session strategies (full replay, windowed, summarizing, semantic), pattern and model-provider registries (ReAct, Deep, Router, Parallel, GroupChat, Reflect, Plan-Execute across Anthropic, OpenAI, and Workers AI), and transport-labelled tool executors (local, MCP, A2A, container, sandbox, browser, queue). Includes HITL approvals, append-only audit log, eval harness with golden datasets, guardrails, and A2A federation. Evolved from an earlier AWS Bedrock + LangGraph implementation. Docs at docs.felix.run.",
+      "tech": [
+        "TypeScript",
+        "Cloudflare Workers",
+        "Durable Objects",
+        "Hono",
+        "D1",
+        "R2",
+        "Vectorize",
+        "Queues",
+        "MCP",
+        "A2A",
+        "Stripe"
+      ],
+      "github": "https://github.com/blakebauman/felix"
+    },
+    {
+      "name": "fold",
+      "year": "2026",
+      "status": "Active",
+      "visibility": "public",
+      "description": "Developer platform that runs any Docker image as a Firecracker microVM — scale-to-zero with wake-on-request, block volumes, a WireGuard 6PN private mesh, and OpenTelemetry-native observability (including GenAI token/cost spans). Built to be the runtime for AI agents and MCP servers.",
+      "context": "Four Go binaries — CLI, control plane (REST API, scheduler, IPAM, identity/quotas), per-host agent, and edge proxy with wake-on-request — over a cloud-agnostic provisioning interface for AWS and GCP, plus a wasmtime fast tier for near-0ms function workloads. Idle apps snapshot to zero machines and restore on the first request; triggers (cron, webhook, queue) wake work at $0 idle. Hosts MCP servers and is itself operable from any MCP client.",
+      "tech": [
+        "Go",
+        "Firecracker",
+        "containerd",
+        "WireGuard",
+        "OpenTelemetry",
+        "WASM",
+        "AWS",
+        "GCP",
+        "Terraform"
+      ],
+      "github": "https://github.com/blakebauman/fold"
+    },
+    {
+      "name": "memoturn-db",
+      "year": "2026",
+      "status": "Active",
+      "visibility": "public",
+      "description": "Agent-memory database: typed memories (facts, events, instructions, tasks) with supersession — newer facts replace older ones on the same topic with history preserved — idempotent ingest, and hybrid recall (keyword + topic + vector, rank-fused). Memory profiles can be checkpointed, forked, and rewound.",
+      "context": "Rust data plane embedding libSQL; each profile is its own tiny database that provisions in milliseconds and hibernates to object storage at near-zero cost when idle. Working prototype with 67 integration tests, true multi-node distribution (ownership, forwarding, failover, fencing) against real etcd, and a Helm chart proven on Kubernetes. Exposed over HTTP, MCP tools, and SDKs.",
+      "tech": ["Rust", "libSQL", "SQLite FTS5", "etcd", "MCP", "Kubernetes", "Helm"],
+      "github": "https://github.com/blakebauman/memoturn-db"
+    },
     {
       "name": "commerceworker",
       "year": "2026",
@@ -152,26 +214,6 @@
       "description": "Cloudflare-native product catalog normalization platform. Handles identity resolution and unified attribute schemas across heterogeneous catalogs.",
       "context": "The data plumbing under the visible commerce layer.",
       "tech": ["TypeScript", "Cloudflare Workers", "D1"]
-    },
-    {
-      "name": "felix-agents",
-      "year": "2025–2026",
-      "status": "Active",
-      "visibility": "public",
-      "description": "Agent framework on AWS Bedrock. Manifest-driven agents compiled into LangGraph runtimes, exposed simultaneously over A2A, MCP, OpenAI-compatible chat, and REST/SSE behind a single FastAPI gateway.",
-      "context": "Five orchestration patterns (ReAct, Deep, Router, Parallel fan-out, GroupChat), AgentCore-backed durable memory and checkpointing, DynamoDB plan artifacts, human-in-the-loop approvals, multi-channel gateway.",
-      "tech": [
-        "Python",
-        "AWS Bedrock",
-        "AgentCore",
-        "LangGraph",
-        "LangChain",
-        "MCP",
-        "A2A",
-        "FastAPI",
-        "DynamoDB",
-        "Terraform"
-      ]
     },
     {
       "name": "fleet-workspace",
