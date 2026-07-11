@@ -3,6 +3,23 @@
  * Ensures conversations stay focused on Blake Bauman's professional background
  */
 
+import resumeData from './resume.json';
+
+// Project names from the resume, matched on word boundaries so short names
+// like "fold" don't match inside unrelated words ("scaffold", "manifold").
+// Derived from resume.json so new projects are recognized without touching this file.
+const PROJECT_NAME_PATTERNS = resumeData.projects.flatMap(project => {
+  const name = project.name.toLowerCase();
+  const base = name.split(/[-.]/)[0] ?? name;
+  const variants = new Set([name, name.replace(/[-.]/g, ' ')]);
+  if (base.length >= 4) {
+    variants.add(base);
+  }
+  return [...variants].map(
+    variant => new RegExp(`\\b${variant.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}\\b`)
+  );
+});
+
 // Keywords strongly indicating on-topic questions about Blake
 // Keep this list focused - avoid generic words that appear in off-topic prompts
 const ON_TOPIC_KEYWORDS = [
@@ -100,6 +117,11 @@ export function checkTopicRelevance(prompt: string): string | null {
   );
 
   if (hasOnTopicKeyword) {
+    return null;
+  }
+
+  // Check for project names from the resume (e.g. "What is Fold?")
+  if (PROJECT_NAME_PATTERNS.some(pattern => pattern.test(lowerPrompt))) {
     return null;
   }
 
