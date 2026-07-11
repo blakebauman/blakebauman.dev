@@ -89,7 +89,7 @@ function saveMessages(messages: Message[]): void {
 }
 
 // Lazy load the chatbot UI
-const ChatbotUI = lazy(() => import('@/resume/chatbot-ui'));
+const ChatbotUI = lazy(() => import('@/components/chatbot-ui'));
 
 interface ChatbotProps {
   greeting?: string;

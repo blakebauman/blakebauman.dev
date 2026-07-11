@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
-import { PromptSchema } from '../schemas';
-import { getFirstErrorMessage } from '../schemas/errors';
+import { PromptSchema } from '..';
+import { getFirstErrorMessage } from '../errors';
 
 describe('Input Validation (using Zod schemas)', () => {
   describe('PromptSchema - sanitization', () => {

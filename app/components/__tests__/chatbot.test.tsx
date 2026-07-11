@@ -1,9 +1,9 @@
 import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
-import { AssistantMessage } from '../resume/assistant-message';
+import { AssistantMessage } from '../assistant-message';
 
 // Mock the lazy-loaded ChatbotUI component
-vi.mock('@/resume/chatbot-ui', () => ({
+vi.mock('@/components/chatbot-ui', () => ({
   default: ({
     messages,
     input,
@@ -49,7 +49,7 @@ vi.mock('@/resume/chatbot-ui', () => ({
 }));
 
 // Import after mocking
-import Chatbot from '../resume/chatbot';
+import Chatbot from '../chatbot';
 
 describe('Chatbot', () => {
   beforeEach(() => {
