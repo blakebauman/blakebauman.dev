@@ -59,7 +59,7 @@ pnpm run vectorize:query     # Test query against production index
 ### Key Directories
 - `app/chat/` - AI chat logic (`request.ts` handles AI request flow)
 - `app/schemas/` - Zod schemas for validation (chat, resume, errors)
-- `app/resume/` - Resume display components and chatbot UI
+- `app/components/` - Resume display components and chatbot UI
 - `app/lib/` - Shared utilities (vectorize population)
 - `workers/` - Cloudflare Worker entry points
 
