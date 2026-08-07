@@ -1033,7 +1033,7 @@ h1, h2, h3 { text-wrap: balance; }
   align-items: end;
 }
 @container doc (min-width: 760px) {
-  .bb-colophon-grid { grid-template-columns: minmax(0, 1fr) minmax(0, 20rem); }
+  .bb-colophon-grid { grid-template-columns: minmax(0, 1fr) minmax(0, 24rem); }
 }
 .bb-colophon p {
   font: 400 clamp(20px, 2vw, 28px)/1.5 var(--font-serif);
@@ -1042,6 +1042,11 @@ h1, h2, h3 { text-wrap: balance; }
   text-wrap: pretty;
 }
 .bb-colophon p + p { margin-top: var(--space-m); }
+.bb-colophon .cta {
+  display: grid;
+  justify-items: start;
+  gap: var(--space-l);
+}
 .bb-colophon .cta a.btn {
   display: inline-block;
   background: var(--cordovan);
@@ -1055,10 +1060,12 @@ h1, h2, h3 { text-wrap: balance; }
   transition: background var(--dur) var(--ease-out);
 }
 .bb-colophon .cta a.btn:hover { background: var(--vermilion); }
+/* Its own block, not a run-on sentence with a button parked inside it. The
+   Print control is a sibling below, so the line can wrap without stranding a
+   button mid-sentence. */
 .bb-colophon .cta .secondary {
-  display: block;
   max-width: 34ch;
-  margin-top: var(--space-l);
+  margin: 0;
   font: 500 var(--micro)/1.9 var(--font-mono);
   letter-spacing: 0.1em;
   color: var(--ink-soft);
@@ -1068,6 +1075,18 @@ h1, h2, h3 { text-wrap: balance; }
   border-bottom-color: var(--rule-strong);
 }
 .bb-colophon .cta .secondary a:hover { color: var(--cordovan); border-color: var(--cordovan); }
+
+/* Flush right, so the CTA stack presents one clean edge against the content
+   measure instead of three ragged ones. Only once the colophon is actually two
+   columns: stacked under the prose, right-aligned would read as stray. Declared
+   after the base .cta rule, since a container query adds no specificity and
+   would otherwise lose on source order. */
+@container doc (min-width: 760px) {
+  .bb-colophon .cta {
+    justify-items: end;
+    text-align: right;
+  }
+}
 
 /* ============================================================
  * Footer stamps
@@ -1129,10 +1148,15 @@ h1, h2, h3 { text-wrap: balance; }
     box-sizing: border-box;
   }
 
+  /* Expand the hit area with a pseudo-element rather than padding: padding
+     pushes the border-bottom underline away from the word it underlines. */
   .bb-colophon .cta .secondary a {
-    display: inline-block;
-    padding: 6px 4px;
-    margin: -6px -4px;
+    position: relative;
+  }
+  .bb-colophon .cta .secondary a::after {
+    content: '';
+    position: absolute;
+    inset: -9px -5px;
   }
 
   /* Row hover is a pointer affordance; suppress the sticky tint on touch */

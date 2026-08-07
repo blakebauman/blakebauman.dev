@@ -336,7 +336,7 @@ export function Resume({ chatEnabled, persona, chatGreeting, suggestedPrompts }:
               <a className="btn" href={`mailto:${resumeData.email}`}>
                 Talk to me
               </a>
-              <span className="secondary">
+              <p className="secondary">
                 Or find me on <a href={resumeData.github}>github</a>,{' '}
                 <a href={resumeData.linkedin}>linkedin</a>
                 {resumeData.bluesky && (
@@ -344,16 +344,11 @@ export function Resume({ chatEnabled, persona, chatGreeting, suggestedPrompts }:
                     , <a href={resumeData.bluesky}>bluesky</a>
                   </>
                 )}
-                .{' '}
-                <button
-                  type="button"
-                  className="bb-print-btn print:hidden"
-                  onClick={handlePrint}
-                  style={{ marginLeft: 8 }}
-                >
-                  Print
-                </button>
-              </span>
+                .
+              </p>
+              <button type="button" className="bb-print-btn print:hidden" onClick={handlePrint}>
+                Print this record
+              </button>
             </div>
           </div>
         </section>
