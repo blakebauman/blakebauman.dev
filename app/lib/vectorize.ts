@@ -88,12 +88,15 @@ Links: LinkedIn: ${validatedData.linkedin} | GitHub: ${validatedData.github} | W
           text: '', // Will be set later
         },
       },
+      // Year, status and website are indexed alongside the prose. Without them the
+      // assistant could describe a project but not say whether it was still active,
+      // when it was from, or point at its actual site — it only had the GitHub URL.
       ...validatedData.projects.map((project, index) => ({
         id: `project_${index}`,
         text: `Project: ${project.name}
 Description: ${project.description}
 ${project.context ? `Context: ${project.context}\n` : ''}Technologies: ${project.tech.join(', ')}
-GitHub: ${project.github}`,
+${project.year ? `Year: ${project.year}\n` : ''}${project.status ? `Status: ${project.status}\n` : ''}${project.github ? `GitHub: ${project.github}\n` : ''}${project.website ? `Website: ${project.website}` : ''}`,
         metadata: {
           type: 'projects' as const,
           section: 'projects',

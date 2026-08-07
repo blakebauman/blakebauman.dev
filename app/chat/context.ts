@@ -5,12 +5,24 @@ export interface ResumeContext {
   relevantSections: string;
 }
 
-// Section headings for each vector match type, in output order
+// Section headings for each vector match type, in output order.
+//
+// Every chunk type written by populateVectorizeIndex must appear here. Matches
+// are grouped by `metadata.type` and then rendered by walking this table, so a
+// type that is missing is retrieved from Vectorize and then silently dropped on
+// the floor. `ai_context` and `recognition` were both missing, which meant the
+// entire chat-only context layer (ai-context.json: the agent-infrastructure
+// detail on Felix, Memoturn, Fold and Skillist, the Adobe agentic work, the
+// Cloudflare and enterprise background) was indexed, matched, and then never
+// reached the model. `skills` is deliberately absent: it is handled separately
+// via relevantSkills just below.
 const SECTION_LABELS: Array<[type: string, label: string]> = [
   ['tools', 'Tools & Technologies'],
   ['projects', 'Projects'],
   ['exploring', 'Currently Exploring'],
   ['experience', 'Relevant Experience'],
+  ['recognition', 'Recognition'],
+  ['ai_context', 'Additional Background'],
   ['personal', 'Personal Information'],
   ['summary', 'Professional Summary'],
 ];
@@ -35,7 +47,7 @@ export function buildFullResumeContext(resumeData: ResumeData): ResumeContext {
   if (resumeData.projects?.length) {
     relevantSections += '\n\nProjects:';
     for (const project of resumeData.projects) {
-      relevantSections += `\n\nProject: ${project.name}\nDescription: ${project.description}${project.context ? `\nContext: ${project.context}` : ''}\nTechnologies: ${project.tech.join(', ')}\nGitHub: ${project.github}`;
+      relevantSections += `\n\nProject: ${project.name}\nDescription: ${project.description}${project.context ? `\nContext: ${project.context}` : ''}\nTechnologies: ${project.tech.join(', ')}${project.year ? `\nYear: ${project.year}` : ''}${project.status ? `\nStatus: ${project.status}` : ''}${project.github ? `\nGitHub: ${project.github}` : ''}${project.website ? `\nWebsite: ${project.website}` : ''}`;
     }
   }
 
