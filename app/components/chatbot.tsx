@@ -150,19 +150,22 @@ export default function Chatbot({ greeting, suggestedPrompts }: ChatbotProps = {
     scrollToBottom();
   }, [messages, scrollToBottom]);
 
-  // Focus input and scroll to bottom on mount
+  // Scroll the messages container to its bottom on mount. Intentionally no input
+  // focus here: focusing on load makes the browser scroll the page to the chat.
   useEffect(() => {
-    inputRef.current?.focus();
     // Delay scroll to ensure DOM is ready
     const timeout = setTimeout(scrollToBottom, 100);
     return () => clearTimeout(timeout);
   }, [scrollToBottom]);
 
-  // Focus input after messages update
+  // Refocus the input after a send completes — but not on initial mount, where
+  // isLoading also starts false and focusing would scroll the page to the chat.
+  const wasLoadingRef = useRef(false);
   useEffect(() => {
-    if (!isLoading) {
+    if (wasLoadingRef.current && !isLoading) {
       inputRef.current?.focus();
     }
+    wasLoadingRef.current = isLoading;
   }, [isLoading]);
 
   // Persist messages to sessionStorage
