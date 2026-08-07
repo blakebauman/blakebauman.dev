@@ -55,7 +55,14 @@
      Prose measures stay capped in `ch` so line length never follows the
      viewport. */
   --rail-w: clamp(216px, 19vw, 300px);
-  --gutter: clamp(20px, 3.4vw, 64px);   /* document inline padding */
+  --gutter: clamp(20px, 3.4vw, 64px);   /* minimum document inline padding */
+  /* Content ceiling. Full-bleed does not mean infinitely wide: past this the
+     ledger's fr tracks balloon and a row stops reading as a row (at 2560px the
+     title column was 964px holding one word, with its stack 1000px away). Only
+     the *content* is capped; section rules, the artifact band, and ledger row
+     hover still run to the edge of the document column, so the page keeps its
+     banding on a wide monitor instead of becoming a floating card. */
+  --doc-max: 1320px;
   --section-pad-y: clamp(56px, 6vw, 112px);
   --max-w: 1200px;                      /* modal / print measure only */
 
@@ -339,7 +346,20 @@ h1, h2, h3 { text-wrap: balance; }
 .bb-doc > section,
 .bb-doc > header,
 .bb-doc > footer {
-  padding-inline: var(--gutter);
+  /* vw, not %: a percentage inside a custom property resolves against each
+     using element's containing block, so the bleed rows below (already inset by
+     this padding) would compute a different, far smaller gutter. Ignores the
+     classic scrollbar, which offsets centring by ~7px at these widths. */
+  --doc-gutter: max(var(--gutter), (100vw - var(--doc-max)) / 2);
+  padding-inline: var(--doc-gutter);
+}
+
+@media (min-width: 1024px) {
+  .bb-doc > section,
+  .bb-doc > header,
+  .bb-doc > footer {
+    --doc-gutter: max(var(--gutter), (100vw - var(--rail-w) - var(--doc-max)) / 2);
+  }
 }
 
 .bb-doc > section {
@@ -530,8 +550,8 @@ h1, h2, h3 { text-wrap: balance; }
     display: grid;
     grid-template-columns: var(--ledger-cols);
     column-gap: var(--ledger-gap);
-    padding: 0 var(--gutter) var(--space-xs);
-    margin-inline: calc(var(--gutter) * -1);
+    padding: 0 var(--doc-gutter) var(--space-xs);
+    margin-inline: calc(var(--doc-gutter) * -1);
     font: 500 10px/1 var(--font-mono);
     letter-spacing: 0.2em;
     text-transform: uppercase;
@@ -545,8 +565,8 @@ h1, h2, h3 { text-wrap: balance; }
   grid-template-columns: minmax(0, 1fr) auto;
   column-gap: var(--space-m);
   row-gap: var(--space-xs);
-  padding: clamp(18px, 1.8vw, 24px) var(--gutter);
-  margin-inline: calc(var(--gutter) * -1);
+  padding: clamp(18px, 1.8vw, 24px) var(--doc-gutter);
+  margin-inline: calc(var(--doc-gutter) * -1);
   border-top: 1px solid var(--rule);
   transition: background var(--dur) var(--ease-out);
 }
@@ -655,8 +675,8 @@ h1, h2, h3 { text-wrap: balance; }
 /* Recognition: a filed entry, tinted rather than boxed */
 .bb-rec-block {
   background: var(--plat-deep);
-  padding: clamp(22px, 2.4vw, 32px) var(--gutter);
-  margin-inline: calc(var(--gutter) * -1);
+  padding: clamp(22px, 2.4vw, 32px) var(--doc-gutter);
+  margin-inline: calc(var(--doc-gutter) * -1);
 }
 .bb-rec-block + .bb-rec-block { margin-top: 2px; }
 .bb-rec-block .stamp {
@@ -1168,7 +1188,7 @@ h1, h2, h3 { text-wrap: balance; }
   a[href]::after { content: none; }
   .bb-rail, .bb-stamps, .bb-chat-frame, .bb-artifact, .bb-ledger-head { display: none !important; }
   .bb-shell { display: block; }
-  .bb-doc > section, .bb-doc > header { padding-inline: 0; }
+  .bb-doc > section, .bb-doc > header { --doc-gutter: 0px; padding-inline: 0; }
   .bb-masthead, .bb-position, .bb-record, .bb-colophon {
     padding-block: 16pt;
     border-top: 1px solid #999;
