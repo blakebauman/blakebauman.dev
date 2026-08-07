@@ -133,30 +133,44 @@
       "year": "2026",
       "status": "Active",
       "visibility": "public",
-      "description": "Developer platform that runs any Docker image as a Firecracker microVM — scale-to-zero with wake-on-request, block volumes, a WireGuard 6PN private mesh, and OpenTelemetry-native observability (including GenAI token/cost spans). Built to be the runtime for AI agents and MCP servers.",
-      "context": "Four Go binaries — CLI, control plane (REST API, scheduler, IPAM, identity/quotas), per-host agent, and edge proxy with wake-on-request — over a cloud-agnostic provisioning interface for AWS and GCP, plus a wasmtime fast tier for near-0ms function workloads. Idle apps snapshot to zero machines and restore on the first request; triggers (cron, webhook, queue) wake work at $0 idle. Hosts MCP servers and is itself operable from any MCP client.",
+      "description": "Enterprise MCP gateway — one governed endpoint between every MCP client and every MCP server. Federates multiple servers behind namespaced tools with deny-by-default ABAC policy, JWT/JWKS auth with OAuth token exchange (RFC 8693), and credential brokering so agents never hold raw API keys.",
+      "context": "Single static Go binary (~22 MB distroless image) on the official MCP Go SDK, with optional Redis for distributed fleet state. Rate limiting, circuit breakers, caching, load balancing with health checks, dynamic registry discovery, hot config reload, a console UI, and a Kubernetes discovery controller with Helm chart. Structured audit events for every request (including denials) plus OpenTelemetry tracing and Prometheus metrics. Passes the official MCP conformance suite 40/40; v1.4.1 with the API contract frozen at v1.0.0, hardened with fuzzers and chaos tests.",
       "tech": [
         "Go",
-        "Firecracker",
-        "containerd",
-        "WireGuard",
+        "MCP",
+        "OAuth 2.0",
+        "Redis",
+        "Kubernetes",
+        "Helm",
         "OpenTelemetry",
-        "WASM",
-        "AWS",
-        "GCP",
-        "Terraform"
+        "Prometheus",
+        "Docker"
       ],
-      "github": "https://github.com/blakebauman/fold"
+      "github": "https://github.com/fold-run/fold"
     },
     {
-      "name": "memoturn-db",
+      "name": "memoturn",
       "year": "2026",
       "status": "Active",
       "visibility": "public",
-      "description": "Agent-memory database: typed memories (facts, events, instructions, tasks) with supersession — newer facts replace older ones on the same topic with history preserved — idempotent ingest, and hybrid recall (keyword + topic + vector, rank-fused). Memory profiles can be checkpointed, forked, and rewound.",
-      "context": "Rust data plane embedding libSQL; each profile is its own tiny database that provisions in milliseconds and hibernates to object storage at near-zero cost when idle. Working prototype with 67 integration tests, true multi-node distribution (ownership, forwarding, failover, fencing) against real etcd, and a Helm chart proven on Kubernetes. Exposed over HTTP, MCP tools, and SDKs.",
-      "tech": ["Rust", "libSQL", "SQLite FTS5", "etcd", "MCP", "Kubernetes", "Helm"],
-      "github": "https://github.com/blakebauman/memoturn-db"
+      "description": "Open-source AI engineering platform for building, evaluating, and monitoring LLM applications in production — tracing and observability over OpenTelemetry, an evaluation framework spanning offline datasets, online production sampling, and human review, a versioned prompt registry with deployment channels, and cost/token/latency dashboards.",
+      "context": "Hono API on Bun with a Vite + TanStack Router SPA; PostgreSQL via Prisma for OLTP and Apache Doris for OLAP analytics, with Redis/Valkey and BullMQ for background work and S3-compatible storage for artifacts. Ships TypeScript, Python, and Go SDKs with LangChain and OpenAI integrations, a multi-provider playground with streaming, SSO/RBAC/audit logs, and an MCP server that exposes prompts and datasets to agent IDEs.",
+      "tech": [
+        "TypeScript",
+        "Bun",
+        "Hono",
+        "TanStack Router",
+        "PostgreSQL",
+        "Prisma",
+        "Apache Doris",
+        "Redis",
+        "BullMQ",
+        "OpenTelemetry",
+        "MCP",
+        "Python",
+        "Go"
+      ],
+      "github": "https://github.com/memoturn/memoturn"
     },
     {
       "name": "commerceworker",
