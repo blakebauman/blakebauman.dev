@@ -1,6 +1,7 @@
-import { lazy, Suspense } from 'react';
+import { lazy, Suspense, useMemo } from 'react';
 import resumeData from '../chat/resume.json';
 import { orderProjects, type Persona } from '../lib/persona';
+import { useCurrentSection } from './section-index';
 
 const Chatbot = lazy(() => import('./chatbot'));
 
@@ -61,48 +62,78 @@ export function Resume({ chatEnabled, persona, chatGreeting, suggestedPrompts }:
     persona
   );
   const todayYear = new Date().getFullYear();
-  const currentMonth = new Date().toLocaleString('en-US', { month: '2-digit', year: 'numeric' });
-  // currentMonth -> "05/2026"; reformat to YYYY-MM
   const recStamp = (() => {
     const d = new Date();
     return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
   })();
+  const filedMonth = recStamp.slice(0, 7);
+
+  // The document index. Numbers live here and only here — they do navigational
+  // work in the rail rather than sitting as an eyebrow above every heading.
+  const sections = useMemo(
+    () => [
+      { id: 'top', num: '01', label: 'Masthead' },
+      { id: 'position', num: '02', label: 'Position' },
+      { id: 'record', num: '03', label: 'Record' },
+      ...(chatEnabled ? [{ id: 'artifact', num: '04', label: 'Artifact' }] : []),
+      { id: 'colophon', num: chatEnabled ? '05' : '04', label: 'Colophon' },
+    ],
+    [chatEnabled]
+  );
+  const sectionIds = useMemo(() => sections.map(s => s.id), [sections]);
+  const current = useCurrentSection(sectionIds, 'top');
+
+  const entryCount = resumeData.experience.length + projects.length;
 
   return (
-    <>
-      <nav className="bb-nav print:hidden" aria-label="Primary">
-        <div className="bb-nav-inner">
-          <a className="bb-nav-mark" href="#top">
-            <span className="dot" aria-hidden="true" /> BLAKE BAUMAN
-          </a>
-          <div className="bb-nav-links">
-            <a className="current" href="#position">
-              <span className="mark" aria-hidden="true" /> Position
-            </a>
-            <a href="#record">
-              <span className="mark" aria-hidden="true" /> Record
-            </a>
-            {chatEnabled && (
-              <a href="#artifact">
-                <span className="mark" aria-hidden="true" /> Artifact
-              </a>
-            )}
-            <a href="#colophon">
-              <span className="mark" aria-hidden="true" /> Colophon
-            </a>
-          </div>
-        </div>
-      </nav>
+    <div className="bb-shell">
+      <aside className="bb-rail print:hidden">
+        <a className="bb-rail-mark" href="#top">
+          <span className="dot" aria-hidden="true" /> Blake Bauman
+        </a>
 
-      <main className="bb-main">
+        <nav className="bb-rail-index" aria-label="Document sections">
+          <ol>
+            {sections.map(section => (
+              <li key={section.id}>
+                <a
+                  href={`#${section.id}`}
+                  className={current === section.id ? 'current' : undefined}
+                  aria-current={current === section.id ? 'location' : undefined}
+                >
+                  <span className="num" aria-hidden="true">
+                    {section.num}
+                  </span>
+                  <span className="mark" aria-hidden="true" />
+                  <span className="label">{section.label}</span>
+                </a>
+              </li>
+            ))}
+          </ol>
+        </nav>
+
+        <div className="bb-rail-foot">
+          <span>Rec. {recStamp}</span>
+          <span>Lot 0042</span>
+        </div>
+      </aside>
+
+      <main className="bb-doc">
         <header className="bb-masthead" id="top">
-          <div className="bb-eyebrow">
+          <div className="strip">
             <span className="mark" aria-hidden="true" />
-            <span className="num">01</span> · {resumeData.name} · Rec.{' '}
-            {currentMonth.split('/').reverse().join('-')} · v0.1
+            <span>{resumeData.name}</span>
+            <span aria-hidden="true">·</span>
+            <span>Filed {filedMonth}</span>
+            <span aria-hidden="true">·</span>
+            <span>v0.1</span>
           </div>
-          <h1 className="name">{resumeData.name}</h1>
-          <p className="subhead">{linkifyProjectMentions(resumeData.copy.subhead)}</p>
+
+          <div className="name-block">
+            <h1 className="name">{resumeData.name}</h1>
+            <p className="subhead">{linkifyProjectMentions(resumeData.copy.subhead)}</p>
+          </div>
+
           <dl className="bb-masthead-meta">
             <dt>Based</dt>
             <dd>{resumeData.location}</dd>
@@ -124,49 +155,53 @@ export function Resume({ chatEnabled, persona, chatGreeting, suggestedPrompts }:
         </header>
 
         <section className="bb-position" id="position" aria-labelledby="position-label">
-          <h2 id="position-label" className="bb-eyebrow">
-            <span className="mark" aria-hidden="true" />
-            <span className="num">02</span> · Position
-          </h2>
-          {resumeData.summary.map((paragraph, idx) => (
-            <p key={paragraph.slice(0, 40)} className="lede" data-idx={idx}>
-              {paragraph}
-            </p>
-          ))}
-          <p className="footnote">{resumeData.copy.positionFootnote}</p>
+          <div className="bb-sec-head">
+            <h2 id="position-label">Position</h2>
+          </div>
+          <div className="body-grid">
+            <div className="lede-set">
+              {resumeData.summary.map(paragraph => (
+                <p key={paragraph.slice(0, 40)} className="lede">
+                  {paragraph}
+                </p>
+              ))}
+            </div>
+            <p className="footnote">{resumeData.copy.positionFootnote}</p>
+          </div>
         </section>
 
         <section className="bb-record" id="record" aria-labelledby="record-label">
-          <div className="bb-eyebrow">
-            <span className="mark" aria-hidden="true" />
-            <span className="num">03</span> · Record
+          <div className="bb-sec-head">
+            <h2 id="record-label">Record</h2>
+            <span className="stamp">{entryCount} entries</span>
           </div>
-          <h2 id="record-label">Record</h2>
 
           <div className="bb-group">
             <div className="bb-group-label">
               <span className="mark" aria-hidden="true" /> Roles
             </div>
+            <div className="bb-ledger-head" aria-hidden="true">
+              <span>Term</span>
+              <span>Role</span>
+              <span>Party</span>
+              <span>Status</span>
+            </div>
             {resumeData.experience.map((exp, idx) => (
-              <article
-                key={`${exp.company}-${exp.role}-${exp.years}`}
-                className={`bb-listing${idx === 0 ? ' first' : ''}`}
-              >
-                <div className="bb-listing-row">
-                  <div className="year">
-                    {exp.years.replace(/-/g, '–').replace(/Present/i, 'Present')}
-                  </div>
-                  <div className="body">
-                    <div className="head">
-                      <span className="role">{exp.role}</span>
-                      <span className="at">at</span>
-                      <span className="company">{exp.company}</span>
-                      <span className={`status${idx === 0 ? ' active' : ''}`}>
-                        {idx === 0 ? 'Active' : 'Filed'}
-                      </span>
-                    </div>
-                    <p className="desc">{exp.description}</p>
-                  </div>
+              <article key={`${exp.company}-${exp.role}-${exp.years}`} className="bb-listing">
+                <div className="year">{exp.years.replace(/-/g, '–')}</div>
+                <div className="title">
+                  <span className="role">{exp.role}</span>
+                </div>
+                <div className="meta">
+                  <span className="company">{exp.company}</span>
+                </div>
+                <div className="status-cell">
+                  <span className={`status${idx === 0 ? ' active' : ''}`}>
+                    {idx === 0 ? 'Active' : 'Filed'}
+                  </span>
+                </div>
+                <div className="detail">
+                  <p className="desc">{exp.description}</p>
                 </div>
               </article>
             ))}
@@ -176,37 +211,44 @@ export function Resume({ chatEnabled, persona, chatGreeting, suggestedPrompts }:
             <div className="bb-group-label">
               <span className="mark dim" aria-hidden="true" /> Working artifacts · personal
             </div>
-            {projects.map((project, idx) => {
+            <div className="bb-ledger-head" aria-hidden="true">
+              <span>Term</span>
+              <span>Entry</span>
+              <span>Stack</span>
+              <span>Status</span>
+            </div>
+            {projects.map(project => {
               const isActive = (project.status ?? '').toLowerCase() === 'active';
-              const year = project.year ?? '—';
               return (
-                <article key={project.name} className={`bb-listing${idx === 0 ? ' first' : ''}`}>
-                  <div className="bb-listing-row">
-                    <div className="year">{year}</div>
-                    <div className="body">
-                      <div className="head">
-                        <span className="role">{project.name}</span>
-                        <span className={`status${isActive ? ' active' : ''}`}>
-                          {project.status ?? 'Filed'}
-                        </span>
+                <article key={project.name} className="bb-listing">
+                  <div className="year">{project.year ?? '—'}</div>
+                  <div className="title">
+                    <span className="role">{project.name}</span>
+                  </div>
+                  <div className="meta">
+                    {project.tech && project.tech.length > 0 && (
+                      <span className="stack">
+                        {project.tech.map(t => t.toUpperCase()).join(' · ')}
+                      </span>
+                    )}
+                  </div>
+                  <div className="status-cell">
+                    <span className={`status${isActive ? ' active' : ''}`}>
+                      {project.status ?? 'Filed'}
+                    </span>
+                  </div>
+                  <div className="detail">
+                    <p className="desc">
+                      {project.description}
+                      {project.context ? ` ${project.context}` : ''}
+                    </p>
+                    {project.github && (
+                      <div className="repo">
+                        <a href={project.github} rel="noopener noreferrer">
+                          {project.github.replace(/^https?:\/\//, '')}
+                        </a>
                       </div>
-                      {project.tech && project.tech.length > 0 && (
-                        <div className="stack">
-                          {project.tech.map(t => t.toUpperCase()).join(' · ')}
-                        </div>
-                      )}
-                      <p className="desc">
-                        {project.description}
-                        {project.context ? ` ${project.context}` : ''}
-                      </p>
-                      {project.github && (
-                        <div className="repo">
-                          <a href={project.github} rel="noopener noreferrer">
-                            {project.github.replace(/^https?:\/\//, '')}
-                          </a>
-                        </div>
-                      )}
-                    </div>
+                    )}
                   </div>
                 </article>
               );
@@ -220,7 +262,7 @@ export function Resume({ chatEnabled, persona, chatGreeting, suggestedPrompts }:
               </div>
               {resumeData.recognition.map(item => (
                 <div key={item.title} className="bb-rec-block">
-                  <div className="stamp">Recognition · Rec. {item.year}</div>
+                  <div className="stamp">Rec. {item.year}</div>
                   <p className="title">{item.title}</p>
                   <p className="desc">{item.description}</p>
                 </div>
@@ -231,42 +273,61 @@ export function Resume({ chatEnabled, persona, chatGreeting, suggestedPrompts }:
 
         {chatEnabled && (
           <section className="bb-artifact" id="artifact" aria-labelledby="artifact-label">
-            <div className="bb-eyebrow">
-              <span className="mark" aria-hidden="true" />
-              <span className="num">04</span> · Working artifact
+            <div className="bb-sec-head">
+              <h2 id="artifact-label">{resumeData.copy.artifactHeading}</h2>
+              <span className="stamp">Live</span>
             </div>
-            <h2 id="artifact-label">{resumeData.copy.artifactHeading}</h2>
-            <p className="frame-text">{resumeData.copy.artifactSubhead}</p>
-            <div className="bb-chat-frame" role="region" aria-label="Resume chatbot demonstration">
-              <Suspense
-                fallback={
-                  <div
-                    style={{
-                      minHeight: 240,
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                      font: '500 11px/1 var(--font-mono)',
-                      letterSpacing: '0.18em',
-                      textTransform: 'uppercase',
-                      opacity: 0.5,
-                    }}
-                  >
-                    Loading the index…
-                  </div>
-                }
-              >
-                <Chatbot greeting={chatGreeting} suggestedPrompts={suggestedPrompts} />
-              </Suspense>
+
+            <div className="bb-artifact-grid">
+              <div className="bb-artifact-aside">
+                <p className="frame-text">{resumeData.copy.artifactSubhead}</p>
+                <ul className="notes">
+                  <li>
+                    <span className="mark" aria-hidden="true" />
+                    Retrieval over the same record you are reading
+                  </li>
+                  <li>
+                    <span className="mark" aria-hidden="true" />
+                    Workers AI · Vectorize · streamed from the edge
+                  </li>
+                  <li>
+                    <span className="mark" aria-hidden="true" />
+                    Off-topic questions are declined, not improvised
+                  </li>
+                </ul>
+              </div>
+
+              <div className="bb-chat-frame" role="region" aria-label="Resume chatbot">
+                <Suspense
+                  fallback={
+                    <div
+                      style={{
+                        minHeight: 240,
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        font: '500 11px/1 var(--font-mono)',
+                        letterSpacing: '0.18em',
+                        textTransform: 'uppercase',
+                        color: 'var(--ink-soft)',
+                      }}
+                    >
+                      Loading the index…
+                    </div>
+                  }
+                >
+                  <Chatbot greeting={chatGreeting} suggestedPrompts={suggestedPrompts} />
+                </Suspense>
+              </div>
             </div>
           </section>
         )}
 
         <section className="bb-colophon" id="colophon" aria-labelledby="colophon-label">
-          <h2 id="colophon-label" className="bb-eyebrow">
-            <span className="mark" aria-hidden="true" />
-            <span className="num">05</span> · Colophon
-          </h2>
+          <div className="bb-sec-head">
+            <h2 id="colophon-label">Colophon</h2>
+            <span className="stamp">v0.1</span>
+          </div>
           <div className="bb-colophon-grid">
             <div>
               <p>{resumeData.copy.colophon}</p>
@@ -308,6 +369,6 @@ export function Resume({ chatEnabled, persona, chatGreeting, suggestedPrompts }:
           </div>
         </footer>
       </main>
-    </>
+    </div>
   );
 }

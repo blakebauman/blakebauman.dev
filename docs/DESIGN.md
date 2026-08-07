@@ -98,7 +98,7 @@ The signature gesture is the **Enamel Mark**, a 6–8px solid-ink square that re
 **Key Characteristics:**
 
 - Type carries hierarchy; ink-weight punctuates. The system is monochromatic: a single cool-tinted hue (~250°) at five lightness stops.
-- Single committed light theme. No dark mode. The Slate Mist ground is the brand decision.
+- Two committed themes, selected by `prefers-color-scheme` alone. No toggle, no control in the UI: the page is a record, not a preferences panel. Slate Mist is the primary ground and the one the frontmatter documents; the dark ground is its designed counterpart, not an inversion.
 - Hairline-only rounding: 0px (display, marks, masthead) and 2px (buttons, tinted surfaces). No SaaS-default 8–12px radii.
 - Real-estate-listing register: **listing block**, **plat rule**, **enamel mark**, **recordation stamp** are the four signature motifs.
 - IBM Plex three-voice: Sans Condensed (display), Serif (body, anchoring the editorial register), Mono (eyebrows, metadata, code).
@@ -135,6 +135,25 @@ A monochromatic ink scale on a cool-tinted ground. Every value sits on the same 
 **The Punctuation Rule.** Cordovan-stop ink punctuates ≤10% of pixel surface. The body sits at Inkpress (18% ink); Cordovan (10% ink) is reserved for marks, links, CTAs, and current-state indicators. If the deepest stop reaches 30%+, something is wrong with the typesetting.
 
 **The Single-Hue Rule.** Every color in the system sits on hue 250° with chroma ≤0.005. No saturated accent, no warm-cool contrast, no second hue. The brand commits to monochrome; emphasis is lightness, not saturation. If a designer reaches for a saturated value to "add warmth" or "make it pop," that's the reflex this rule exists to refuse. The rule replaces the prior Warm-Cool Inversion Rule, which was retired with the move to monochrome.
+
+### After Hours: the dark ramp
+
+Served on `prefers-color-scheme: dark`. Same hue, same chroma, same five roles. The ramp is rebuilt end-for-end rather than flipped, because the organising idea is *emphasis is the strongest tone on the page*: on paper that is the deepest stop, on a dark ground it is the brightest.
+
+- **Cordovan** `oklch(97% 0.005 250)` / `#F3F5F8` — emphasis. Same role, opposite end. Still ≤10% of surface.
+- **Vermilion** `oklch(78% 0.005 250)` / `#B5B8BA` — hover lift. Still moves *toward the ground*: ink lightened 10%→30% on paper, so here it dims 97%→78%. Same gesture, same direction of travel.
+- **Inkpress** `oklch(90% 0.005 250)` / `#DBDEE1` — body. Never pure white; 100% blooms on a dark ground.
+- **Slate Mist** `oklch(22% 0.005 250)` / `#191B1D` — ground. Never pure black.
+- **Plat Deep** `oklch(27% 0.005 250)` / `#242628` — lifted surface. In dark, a lift is *lighter*. Flipping the light values would sink it into a hole instead.
+- **Ink-soft** `oklch(70% 0.005 250)` / `#9C9FA1` — AA metadata.
+
+**The Perceptual-Floor Rule.** OKLCH lightness is perceptual, not sRGB-linear: `oklch(14%)` renders `#08090B`, which is black for practical purposes and collapses the gap between ground and lifted surface. The dark ground sits at 22% and Plat Deep at 27%, preserving the same perceptual step the light theme has between 91% and 87%. Verify a dark value's rendered hex before trusting its lightness number.
+
+**The Alpha-Asymmetry Rule.** Plat Rules invert to light-on-dark, and their alphas come down with them: a white hairline at 0.55 reads far heavier than a black one at the same value. Dark uses 0.16 / 0.40 / 0.09 against light's 0.18 / 0.55 / 0.10.
+
+**The No-Dimmed-Emphasis Rule.** Disabled states never dim an emphasis fill with `opacity`. That reads as muted on paper and as a bright grey block in dark, where it becomes the loudest element on screen while being non-interactive. Disabled controls go ghost: transparent fill, ink-soft label, hairline rule.
+
+Print resets the ramp to ink-on-white regardless of scheme, so a dark-mode visitor's printout is not a sheet of black.
 
 ## 3. Typography
 
@@ -275,7 +294,8 @@ A small 1px-bordered mono label sitting inside the listing-block header.
 - **Don't** use `border-left` or `border-right` greater than 1px as a colored stripe accent on cards, list items, or callouts. Side-stripe borders are an absolute ban.
 - **Don't** add the hero-metric template (big number + small label + supporting stats + gradient accent). SaaS cliché, named in the absolute bans.
 - **Don't** stack identical card grids. Three identical icon+heading+text cards in a row is a watch-list pattern from PRODUCT.md.
-- **Don't** ship dark mode without a designed dark variant. Single-mode commitment is the brand decision; if dark is added later, it requires a real dark palette pass, not just inverted tokens.
+- **Don't** extend the dark theme by inverting light values. The dark ramp is a designed variant with its own lightness stops and its own alpha scale; see "After Hours" in the Colors section. New tokens need a dark counterpart chosen by role, not by arithmetic.
+- **Don't** add a theme toggle. The two themes follow `prefers-color-scheme` and nothing else. A control would make the page a preferences panel; it is a record.
 - **Don't** add scroll choreography, parallax, autoplay video, or "wow on load" animations. Motion is permitted only where it serves comprehension. PRODUCT.md anti-reference: Awwwards-bait.
 - **Don't** use exclamation points outside of quoted speech.
 - **Don't** use em dashes in copy. Use commas, colons, semicolons, periods, parentheses.

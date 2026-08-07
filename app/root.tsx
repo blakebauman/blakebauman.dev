@@ -45,7 +45,9 @@ export function Layout({ children }: { children: React.ReactNode }) {
       <head>
         <meta charSet="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
-        <meta name="theme-color" content="#E5E7EA" />
+        {/* Matches the Slate Mist ground / its dark counterpart in app.css. */}
+        <meta name="theme-color" media="(prefers-color-scheme: light)" content="#E5E7EA" />
+        <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#191B1D" />
         <meta name="description" content={metaDescription} />
 
         {/* Open Graph */}
