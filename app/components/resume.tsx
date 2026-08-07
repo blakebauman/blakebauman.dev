@@ -23,9 +23,34 @@ interface ProjectEntry {
   context?: string;
   tech: string[];
   github?: string;
+  website?: string;
   year?: string;
   status?: string;
   visibility?: 'public' | 'private';
+}
+
+// Project name -> external site, for linkifying project mentions in the hero subhead.
+const PROJECT_SITES = new Map<string, string>(
+  (resumeData.projects as ProjectEntry[]).flatMap(p =>
+    p.website ? [[p.name.toLowerCase(), p.website] as [string, string]] : []
+  )
+);
+
+const PROJECT_MENTION = new RegExp(`\\b(${[...PROJECT_SITES.keys()].join('|')})\\b`, 'gi');
+
+function linkifyProjectMentions(text: string) {
+  if (PROJECT_SITES.size === 0) return text;
+  return text.split(PROJECT_MENTION).map((part, index) => {
+    const site = PROJECT_SITES.get(part.toLowerCase());
+    return site ? (
+      // biome-ignore lint/suspicious/noArrayIndexKey: static text, parts never reorder
+      <a key={index} href={site} target="_blank" rel="noopener noreferrer">
+        {part}
+      </a>
+    ) : (
+      part
+    );
+  });
 }
 
 export function Resume({ chatEnabled, persona, chatGreeting, suggestedPrompts }: ResumeProps) {
@@ -77,7 +102,7 @@ export function Resume({ chatEnabled, persona, chatGreeting, suggestedPrompts }:
             {currentMonth.split('/').reverse().join('-')} · v0.1
           </div>
           <h1 className="name">{resumeData.name}</h1>
-          <p className="subhead">{resumeData.copy.subhead}</p>
+          <p className="subhead">{linkifyProjectMentions(resumeData.copy.subhead)}</p>
           <dl className="bb-masthead-meta">
             <dt>Based</dt>
             <dd>{resumeData.location}</dd>

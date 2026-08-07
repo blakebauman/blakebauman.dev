@@ -126,7 +126,8 @@
         "A2A",
         "Stripe"
       ],
-      "github": "https://github.com/blakebauman/felix"
+      "github": "https://github.com/blakebauman/felix",
+      "website": "https://docs.felix.run/"
     },
     {
       "name": "fold",
@@ -146,7 +147,8 @@
         "Prometheus",
         "Docker"
       ],
-      "github": "https://github.com/fold-run/fold"
+      "github": "https://github.com/fold-run/fold",
+      "website": "https://fold.run/"
     },
     {
       "name": "memoturn",
@@ -170,7 +172,8 @@
         "Python",
         "Go"
       ],
-      "github": "https://github.com/memoturn/memoturn"
+      "github": "https://github.com/memoturn/memoturn",
+      "website": "https://memoturn.com/"
     },
     {
       "name": "commerceworker",
