@@ -50,7 +50,7 @@
     "@tailwindcss/vite": "^4.0.7",
     "@testing-library/jest-dom": "^6.6.3",
     "@testing-library/react": "^16.2.0",
-    "@types/node": "^20.17.19",
+    "@types/node": "^26.1.2",
     "@types/react": "^19.0.10",
     "@types/react-dom": "^19.0.4",
     "@vitest/coverage-v8": "^3.0.7",
