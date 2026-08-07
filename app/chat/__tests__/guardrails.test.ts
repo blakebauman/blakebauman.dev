@@ -37,6 +37,20 @@ describe('checkTopicRelevance', () => {
     });
   });
 
+  describe('allows prompts naming the agentic work', () => {
+    it.each([
+      'What is CX Enterprise Coworker?',
+      'What is CX Enterprise Coworker and how is it used?',
+      'Explain Adobe Experience Platform Agent Orchestrator',
+      'What agent orchestration platforms has been used here?',
+      'Has any agentic AI shipped to production?',
+      'What is the MCP gateway for?',
+      'Any experience building multi-agent systems?',
+    ])('allows: %s', prompt => {
+      expect(checkTopicRelevance(prompt)).toBeNull();
+    });
+  });
+
   describe('allows short follow-up prompts', () => {
     it.each([
       'Tell me more',

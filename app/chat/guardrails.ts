@@ -61,6 +61,16 @@ const ON_TOPIC_KEYWORDS = [
   'aem',
   'magento',
   'commerce',
+  // Agentic work. "What is CX Enterprise Coworker?" carries no name, no pronoun
+  // and no company, so without these it tripped the length fallback and got
+  // redirected — the exact question this content exists to answer.
+  'agentic',
+  'coworker',
+  'orchestrator',
+  'agent orchestration',
+  'experience platform',
+  'multi-agent',
+  'mcp',
   // Interest/exploration
   'exploring',
   'learning',

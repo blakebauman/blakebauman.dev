@@ -12,11 +12,11 @@
   "website": "https://blakebauman.dev",
   "bluesky": "https://bsky.app/profile/blakebauman.dev",
   "summary": [
-    "I'm a Principal Technical Architect at Adobe. For Fortune 500 clients I architect and ship enterprise commerce on Adobe Commerce and AEM Edge Delivery Services — including one of the first production EDS plus Commerce B2B integrations — and increasingly the agentic layer on top of it via Adobe Agent Orchestrator. I know how Commerce systems fail, how to migrate them, and how to build teams around them.",
-    "Outside client work I build agent infrastructure across four layers: the harness (Felix, a managed-agents harness on Cloudflare Workers with manifest-defined agents, swappable session strategies, and an agentic commerce layer), the evaluation layer (Memoturn, an open-source AI engineering platform for building, evaluating, and monitoring LLM applications in production — tracing, evals, prompt registry, cost analytics), the governance layer (Fold, an enterprise MCP gateway in Go that federates every MCP server behind one governed endpoint with deny-by-default policy and credential brokering), and the skills layer (Skillist, a realtime registry where agents publish, version, and discover reusable skills). Earlier iterations of this work ran on AWS Bedrock, AgentCore, and LangGraph. The list below is the live record; the chatbot below it answers questions about it."
+    "I'm a Principal Technical Architect at Adobe. For Fortune 500 clients I architect and ship enterprise commerce on Adobe Commerce and AEM Edge Delivery Services, including one of the first production EDS plus Commerce B2B integrations, and increasingly the agentic layer on top of it. I build client solutions on Adobe Experience Platform Agent Orchestrator and CX Enterprise Coworker, which coordinate agents across analytics, content production, and journey orchestration with governance and human approval in the loop, and I've contributed to the core code behind them. I know how Commerce systems fail, how to migrate them, and how to build teams around them.",
+    "Outside client work I build agent infrastructure across four layers: the harness (Felix, a managed-agents harness on Cloudflare Workers with manifest-defined agents, swappable session strategies, and an agentic commerce layer), the evaluation layer (Memoturn, an open-source AI engineering platform for building, evaluating, and monitoring LLM applications in production: tracing, evals, prompt registry, cost analytics), the governance layer (Fold, an enterprise MCP gateway in Go that federates every MCP server behind one governed endpoint with deny-by-default policy and credential brokering), and the skills layer (Skillist, a realtime registry where agents publish, version, and discover reusable skills). Earlier iterations of this work ran on AWS Bedrock, AgentCore, and LangGraph. The list below is the live record; the chatbot below it answers questions about it."
   ],
   "copy": {
-    "subhead": "Principal Technical Architect. Enterprise commerce on Adobe Commerce and AEM Edge Delivery Services. Edge-platform work on Cloudflare. Agentic AI on Adobe Agent Orchestrator, plus independent agent infrastructure: Felix (harness), Memoturn (evals & observability), Fold (MCP gateway), Skillist (skills registry).",
+    "subhead": "Principal Technical Architect. Enterprise commerce on Adobe Commerce and AEM Edge Delivery Services. Agentic CX on Adobe Experience Platform Agent Orchestrator and CX Enterprise Coworker. Edge-platform work on Cloudflare, plus independent agent infrastructure: Felix (harness), Memoturn (evals & observability), Fold (MCP gateway), Skillist (skills registry).",
     "positionFootnote": "8+ YEARS · ENTERPRISE COMMERCE · EDGE PLATFORMS · MULTI-AGENT AI WORKFLOWS · ZERO-DOWNTIME MIGRATIONS · COMMERCE FAILURE MODES & HOW TO FIX THEM.",
     "artifactHeading": "Ask the resume",
     "artifactSubhead": "It will tell you what I've worked on and what I haven't.",
@@ -62,13 +62,15 @@
     "Amazon Bedrock AgentCore",
     "Model Context Protocol",
     "Agent-to-Agent (A2A)",
-    "Adobe Agent Orchestrator",
     "Go",
     "Rust",
     "Kubernetes",
     "OpenTelemetry",
     "Cloudflare Durable Objects",
-    "Cloudflare Vectorize"
+    "Cloudflare Vectorize",
+    "Adobe Experience Platform Agent Orchestrator",
+    "CX Enterprise Coworker",
+    "Adobe Experience Platform"
   ],
   "tools": {
     "Edge & Runtime": ["Cloudflare Workers", "Durable Objects", "Edge Computing", "Hono", "Bun"],
@@ -82,7 +84,9 @@
       "AgentCore",
       "MCP",
       "A2A",
-      "Adobe Agent Orchestrator"
+      "Adobe Agent Orchestrator",
+      "Adobe Experience Platform Agent Orchestrator",
+      "CX Enterprise Coworker"
     ],
     "Data & Backend": ["Postgres", "Prisma", "Apache Doris", "Redis", "Drizzle ORM"],
     "Systems & Infra": ["Go", "Rust", "Kubernetes", "Helm", "OpenTelemetry", "Terraform"],
@@ -101,7 +105,9 @@
       "Durable agent memory",
       "Agentic commerce (ACP)",
       "LLM evals and production observability",
-      "MCP federation and governance"
+      "MCP federation and governance",
+      "Agentic customer experience orchestration",
+      "Agent governance and human-in-the-loop approval"
     ],
     "Edge Infrastructure": ["Cloudflare Workflows", "Cloudflare D1", "Design Patterns"]
   },
@@ -111,7 +117,7 @@
       "year": "2025–2026",
       "status": "Active",
       "visibility": "public",
-      "description": "Managed agents harness on Cloudflare Workers, shaped after Anthropic's Managed Agents architecture. Manifest-defined agents compile into runnable agents exposed over OpenAI-compatible chat, A2A, MCP, and REST/SSE — with Felix Commerce, an agentic commerce layer (Agentic Commerce Protocol merchant endpoint, approval-gated Stripe checkout, per-brand D2C storefronts, B2B quote-to-cash), on top.",
+      "description": "Managed agents harness on Cloudflare Workers, shaped after Anthropic's Managed Agents architecture. Manifest-defined agents compile into runnable agents exposed over OpenAI-compatible chat, A2A, MCP, and REST/SSE. On top sits Felix Commerce, an agentic commerce layer (Agentic Commerce Protocol merchant endpoint, approval-gated Stripe checkout, per-brand D2C storefronts, B2B quote-to-cash), on top.",
       "context": "Three swappable seams: session strategies (full replay, windowed, summarizing, semantic), pattern and model-provider registries (ReAct, Deep, Router, Parallel, GroupChat, Reflect, Plan-Execute across Anthropic, OpenAI, and Workers AI), and transport-labelled tool executors (local, MCP, A2A, container, sandbox, browser, queue). Includes HITL approvals, append-only audit log, eval harness with golden datasets, guardrails, and A2A federation. Evolved from an earlier AWS Bedrock + LangGraph implementation. Docs at docs.felix.run.",
       "tech": [
         "TypeScript",
@@ -134,7 +140,7 @@
       "year": "2026",
       "status": "Active",
       "visibility": "public",
-      "description": "Enterprise MCP gateway — one governed endpoint between every MCP client and every MCP server. Federates multiple servers behind namespaced tools with deny-by-default ABAC policy, JWT/JWKS auth with OAuth token exchange (RFC 8693), and credential brokering so agents never hold raw API keys.",
+      "description": "Enterprise MCP gateway: one governed endpoint between every MCP client and every MCP server. Federates multiple servers behind namespaced tools with deny-by-default ABAC policy, JWT/JWKS auth with OAuth token exchange (RFC 8693), and credential brokering so agents never hold raw API keys.",
       "context": "Single static Go binary (~22 MB distroless image) on the official MCP Go SDK, with optional Redis for distributed fleet state. Rate limiting, circuit breakers, caching, load balancing with health checks, dynamic registry discovery, hot config reload, a console UI, and a Kubernetes discovery controller with Helm chart. Structured audit events for every request (including denials) plus OpenTelemetry tracing and Prometheus metrics. Passes the official MCP conformance suite 40/40; v1.4.1 with the API contract frozen at v1.0.0, hardened with fuzzers and chaos tests.",
       "tech": [
         "Go",
@@ -155,7 +161,7 @@
       "year": "2026",
       "status": "Active",
       "visibility": "public",
-      "description": "Open-source AI engineering platform for building, evaluating, and monitoring LLM applications in production — tracing and observability over OpenTelemetry, an evaluation framework spanning offline datasets, online production sampling, and human review, a versioned prompt registry with deployment channels, and cost/token/latency dashboards.",
+      "description": "Open-source AI engineering platform for building, evaluating, and monitoring LLM applications in production: tracing and observability over OpenTelemetry, an evaluation framework spanning offline datasets, online production sampling, and human review, a versioned prompt registry with deployment channels, and cost/token/latency dashboards.",
       "context": "Hono API on Bun with a Vite + TanStack Router SPA; PostgreSQL via Prisma for OLTP and Apache Doris for OLAP analytics, with Redis/Valkey and BullMQ for background work and S3-compatible storage for artifacts. Ships TypeScript, Python, and Go SDKs with LangChain and OpenAI integrations, a multi-provider playground with streaming, SSO/RBAC/audit logs, and an MCP server that exposes prompts and datasets to agent IDEs.",
       "tech": [
         "TypeScript",
@@ -180,7 +186,7 @@
       "year": "2026",
       "status": "Active",
       "visibility": "public",
-      "description": "Realtime registry and management platform for AI agent skills — publish, version, improve, and deliver reusable skills that agents discover and execute, following the agentskills.io spec.",
+      "description": "Realtime registry and management platform for AI agent skills: publish, version, improve, and deliver reusable skills that agents discover and execute, following the agentskills.io spec.",
       "context": "Cloudflare Workers with Hono and Durable Objects for realtime WebSocket/SSE updates, Neon Postgres via Hyperdrive, R2 and KV storage, and Workers AI. Vite + TanStack Router console with shadcn/ui and Tailwind v4, Better Auth (OAuth, magic links, passkeys), a hosted sandbox execution environment, and a CLI (@skillist/cli) for local skill development. Two npm packages published under MIT; deployed via GitHub Actions.",
       "tech": [
         "TypeScript",
@@ -307,7 +313,7 @@
       "company": "Adobe",
       "role": "Principal Technical Architect",
       "years": "2022–Present",
-      "description": "Delivered one of the first production AEM Edge Delivery Services plus Adobe Commerce B2B integrations, for a Fortune 500 company. Ran a webinar on Commerce with Edge Delivery that became a reference for Adobe's enterprise teams."
+      "description": "Delivered one of the first production AEM Edge Delivery Services plus Adobe Commerce B2B integrations, for a Fortune 500 company. Now works the agentic layer on top of that stack from both sides: builds client solutions on Adobe Experience Platform Agent Orchestrator, which plans a task, calls the specialized Experience Platform agents it needs, and returns one response under human oversight, and on CX Enterprise Coworker, Adobe's agentic CX platform that reached general availability in June 2026, and has contributed to the core code behind them. Ran a webinar on Commerce with Edge Delivery that became a reference for Adobe's enterprise teams."
     },
     {
       "company": "Adobe",
