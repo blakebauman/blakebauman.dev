@@ -2,58 +2,16 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
 import type { Env } from '../../types';
 import { requestAI } from '../request';
 
-// Mock resume data (must match ResumeDataSchema - request.ts uses resumeJson for context)
-const mockResumeData = {
-  name: 'Test User',
-  title: 'Software Engineer',
-  location: 'Test Location',
-  email: 'test@example.com',
-  phone: '123-456-7890',
-  linkedin: 'https://linkedin.com/in/test',
-  github: 'https://github.com/test',
-  website: 'https://test.com',
-  skills: ['JavaScript', 'TypeScript', 'React'],
-  tools: ['JavaScript', 'TypeScript', 'React'],
-  exploring: ['AI', 'LLMs'],
-  projects: [
-    {
-      name: 'test-project',
-      description: 'A test project',
-      tech: ['TypeScript', 'React'],
-      github: 'https://github.com/test/test-project',
-    },
-  ],
-  experience: [
-    {
-      company: 'Test Company',
-      role: 'Senior Developer',
-      years: '2020-2023',
-      description: 'Led development of key features',
-    },
-  ],
-  summary: ['Test professional summary.'],
-  blockquote: { text: 'I learn {word} fast.', highlight: 'things' },
-  sections: {
-    tools: 'Tools intro.',
-    exploring: 'Exploring intro.',
-    projects: 'Projects intro.',
-    contact: 'Contact intro.',
-  },
-};
-
 // Mock execution context
 const mockCtx = {
   waitUntil: vi.fn(),
   passThroughOnException: vi.fn(),
   props: {},
-};
+  exports: {},
+} as unknown as ExecutionContext;
 
 // Mock environment - request.ts uses AI.run for both embeddings and LLM (not AI_EMBEDDINGS)
 const mockEnv = {
-  RESUME_DATA_KV: {
-    get: vi.fn(),
-    put: vi.fn(),
-  },
   AI: {
     run: vi.fn(),
   },
@@ -66,9 +24,6 @@ const mockEnv = {
 describe('requestAI', () => {
   beforeEach(() => {
     vi.clearAllMocks();
-
-    // Mock KV get to return resume data
-    mockEnv.RESUME_DATA_KV.get.mockResolvedValue(mockResumeData);
 
     // Mock Vectorize query
     mockEnv.VECTORIZE.query.mockResolvedValue({
@@ -106,22 +61,6 @@ describe('requestAI', () => {
     expect(response.status).toBe(200);
     const data = (await response.json()) as { choices: Array<{ message: { content: string } }> };
     expect(data.choices[0]?.message.content).toBe('Test response');
-  });
-
-  it('should fetch resume data from KV if not present', async () => {
-    mockEnv.RESUME_DATA_KV.get.mockResolvedValue(null);
-
-    const request = new Request('http://test.com', {
-      method: 'POST',
-      body: JSON.stringify({ prompt: 'Tell me about your experience' }),
-    });
-
-    await requestAI({
-      request,
-      context: { cloudflare: { env: mockEnv as unknown as Env, ctx: mockCtx } },
-    });
-
-    expect(mockEnv.RESUME_DATA_KV.put).toHaveBeenCalled();
   });
 
   it('should handle empty embeddings by falling back to full resume', async () => {

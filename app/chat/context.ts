@@ -1,5 +1,4 @@
 import type { Env, ResumeData, VectorMatch } from '../types';
-import resumeJson from './resume.json';
 
 export interface ResumeContext {
   relevantSkills: string[];
@@ -65,19 +64,7 @@ export async function searchResumeContext(
   resumeData: ResumeData
 ): Promise<ResumeContext> {
   try {
-    // Run KV check and embeddings generation in parallel
-    const [resume, embeddings] = await Promise.all([
-      env.RESUME_DATA_KV.get<ResumeData>('resume_json', 'json'),
-      env.AI.run('@cf/baai/bge-base-en-v1.5', { text: [prompt] }),
-    ]);
-
-    // Update KV if missing or stale (fire and forget - don't await)
-    const hasTools =
-      resume?.tools &&
-      (Array.isArray(resume.tools) ? resume.tools.length : Object.keys(resume.tools).length);
-    if (!resume || !resume.projects || !hasTools) {
-      env.RESUME_DATA_KV.put('resume_json', JSON.stringify(resumeJson));
-    }
+    const embeddings = await env.AI.run('@cf/baai/bge-base-en-v1.5', { text: [prompt] });
 
     let relevantSections = '';
     let relevantSkills: string[] = [];
@@ -88,8 +75,6 @@ export async function searchResumeContext(
         topK: 8, // Broaden recall so short prompts still surface relevant chunks
         returnMetadata: 'all',
       });
-
-      console.log('Vector search results:', JSON.stringify(vectorResults));
 
       // Process matches by type
       const matchesByType = vectorResults.matches.reduce(

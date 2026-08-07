@@ -30,10 +30,34 @@ export function sseTransformResponse(
   const transformedStream = new ReadableStream({
     async start(controller) {
       const reader = stream.getReader();
+
+      // Workers AI streams in SSE format: data: {"response":"text"}
+      const processLine = (line: string) => {
+        if (!line.startsWith('data: ')) return;
+        const jsonStr = line.slice(6).trim();
+        if (jsonStr === '[DONE]') return;
+        try {
+          const parsed = JSON.parse(jsonStr) as { response?: string };
+          if (parsed.response) {
+            accumulatedResponse += parsed.response;
+            controller.enqueue(
+              encoder.encode(`data: ${JSON.stringify({ content: parsed.response })}\n\n`)
+            );
+          }
+        } catch {
+          // Malformed event - skip
+        }
+      };
+
       try {
+        // SSE events can be split across network chunks, so buffer the trailing
+        // partial line and prepend it to the next chunk instead of dropping it.
+        let buffer = '';
         while (true) {
           const { done, value } = await reader.read();
           if (done) {
+            buffer += decoder.decode();
+            if (buffer) processLine(buffer);
             controller.enqueue(encoder.encode('data: [DONE]\n\n'));
             if (accumulatedResponse) {
               onComplete(accumulatedResponse);
@@ -42,30 +66,11 @@ export function sseTransformResponse(
             break;
           }
 
-          // Decode the chunk and extract content
-          const text = decoder.decode(value, { stream: true });
-
-          // Workers AI streams in SSE format: data: {"response":"text"}
-          const lines = text.split('\n');
+          buffer += decoder.decode(value, { stream: true });
+          const lines = buffer.split('\n');
+          buffer = lines.pop() ?? '';
           for (const line of lines) {
-            if (line.startsWith('data: ')) {
-              const jsonStr = line.slice(6);
-              if (jsonStr === '[DONE]') {
-                controller.enqueue(encoder.encode('data: [DONE]\n\n'));
-                continue;
-              }
-              try {
-                const parsed = JSON.parse(jsonStr) as { response?: string };
-                if (parsed.response) {
-                  accumulatedResponse += parsed.response;
-                  controller.enqueue(
-                    encoder.encode(`data: ${JSON.stringify({ content: parsed.response })}\n\n`)
-                  );
-                }
-              } catch {
-                // Not valid JSON, might be partial - skip
-              }
-            }
+            processLine(line);
           }
         }
       } catch (error) {

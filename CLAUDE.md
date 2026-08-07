@@ -48,7 +48,7 @@ pnpm run vectorize:query     # Test query against production index
 - **Framework**: React Router v7 with SSR
 - **Styling**: Tailwind CSS v4
 - **Deployment**: Cloudflare Workers
-- **AI Services**: Workers AI (embeddings + LLM), Vectorize (vector search), KV (data storage)
+- **AI Services**: Workers AI (embeddings + LLM), Vectorize (vector search)
 - **Validation**: Zod v4 for runtime schema validation
 
 ### Entry Points
@@ -64,9 +64,9 @@ pnpm run vectorize:query     # Test query against production index
 - `workers/` - Cloudflare Worker entry points
 
 ### Cloudflare Bindings (wrangler.jsonc)
-- `AI` - Workers AI for embeddings (@cf/baai/bge-base-en-v1.5) and LLM (@cf/meta/llama-3.1-8b-instruct)
+- `AI` - Workers AI for embeddings (@cf/baai/bge-base-en-v1.5) and LLM (@cf/meta/llama-3.3-70b-instruct-fp8-fast)
 - `VECTORIZE` - Vector index for semantic resume search (768 dimensions, index: resume-index-768)
-- `RESUME_DATA_KV` - KV namespace for resume JSON and rate limiting
+- `CHAT_RATE_LIMITER` - Native Workers rate limiting binding (20 req/min per IP; absent in local dev)
 
 ### AI Chat Flow
 1. User sends prompt to `/api/chat` (rate limited: 20 req/min per IP)

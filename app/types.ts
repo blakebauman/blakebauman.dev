@@ -30,7 +30,11 @@ interface AIRunResult {
 }
 
 export interface Env {
-  RESUME_DATA_KV: KVNamespace;
+  // Native Workers rate limiting binding (wrangler.jsonc "ratelimits").
+  // Optional: absent in local dev, where rate limiting is skipped.
+  CHAT_RATE_LIMITER?: {
+    limit(options: { key: string }): Promise<{ success: boolean }>;
+  };
   CHAT_LOGS_DB: D1Database;
   AI: {
     run(model: string, input: AIRunInput & { stream: true }): Promise<ReadableStream>;

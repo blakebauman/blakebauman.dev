@@ -1,7 +1,7 @@
 {
   "$schema": "./node_modules/wrangler/config-schema.json",
   "name": "blakebauman-dev",
-  "compatibility_date": "2025-02-11",
+  "compatibility_date": "2026-03-02",
   "compatibility_flags": ["nodejs_compat"],
   "main": "./build/server/index.js",
   "assets": {
@@ -21,13 +21,11 @@
     "NODE_ENV": "production",
     "CHAT_ENABLED": "true"
   },
+  "observability": {
+    "enabled": true
+  },
   "ai": {
-    "binding": "AI",
-    "model": "@cf/baai/bge-base-en-v1.5",
-    "embeddings": {
-      "binding": "AI_EMBEDDINGS",
-      "model": "@cf/baai/bge-base-en-v1.5"
-    }
+    "binding": "AI"
   },
   "vectorize": [
     {
@@ -35,11 +33,16 @@
       "index_name": "resume-index-768"
     }
   ],
-  "kv_namespaces": [
+  // In-memory edge rate limiting for /api/chat (replaces the old KV counter).
+  // period must be 10 or 60 seconds; limit is per key (client IP).
+  "ratelimits": [
     {
-      "binding": "RESUME_DATA_KV",
-      "id": "51a74b0210474ffbbc4c144e7f156187",
-      "preview_id": "51a74b0210474ffbbc4c144e7f156187"
+      "name": "CHAT_RATE_LIMITER",
+      "namespace_id": "1001",
+      "simple": {
+        "limit": 20,
+        "period": 60
+      }
     }
   ],
   "d1_databases": [

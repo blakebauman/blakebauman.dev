@@ -4,10 +4,6 @@ import type { Env, ResumeData } from '../app/types';
 
 interface CloudflareEnvironment extends Env {}
 
-// Rate limiting configuration (uses KV for cross-request persistence in Workers)
-const RATE_LIMIT_WINDOW_SEC = 60; // 1 minute
-const RATE_LIMIT_MAX_REQUESTS = 20; // 20 requests per minute
-
 function hasSeenCookie(request: Request): boolean {
   const cookie = request.headers.get('Cookie');
   return cookie ? /(?:^|;\s*)bb_seen=1(?:;|$)/.test(cookie) : false;
@@ -25,30 +21,6 @@ function getClientIP(request: Request): string {
     request.headers.get('X-Forwarded-For')?.split(',')[0]?.trim() ||
     'anonymous'
   );
-}
-
-async function checkRateLimit(
-  kv: KVNamespace,
-  clientIP: string
-): Promise<{ allowed: boolean; remaining: number; resetTime: number }> {
-  const currentMinute = Math.floor(Date.now() / 60000);
-  const kvKey = `ratelimit:chat:${clientIP}:${currentMinute}`;
-
-  const currentCount = await kv.get(kvKey);
-  const count = currentCount ? parseInt(currentCount, 10) : 0;
-
-  if (count >= RATE_LIMIT_MAX_REQUESTS) {
-    const resetTime = (currentMinute + 1) * 60000;
-    return { allowed: false, remaining: 0, resetTime };
-  }
-
-  await kv.put(kvKey, String(count + 1), { expirationTtl: RATE_LIMIT_WINDOW_SEC });
-  const resetTime = (currentMinute + 1) * 60000;
-  return {
-    allowed: true,
-    remaining: RATE_LIMIT_MAX_REQUESTS - count - 1,
-    resetTime,
-  };
 }
 
 // CORS configuration - restrict to allowed origins
@@ -246,24 +218,22 @@ export default {
       });
     }
 
-    // Rate limit check for /api/chat endpoint
-    if (url.pathname === '/api/chat' && request.method === 'POST') {
-      const rateLimit = await checkRateLimit(env.RESUME_DATA_KV, getClientIP(request));
+    // Rate limit check for /api/chat (in-memory edge rate limiter; limits are set in
+    // wrangler.jsonc). Binding is absent in local dev, where the check is skipped.
+    if (url.pathname === '/api/chat' && request.method === 'POST' && env.CHAT_RATE_LIMITER) {
+      const { success } = await env.CHAT_RATE_LIMITER.limit({ key: getClientIP(request) });
 
-      if (!rateLimit.allowed) {
+      if (!success) {
         return new Response(
           JSON.stringify({
             error: 'Too many requests. Please try again later.',
-            retryAfter: Math.ceil((rateLimit.resetTime - Date.now()) / 1000),
+            retryAfter: 60,
           }),
           {
             status: 429,
             headers: {
               'Content-Type': 'application/json',
-              'Retry-After': String(Math.ceil((rateLimit.resetTime - Date.now()) / 1000)),
-              'X-RateLimit-Limit': String(RATE_LIMIT_MAX_REQUESTS),
-              'X-RateLimit-Remaining': '0',
-              'X-RateLimit-Reset': String(Math.ceil(rateLimit.resetTime / 1000)),
+              'Retry-After': '60',
               ...corsHeaders,
             },
           }

@@ -234,34 +234,42 @@ export default function Chatbot({ greeting, suggestedPrompts }: ChatbotProps = {
         const decoder = new TextDecoder();
         let accumulatedContent = '';
 
+        const processLine = (line: string) => {
+          if (!line.startsWith('data: ')) return;
+          const data = line.slice(6).trim();
+          if (data === '[DONE]') return;
+          try {
+            const parsed = JSON.parse(data) as StreamChunk;
+            if (parsed.content) {
+              accumulatedContent += parsed.content;
+              // Update the message with accumulated content
+              setMessages(prev =>
+                prev.map(msg =>
+                  msg.id === assistantMessageId ? { ...msg, content: accumulatedContent } : msg
+                )
+              );
+            }
+          } catch {
+            // Ignore malformed events
+          }
+        };
+
+        // SSE events can be split across network chunks; buffer the trailing partial
+        // line and prepend it to the next chunk so no tokens are dropped.
+        let buffer = '';
         while (true) {
           const { done, value } = await reader.read();
-          if (done) break;
+          if (done) {
+            buffer += decoder.decode();
+            if (buffer) processLine(buffer);
+            break;
+          }
 
-          const chunk = decoder.decode(value, { stream: true });
-          const lines = chunk.split('\n');
-
+          buffer += decoder.decode(value, { stream: true });
+          const lines = buffer.split('\n');
+          buffer = lines.pop() ?? '';
           for (const line of lines) {
-            if (line.startsWith('data: ')) {
-              const data = line.slice(6);
-              if (data === '[DONE]') {
-                break;
-              }
-              try {
-                const parsed = JSON.parse(data) as StreamChunk;
-                if (parsed.content) {
-                  accumulatedContent += parsed.content;
-                  // Update the message with accumulated content
-                  setMessages(prev =>
-                    prev.map(msg =>
-                      msg.id === assistantMessageId ? { ...msg, content: accumulatedContent } : msg
-                    )
-                  );
-                }
-              } catch {
-                // Ignore parse errors for incomplete chunks
-              }
-            }
+            processLine(line);
           }
         }
 
