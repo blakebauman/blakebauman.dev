@@ -10,11 +10,20 @@ Personal portfolio website (blakebauman.dev) built with React Router v7 and depl
 
 ```bash
 pnpm install          # Install dependencies
-pnpm run dev          # Start dev server with HMR (http://localhost:5173)
+pnpm run dev          # Start dev server with HMR (http://localhost:5173), local bindings
+REMOTE_BINDINGS=true pnpm run dev   # Same, but with live AI/Vectorize bindings
 pnpm run build        # Production build
 pnpm run deploy       # Build and deploy to Cloudflare Workers
 pnpm run typecheck    # Generate types and run TypeScript checks
 ```
+
+`pnpm run dev` defaults to local bindings. AI and Vectorize have no local
+implementation, so `/api/chat` returns "Binding AI needs to be run remotely" and
+the rest of the site works normally. `REMOTE_BINDINGS=true` restores live
+bindings, but currently fails: Cloudflare rejects the preview session with error
+1031 ("Invalid Workers Preview configuration") on the account's workers.dev
+preview subdomain. Until that is fixed, the chatbot can only be exercised end to
+end against a deployment.
 
 ### Testing
 ```bash
