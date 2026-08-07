@@ -1159,6 +1159,26 @@ h1, h2, h3 { text-wrap: balance; }
     inset: -9px -5px;
   }
 
+  /* The masthead's elsewhere row (github / linkedin / bluesky) sits at 17px tall
+     with 23px between links, which misses WCAG 2.5.8 on target size and lands
+     just under the spacing exception that would otherwise excuse it. Grow the
+     hit area vertically only, to 29px: growing it sideways would close the gap
+     between neighbouring targets and trade one problem for another. */
+  .bb-masthead-meta dd a,
+  .bb-rail-mark {
+    position: relative;
+  }
+  .bb-masthead-meta dd a::after {
+    content: '';
+    position: absolute;
+    inset: -6px 0;
+  }
+  .bb-rail-mark::after {
+    content: '';
+    position: absolute;
+    inset: -8px -4px;
+  }
+
   /* Row hover is a pointer affordance; suppress the sticky tint on touch */
   .bb-listing:hover { background: transparent; }
 }
@@ -1168,6 +1188,26 @@ h1, h2, h3 { text-wrap: balance; }
   .bb-masthead .subhead { max-width: none; }
   .bb-sec-head { gap: var(--space-m); }
   .bb-listing .role { font-size: 18px; }
+
+  /* The index is a table of contents, so set it on a real grid rather than
+     letting flex-wrap deal the items out. Five labels never fit one phone line;
+     wrapping them left a ragged 3 + 2 with mismatched widths (81/81/64/81/81)
+     that read as an accident. Three equal columns align the second row under
+     the first and make the break look chosen.
+     The rail is sticky for the whole document, so its height is a permanent tax
+     on a 844px viewport: tightening the padding and dropping the row gap takes
+     it from 150px to roughly 130. Link targets stay at 44px. */
+  .bb-rail {
+    padding: 9px var(--gutter);
+    gap: var(--space-xs) var(--space-m);
+  }
+  .bb-rail-index { width: 100%; }
+  .bb-rail-index ol {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 0;
+  }
+  .bb-rail-index a { padding: 0; }
 }
 
 /* ============================================================
