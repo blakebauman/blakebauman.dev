@@ -1,7 +1,31 @@
-import type { Components } from 'react-markdown';
+import type { ReactNode } from 'react';
 import { CodeBlock } from './code-block';
 
-export const markdownComponents: Components = {
+export interface MarkdownElementProps {
+  children?: ReactNode;
+  href?: string;
+  className?: string;
+}
+
+export type MarkdownComponents = Record<
+  | 'h1'
+  | 'h2'
+  | 'h3'
+  | 'blockquote'
+  | 'a'
+  | 'code'
+  | 'table'
+  | 'thead'
+  | 'tbody'
+  | 'tr'
+  | 'th'
+  | 'td'
+  | 'strong'
+  | 'hr',
+  (props: MarkdownElementProps) => ReactNode
+>;
+
+export const markdownComponents: MarkdownComponents = {
   h1: ({ children }) => (
     <h1
       style={{

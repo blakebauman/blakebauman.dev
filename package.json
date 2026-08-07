@@ -35,13 +35,10 @@
     "@fontsource/ibm-plex-serif": "^5.2.7",
     "@react-router/node": "^7.2.0",
     "@react-router/serve": "^7.2.0",
-    "agents": "^0.0.86",
     "isbot": "^5.1.23",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
-    "react-markdown": "^10.1.0",
     "react-router": "^7.2.0",
-    "remark-gfm": "^4.0.1",
     "uuid": "^13.0.0",
     "zod": "^4.3.6"
   },

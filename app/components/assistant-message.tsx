@@ -1,6 +1,4 @@
-import Markdown from 'react-markdown';
-import remarkGfm from 'remark-gfm';
-import { markdownComponents } from './markdown-components';
+import { MarkdownLite } from './markdown-lite';
 
 interface AssistantMessageProps {
   content: string;
@@ -10,9 +8,7 @@ interface AssistantMessageProps {
 export function AssistantMessage({ content, isStreaming = false }: AssistantMessageProps) {
   return (
     <>
-      <Markdown remarkPlugins={[remarkGfm]} components={markdownComponents}>
-        {content}
-      </Markdown>
+      <MarkdownLite content={content} />
       {isStreaming && <span className="bb-chat-cursor" aria-hidden="true" />}
     </>
   );
