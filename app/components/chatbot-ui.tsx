@@ -10,7 +10,7 @@ interface Message {
 }
 
 const DEFAULT_SUGGESTED_PROMPTS = [
-  'What did Blake do at Adobe?',
+  'What is he building with agentic AI at Adobe?',
   'Has he worked with Cloudflare?',
   'What is the most recent project on the record?',
   'What did he ship at Lyons?',

@@ -25,12 +25,12 @@ export const DEFAULT_CHAT_GREETING =
   "I read Blake's record. Ask me what he's worked on, where, and with what.";
 
 // Shown to visitors who've been here before (bb_seen cookie) but are opening a fresh
-// chat session — a quiet acknowledgement, not a gimmick.
+// chat session: a quiet acknowledgement, not a gimmick.
 export const RETURNING_CHAT_GREETING =
-  "Back again — ask me anything on Blake's record, or pick up where you left off.";
+  "Back again. Ask me anything on Blake's record, or pick up where you left off.";
 
 export const DEFAULT_SUGGESTED_PROMPTS = [
-  'What did Blake do at Adobe?',
+  'What is he building with agentic AI at Adobe?',
   'Has he worked with Cloudflare?',
   'What is the most recent project on the record?',
   'What did he ship at Lyons?',
@@ -77,7 +77,7 @@ const REFERRER_TECH_BOOST: Partial<Record<ReferrerSource, string[]>> = {
 
 const REFERRER_GREETING: Partial<Record<ReferrerSource, string>> = {
   github:
-    "I read Blake's record. Ask about the code — the edge stack, the agents, what's on GitHub.",
+    "I read Blake's record. Ask about the code: the edge stack, the agents, what's on GitHub.",
   linkedin:
     "I read Blake's record. Ask about his roles, enterprise architecture work, and what he's shipped.",
 };
@@ -90,7 +90,7 @@ const REFERRER_PROMPTS: Partial<Record<ReferrerSource, string[]>> = {
     'Which projects use Durable Objects?',
   ],
   linkedin: [
-    'What did Blake do at Adobe?',
+    'What is he building with agentic AI at Adobe?',
     'Summarize his architecture experience.',
     'What enterprise systems has he led?',
     'What did he ship at Lyons?',
