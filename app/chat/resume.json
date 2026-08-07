@@ -13,10 +13,10 @@
   "bluesky": "https://bsky.app/profile/blakebauman.dev",
   "summary": [
     "I'm a Principal Technical Architect at Adobe. For Fortune 500 clients I architect and ship enterprise commerce on Adobe Commerce and AEM Edge Delivery Services — including one of the first production EDS plus Commerce B2B integrations — and increasingly the agentic layer on top of it via Adobe Agent Orchestrator. I know how Commerce systems fail, how to migrate them, and how to build teams around them.",
-    "Outside client work I build agent infrastructure across three layers: the harness (Felix, a managed-agents harness on Cloudflare Workers with manifest-defined agents, swappable session strategies, and an agentic commerce layer), the memory (Memoturn, a Rust agent-memory database with typed memories, supersession, and hybrid recall), and the runtime (Fold, a Go platform that runs any container as a Firecracker microVM with scale-to-zero — built for AI agents and MCP servers). Earlier iterations of this work ran on AWS Bedrock, AgentCore, and LangGraph. The list below is the live record; the chatbot below it answers questions about it."
+    "Outside client work I build agent infrastructure across three layers: the harness (Felix, a managed-agents harness on Cloudflare Workers with manifest-defined agents, swappable session strategies, and an agentic commerce layer), the evaluation layer (Memoturn, an open-source AI engineering platform for building, evaluating, and monitoring LLM applications in production — tracing, evals, prompt registry, cost analytics), and the governance layer (Fold, an enterprise MCP gateway in Go that federates every MCP server behind one governed endpoint with deny-by-default policy and credential brokering). Earlier iterations of this work ran on AWS Bedrock, AgentCore, and LangGraph. The list below is the live record; the chatbot below it answers questions about it."
   ],
   "copy": {
-    "subhead": "Principal Technical Architect. Enterprise commerce on Adobe Commerce and AEM Edge Delivery Services. Edge-platform work on Cloudflare. Agentic AI on Adobe Agent Orchestrator, plus independent agent infrastructure: Felix (harness), Memoturn (memory), Fold (runtime).",
+    "subhead": "Principal Technical Architect. Enterprise commerce on Adobe Commerce and AEM Edge Delivery Services. Edge-platform work on Cloudflare. Agentic AI on Adobe Agent Orchestrator, plus independent agent infrastructure: Felix (harness), Memoturn (evals & observability), Fold (MCP gateway).",
     "positionFootnote": "8+ YEARS · ENTERPRISE COMMERCE · EDGE PLATFORMS · MULTI-AGENT AI WORKFLOWS · ZERO-DOWNTIME MIGRATIONS · COMMERCE FAILURE MODES & HOW TO FIX THEM.",
     "artifactHeading": "Ask the resume",
     "artifactSubhead": "It will tell you what I've worked on and what I haven't.",
@@ -65,7 +65,7 @@
     "Adobe Agent Orchestrator",
     "Go",
     "Rust",
-    "Firecracker",
+    "Kubernetes",
     "OpenTelemetry",
     "Cloudflare Durable Objects",
     "Cloudflare Vectorize"
@@ -84,8 +84,8 @@
       "A2A",
       "Adobe Agent Orchestrator"
     ],
-    "Data & Backend": ["Postgres", "Redis", "Drizzle ORM"],
-    "Systems & Infra": ["Go", "Rust", "Firecracker", "libSQL", "OpenTelemetry", "Terraform"],
+    "Data & Backend": ["Postgres", "Prisma", "Apache Doris", "Redis", "Drizzle ORM"],
+    "Systems & Infra": ["Go", "Rust", "Kubernetes", "Helm", "OpenTelemetry", "Terraform"],
     "Frontend": ["JavaScript", "TypeScript", "React"]
   },
   "exploring": {
@@ -100,8 +100,8 @@
       "Protocol gateways (A2A / MCP / OpenAI-compat)",
       "Durable agent memory",
       "Agentic commerce (ACP)",
-      "Agent memory with supersession",
-      "MicroVM isolation for agent workloads"
+      "LLM evals and production observability",
+      "MCP federation and governance"
     ],
     "Edge Infrastructure": ["Cloudflare Workflows", "Cloudflare D1", "Design Patterns"]
   },
