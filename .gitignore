@@ -9,6 +9,7 @@
 .mf
 .wrangler
 .dev.vars
+.dev.vars.*
 
 # TypeScript
 tsconfig.tsbuildinfo
