@@ -25,6 +25,14 @@ interface GoldenCase {
 // Questions a real visitor asks, mapped to the chunks that should answer them.
 // Prefixes rather than exact ids, so a question satisfied by either a project's
 // main chunk or one of its highlight chunks counts as a hit.
+// Keeping expectations current is part of the job. When a gap is closed by adding
+// a new chunk, that chunk has to be added here too — otherwise the eval reports a
+// regression on the very question that was just fixed, because it is still
+// looking for the old chunk that used to be the least-bad answer.
+//
+// Update an expectation only after confirming, via /api/debug/retrieval, that the
+// new chunk genuinely outranks the old one. Editing this list to match whatever
+// came back would turn the eval into a mirror.
 const GOLDEN_SET: GoldenCase[] = [
   // Current work and role
   {
@@ -42,7 +50,7 @@ const GOLDEN_SET: GoldenCase[] = [
   },
   {
     question: 'Has he contributed to Adobe product code or just client work?',
-    expect: ['ai_context_adobe-role-scope'],
+    expect: ['ai_context_faq-product-work-vs-client-work', 'ai_context_adobe-role-scope'],
   },
 
   // The agent infrastructure
@@ -82,7 +90,11 @@ const GOLDEN_SET: GoldenCase[] = [
   },
   {
     question: 'Has he built a feature flag system?',
-    expect: ['project_edgevault', 'ai_context_edgevault-platform'],
+    expect: [
+      'ai_context_config-and-feature-flags',
+      'project_edgevault',
+      'ai_context_edgevault-platform',
+    ],
   },
   {
     question: 'What is contentworker?',
@@ -171,7 +183,7 @@ const GOLDEN_SET: GoldenCase[] = [
   },
   {
     question: 'How many years of experience does he have?',
-    expect: ['ai_context_career-arc', 'summary_'],
+    expect: ['ai_context_faq-years-of-experience', 'ai_context_career-arc', 'summary_'],
   },
   { question: 'What is his career trajectory?', expect: ['ai_context_career-arc'] },
   {

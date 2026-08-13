@@ -222,6 +222,53 @@
       "text": "Blake has led production implementations for Fortune 500 companies at Adobe. The specific enterprise competencies are zero-downtime migration of live commerce platforms, architectural review and governance processes for large implementations, and the failure modes of enterprise commerce systems under load and during cutover. His line — that he knows how large systems fail and how to fix them — refers to this work rather than to theory. He also builds the internal enablement material and reference content enterprise teams use, including a webinar on Commerce with Edge Delivery Services that became a reference inside Adobe."
     },
     {
+      "id": "config-and-feature-flags",
+      "title": "Configuration management and feature flags",
+      "kind": "background",
+      "topics": [
+        "feature flags",
+        "feature flagging",
+        "configuration",
+        "config management",
+        "kill switch",
+        "rollout",
+        "targeting",
+        "environment promotion",
+        "secrets management"
+      ],
+      "text": "Runtime configuration is a problem Blake has built for twice. edgeconfig-monorepo came first, handling many config formats with SSE live updates, revision history, rollback and environment promotion. edgevault is the rebuild and the current one: a feature-flag and configuration platform where flag evaluation is served from KV behind an in-isolate cache for single-digit-millisecond reads, deliberately on a separate Worker from the management API so a slow control plane can never slow down a flag check. Config changes are promoted from dev to prod through a Workflow carrying an AI risk scan and a human approval gate, so a flag flip gets the same treatment as a deploy, and every change lands in an append-only audit log. Secrets sit alongside flags in an envelope-encrypted vault. This is the kind of infrastructure that decides whether a team can ship safely on a Friday."
+    },
+    {
+      "id": "faq-product-work-vs-client-work",
+      "title": "FAQ: does he write product code, or only client implementations?",
+      "kind": "faq",
+      "topics": [
+        "product code",
+        "core code",
+        "client work",
+        "consulting",
+        "implementation",
+        "contributed",
+        "both sides"
+      ],
+      "text": "Both, and that is the unusual part. Most architects at Blake's level do one or the other: either they implement a vendor's product for clients, or they build the product. He does both on the same products. For Adobe Experience Platform Agent Orchestrator and CX Enterprise Coworker he architects and delivers Fortune 500 client solutions built on them, and he has also contributed to the core product code behind them. Outside Adobe, everything in the projects list is product work he owns end to end rather than client delivery — Felix, Memoturn, Fold, Skillist, edgevault, contentworker and the rest are his own. So the honest answer to \"is he a consultant or an engineer\" is that the record shows both, consistently, at the same time."
+    },
+    {
+      "id": "faq-years-of-experience",
+      "title": "FAQ: how many years of experience does he have?",
+      "kind": "faq",
+      "topics": [
+        "years of experience",
+        "how long",
+        "seniority",
+        "tenure",
+        "how many years",
+        "since when",
+        "started"
+      ],
+      "text": "This record begins in 2017, which makes it roughly nine years of enterprise architecture as of 2026. The breakdown: 2017 to 2019 as a Technical Architect at Lyons Consulting Group (Capgemini), 2019 to 2022 as a Technical Architect at Adobe, and Principal Technical Architect at Adobe from 2022 onward. That is about seven years at Adobe and around four years in the principal role. Worth noting that the site's own footnote says \"8+ years\", which is a floor rather than a precise count. If someone needs an exact figure for a background check or a form, point them at the year ranges on each role rather than a single number, and suggest confirming with Blake directly."
+    },
+    {
       "id": "auth-and-security",
       "title": "Authentication and security work across the projects",
       "kind": "background",
@@ -280,7 +327,7 @@
       "title": "FAQ: how to get in touch with Blake",
       "kind": "faq",
       "topics": ["contact", "email", "reach", "hire", "hiring", "linkedin", "availability"],
-      "text": "The links on this page are the way: email at blake.bauman@gmail.com, LinkedIn at linkedin.com/in/blakebauman, GitHub at github.com/blakebauman, and Bluesky at bsky.app/profile/blakebauman.dev. This record does not state whether Blake is currently looking for a new role or open to contract work, so the honest answer to an availability question is that it is not something this record covers and the right move is to ask him directly. What it does say about roles he values: work combining architecture, client strategy and hands-on engineering, on genuinely hard problems with direct impact."
+      "text": "The links on this page are the way to reach Blake: email at blake.bauman@gmail.com, LinkedIn at linkedin.com/in/blakebauman, GitHub at github.com/blakebauman, and Bluesky at bsky.app/profile/blakebauman.dev. This record does not state whether he is currently looking for a new role or open to contract work, so the honest answer to an availability question is that it is not something this record covers, and the right move is to message him on one of those channels and ask."
     },
     {
       "id": "faq-leadership",

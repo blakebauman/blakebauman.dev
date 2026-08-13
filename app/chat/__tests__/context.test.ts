@@ -280,12 +280,49 @@ describe('toSources', () => {
           title: `Project ${i}`,
           sourceId: `p${i}`,
           text: 'x',
-          score: 0.9 - i * 0.01,
+          // All within the citation band, so the count cap is what binds.
+          score: 0.9 - i * 0.002,
         })
       )
     );
 
     expect(toSources(matches).length).toBeLessThanOrEqual(4);
+  });
+
+  it('does not cite a match that merely cleared the floor', () => {
+    // A fixed top-N cited the 4th-best chunk as confidently as the 1st even when
+    // it scored far below and contributed nothing.
+    const matches = selectMatches([
+      rawMatch({
+        id: 'strong',
+        type: 'projects',
+        title: 'Strong',
+        sourceId: 'a',
+        text: 'x',
+        score: 0.88,
+      }),
+      rawMatch({
+        id: 'close',
+        type: 'projects',
+        title: 'Close',
+        sourceId: 'b',
+        text: 'x',
+        score: 0.86,
+      }),
+      rawMatch({
+        id: 'marginal',
+        type: 'personal',
+        title: 'Marginal',
+        sourceId: 'c',
+        text: 'x',
+        score: 0.57,
+      }),
+    ]);
+
+    // All three still reach the model as context...
+    expect(matches).toHaveLength(3);
+    // ...but only the two that actually informed it are claimed as sources.
+    expect(toSources(matches).map(s => s.title)).toEqual(['Strong', 'Close']);
   });
 
   it('collapses several chunks of one entity into a single citation', () => {

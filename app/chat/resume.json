@@ -497,6 +497,7 @@
       "year": "2026",
       "status": "Filed",
       "visibility": "public",
+      "listed": false,
       "description": "Bikepacking e-commerce storefront on Medusa v2, with a custom Kit Builder module and editorial product metadata.",
       "context": "Commerce work outside the Adobe stack, and the most-starred of the public repositories. The Kit Builder is a custom Medusa module rather than a storefront feature: assembling a bikepacking kit is a domain concept, so it lives in the domain layer.",
       "tech": ["TypeScript", "Medusa v2", "PostgreSQL", "Docker", "pnpm"],
@@ -577,6 +578,7 @@
       "year": "2025",
       "status": "Filed",
       "visibility": "public",
+      "listed": false,
       "description": "Cloudflare Workers monorepo template: Turborepo and pnpm workspaces with one example Worker and nine shared packages.",
       "context": "The scaffolding decisions extracted once so they stop being remade per project — syncpack for dependency alignment, Biome, Lefthook, Vitest, Changesets, and Just, over Hono, Drizzle, Better Auth, Hyperdrive, and Neon.",
       "tech": [

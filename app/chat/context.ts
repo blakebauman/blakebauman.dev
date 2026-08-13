@@ -153,9 +153,25 @@ export function renderSections(matches: RetrievedMatch[]): string {
 const HIGHLIGHT_TITLE_SUFFIXES = [' — what it does', ' — accomplishments'];
 
 // Citations are provenance, not an audit log. Past a handful the chips stop
-// reading as "this is where the answer came from" and start reading as clutter,
-// and the tail of the list is the weakest-scoring context anyway.
+// reading as "this is where the answer came from" and start reading as clutter.
 const MAX_SOURCES = 4;
+
+// Cite only what was close to the best match. A fixed top-N cites the 4th-best
+// chunk just as confidently as the 1st even when it scored far lower and
+// contributed nothing to the answer.
+//
+// Swept against the live index across representative queries. Scores here sit in
+// a narrow band, so the delta is sensitive:
+//
+//   0.02  too tight — "has he written any Rust?" loses memoturn-db-engine
+//   0.03  right     — "what authentication has Blake built?" cites the auth and
+//                     edgevault chunks and stops there
+//   0.05  too loose — the same query also cites `personal` (0.717) and the Adobe
+//                     role chunk (0.723), neither of which is about auth
+//
+// Retrieval is unchanged: the model still receives the full filtered context.
+// This governs only what is claimed as a source.
+const CITATION_SCORE_DELTA = 0.03;
 
 function citationTitle(title: string): string {
   for (const suffix of HIGHLIGHT_TITLE_SUFFIXES) {
@@ -169,10 +185,15 @@ function citationTitle(title: string): string {
  * chunks of the felix project cite as one "Project: felix", not three.
  */
 export function toSources(matches: RetrievedMatch[]): ContextSource[] {
+  const best = matches[0]?.score;
+  if (best === undefined) return [];
+
   const seen = new Set<string>();
   const sources: ContextSource[] = [];
 
   for (const match of matches) {
+    if (match.score < best - CITATION_SCORE_DELTA) break;
+
     const key = `${match.type}:${match.sourceId}`;
     if (seen.has(key)) continue;
     seen.add(key);
