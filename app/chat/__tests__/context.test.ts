@@ -1,6 +1,7 @@
 import { describe, expect, it, vi } from 'vitest';
 import type { Env, ResumeData, VectorMatch } from '../../types';
 import {
+  attributeSources,
   buildFullResumeContext,
   RETRIEVAL_CONFIG,
   searchResumeContext,
@@ -359,5 +360,132 @@ describe('buildFullResumeContext', () => {
 
     expect(firstHighlight).toBeTruthy();
     expect(relevantSections).toContain(firstHighlight as string);
+  });
+});
+
+describe('attributeSources', () => {
+  const employment = rawMatch({
+    id: 'ai_context_career-arc',
+    type: 'ai_context',
+    title: 'Where Blake has worked',
+    sourceId: 'career-arc',
+    score: 0.61,
+    text: 'Blake has worked at two companies. Lyons Consulting Group (Capgemini) from 2017 to 2019 as a Technical Architect. Adobe from 2019 to now.',
+  });
+  const contact = rawMatch({
+    id: 'ai_context_faq-contact',
+    type: 'ai_context',
+    title: 'FAQ: how to get in touch with Blake',
+    sourceId: 'faq-contact',
+    score: 0.648,
+    text: 'The links on this page are the way to reach Blake: email, LinkedIn, GitHub, and Bluesky.',
+  });
+  const frontend = rawMatch({
+    id: 'ai_context_faq-frontend',
+    type: 'ai_context',
+    title: 'FAQ: does Blake do frontend work',
+    sourceId: 'faq-frontend',
+    score: 0.639,
+    text: 'He works in React and React Router, TanStack Router, Tailwind CSS and shadcn/ui.',
+  });
+
+  // The exact failure this exists to fix: the answer is built from the
+  // lowest-scoring chunk, while score-ordered citation credits the other two.
+  const matches = selectMatches([contact, frontend, employment]);
+  const answer =
+    'Blake has worked at two companies: Lyons Consulting Group (Capgemini) from 2017 to 2019 as a Technical Architect, and Adobe from 2019 to now.';
+
+  it('cites the chunk the answer was built from, not the highest scoring one', () => {
+    expect(matches[0]?.id).toBe('ai_context_faq-contact');
+    expect(attributeSources(matches, answer).map(s => s.title)).toEqual(['Where Blake has worked']);
+  });
+
+  it('score-ordered citation gets this wrong, which is why attribution exists', () => {
+    expect(toSources(matches).map(s => s.title)).not.toContain('Where Blake has worked');
+  });
+
+  it('cites nothing when the answer grounds in nothing', () => {
+    // Deliberately shares no distinctive vocabulary with any candidate. An
+    // earlier version of this fixture said "try the contact links", which does
+    // legitimately draw on the contact chunk — the logic was right and the
+    // fixture was wrong.
+    const refusal = 'That is not something the record covers.';
+    expect(attributeSources(matches, refusal)).toEqual([]);
+  });
+
+  it('cites nothing for an empty answer or no matches', () => {
+    expect(attributeSources(matches, '   ')).toEqual([]);
+    expect(attributeSources([], answer)).toEqual([]);
+  });
+
+  it('ignores vocabulary shared across every candidate', () => {
+    // "Blake" appears in all three, so an answer that only says his name
+    // attributes to nothing rather than to whichever chunk happens to rank first.
+    expect(attributeSources(matches, 'Blake. Blake. Blake.')).toEqual([]);
+  });
+
+  it('can cite several chunks when the answer genuinely draws on several', () => {
+    const combined =
+      'He works in React and Tailwind CSS, and has worked at Lyons Consulting Group and Adobe.';
+    const titles = attributeSources(matches, combined).map(s => s.title);
+    expect(titles).toContain('Where Blake has worked');
+    expect(titles).toContain('FAQ: does Blake do frontend work');
+  });
+
+  it('collapses several chunks of one entity into a single citation', () => {
+    const parent = rawMatch({
+      id: 'project_felix',
+      type: 'projects',
+      title: 'Project: felix',
+      sourceId: 'felix',
+      text: 'Felix is a manifest-driven agents harness on Cloudflare Workers.',
+    });
+    const child = rawMatch({
+      id: 'project_felix_highlights_0',
+      type: 'projects',
+      title: 'Project: felix — what it does',
+      sourceId: 'felix',
+      text: 'Felix compiles a manifest into a runnable agent harness.',
+    });
+    const sources = attributeSources(
+      selectMatches([parent, child]),
+      'Felix is a manifest harness.'
+    );
+    expect(sources).toHaveLength(1);
+    expect(sources[0]?.title).toBe('Project: felix');
+  });
+});
+
+describe('attributeSources absolute floor', () => {
+  const a = rawMatch({
+    id: 'ai_context_scope-metrics-and-scale',
+    type: 'ai_context',
+    title: 'Scope: what this record does not quantify',
+    sourceId: 'scope-metrics',
+    text: 'This record is qualitative and contains no traffic figures, revenue impact, team sizes or latency benchmarks.',
+  });
+  const b = rawMatch({
+    id: 'ai_context_faq-awards-and-recognition',
+    type: 'ai_context',
+    title: 'FAQ: awards, recognition, and public speaking',
+    sourceId: 'faq-awards',
+    text: 'One competitive award is on this record: second place at the Adobe AI Summit and Hackathon in 2025.',
+  });
+
+  it('does not cite a chunk on one incidental word', () => {
+    // Relative share alone let this through: on a short answer every score is
+    // near zero, and 30% of almost-nothing still qualifies.
+    const matches = selectMatches([a, b]);
+    const thin = 'This record does not include that.';
+    expect(attributeSources(matches, thin)).toEqual([]);
+  });
+
+  it('still cites when the answer genuinely uses distinctive content', () => {
+    const matches = selectMatches([a, b]);
+    const grounded =
+      'The record contains no traffic figures, revenue impact, or latency benchmarks.';
+    expect(attributeSources(matches, grounded).map(s => s.title)).toEqual([
+      'Scope: what this record does not quantify',
+    ]);
   });
 });

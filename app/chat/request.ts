@@ -6,6 +6,7 @@ import {
 } from '../schemas';
 import type { Env } from '../types';
 import {
+  attributeSources,
   buildFullResumeContext,
   type ContextSource,
   type ResumeContext,
@@ -162,14 +163,22 @@ export async function requestAI({
         ...INFERENCE_OPTIONS,
       })) as ReadableStream;
 
-      return sseTransformResponse(stream, logCompletion, resumeContext.sources);
+      // Sources are resolved from the finished answer rather than from
+      // retrieval scores, so the chips name what the response was actually
+      // built from. See attributeSources.
+      return sseTransformResponse(stream, logCompletion, answer =>
+        attributeSources(resumeContext.matches, answer)
+      );
     }
 
     const response = await env.AI.run(CHAT_MODEL, { messages, ...INFERENCE_OPTIONS });
     const assistantContent = response.response || "Sorry, I couldn't generate a response.";
     logCompletion(assistantContent);
 
-    return jsonChatResponse(assistantContent, resumeContext.sources);
+    return jsonChatResponse(
+      assistantContent,
+      attributeSources(resumeContext.matches, assistantContent)
+    );
   } catch (error) {
     // The caller gets a fixed message and a request id; the id is the only
     // thing that connects their report to the log line holding the real cause.
