@@ -202,10 +202,25 @@
     },
     {
       "id": "career-arc",
-      "title": "Career arc, 2017 to now",
+      "title": "Where Blake has worked: the companies, and the career arc from 2017 to now",
       "kind": "background",
-      "topics": ["career", "timeline", "history", "trajectory", "capgemini", "lyons", "adobe"],
-      "text": "The through-line is enterprise commerce, then the platforms underneath it, then the agents on top. From 2017 to 2019 Blake was a Technical Architect at Lyons Consulting Group (Capgemini), leading Adobe Commerce design and implementation for a leading activewear brand and an Adobe Scene7 integration. He joined Adobe in 2019 as a Technical Architect, leading a global beverage company's zero-downtime migration from Adobe Commerce on-premise to Cloud and building the architectural review process for enterprise Commerce implementations. He has been a Principal Technical Architect since 2022, delivering Edge Delivery Services and Commerce B2B work and then the agentic layer on top of it. That is roughly nine years of enterprise architecture."
+      "topics": [
+        "career",
+        "timeline",
+        "history",
+        "trajectory",
+        "capgemini",
+        "lyons",
+        "adobe",
+        "where has he worked",
+        "companies",
+        "employers",
+        "worked at",
+        "employment",
+        "job history",
+        "previous roles"
+      ],
+      "text": "Blake has worked at two companies. Lyons Consulting Group (Capgemini) from 2017 to 2019, as a Technical Architect leading Adobe Commerce design and implementation for a leading activewear brand and an Adobe Scene7 integration. Adobe from 2019 to now: first as a Technical Architect, leading a global beverage company's zero-downtime migration from Adobe Commerce on-premise to Cloud and building the architectural review process for enterprise Commerce implementations, then as Principal Technical Architect since 2022, delivering Edge Delivery Services and Commerce B2B work and then the agentic layer on top of it. The through-line across both employers is enterprise commerce, then the platforms underneath it, then the agents on top. That is roughly nine years of enterprise architecture."
     },
     {
       "id": "work-style",
@@ -292,7 +307,7 @@
       "title": "Languages and where each one is actually used",
       "kind": "background",
       "topics": ["languages", "typescript", "python", "go", "rust", "c++", "php", "polyglot"],
-      "text": "Blake's public repositories are mostly TypeScript, with about fifteen TypeScript projects, four Python, and one each in Go, Rust and C++. Each language maps to a real project rather than a resume line: TypeScript across felix, edgevault, skillist, contentworker, timetracker and this site; Python for the ecommerce intent reasoning engine, adventure-agent, the LangChain AgentCore work and vital; Go for fold, the MCP gateway, and deckhand's sidecar; Rust for memoturn-db and prompton's agent core; C++ with JUCE for the CaveAcoustics plugins. PHP comes from the Magento and Adobe Commerce years. The pattern is picking the language the problem wants, not defending one."
+      "text": "Blake's public repositories are mostly TypeScript, with about fifteen TypeScript repositories, four Python, and one each in Go, Rust and C++. Each language is tied to something he actually built rather than a resume line: TypeScript across felix, edgevault, skillist, contentworker, timetracker and this site; Python for the ecommerce intent reasoning engine, adventure-agent, the LangChain AgentCore work and vital; Go for fold, the MCP gateway, and deckhand's sidecar; Rust for memoturn-db and prompton's agent core; C++ with JUCE for the CaveAcoustics plugins. PHP comes from the Magento and Adobe Commerce years. The pattern is picking the language the problem wants, not defending one."
     },
     {
       "id": "github-orgs",
@@ -366,10 +381,22 @@
     },
     {
       "id": "scope-production-vs-prototype",
-      "title": "Scope: what is shipped versus what is a prototype",
+      "title": "Which projects are deployed, shipped, and live, and which are prototypes",
       "kind": "scope",
-      "topics": ["status", "production", "prototype", "shipped", "maturity", "deployed"],
-      "text": "This distinction matters and should not be blurred. Deployed and in use: Felix, the agents harness behind docs.felix.run; fold at v1.4.1 with a frozen API and 40/40 MCP conformance; edgevault at edgevault.io; Memoturn; Skillist with two published npm packages; timetracker at timetracker.run; nomoji.dev; vital on the Claude Code plugin marketplace; and this site. Working prototypes and early-stage: contentworker, memoturn-db — whose own README calls it architecture plus working prototype — prompton, self-described as an MVP, deckhand, shipping unnotarized pre-release builds, and the CaveAcoustics plugins, built for the craft rather than commercially released. References and templates rather than products: cf-monorepo, hono-aws-lambda, contentworker-workspace, and fleet-workspace, which its README calls a demonstration. If asked whether something is production-ready, use this list and do not upgrade a prototype."
+      "topics": [
+        "status",
+        "production",
+        "prototype",
+        "shipped",
+        "maturity",
+        "deployed",
+        "live",
+        "in use",
+        "which projects",
+        "running",
+        "released"
+      ],
+      "text": "Which of Blake's projects are deployed and in use, and which are not. The distinction matters and should not be blurred. Deployed and in use: Felix, the agents harness behind docs.felix.run; fold at v1.4.1 with a frozen API and 40/40 MCP conformance; edgevault at edgevault.io; Memoturn; Skillist with two published npm packages; timetracker at timetracker.run; nomoji.dev; vital on the Claude Code plugin marketplace; and this site. Working prototypes and early-stage: contentworker, memoturn-db — whose own README calls it architecture plus working prototype — prompton, self-described as an MVP, deckhand, shipping unnotarized pre-release builds, and the CaveAcoustics plugins, built for the craft rather than commercially released. References and templates rather than products: cf-monorepo, hono-aws-lambda, contentworker-workspace, and fleet-workspace, which its README calls a demonstration. If asked which projects are live, shipped, or production-ready, use this list and never upgrade a prototype."
     },
     {
       "id": "scope-metrics-and-scale",

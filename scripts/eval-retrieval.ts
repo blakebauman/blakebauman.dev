@@ -207,6 +207,43 @@ const GOLDEN_SET: GoldenCase[] = [
     expect: ['ai_context_work-style', 'ai_context_faq-contact'],
   },
 
+  // Paraphrase coverage.
+  //
+  // Every question above is a single phrasing, which makes the headline recall
+  // number measure the wording chosen here rather than robustness to how a
+  // visitor actually asks. That gap hid a real failure: "which of these projects
+  // are actually in production?" scraped a hit at rank 3, while "which projects
+  // are deployed and in use?" — the same question, ordinary wording — retrieved
+  // nothing relevant at all, because ai_context_language-breadth swallowed every
+  // "which projects" query.
+  //
+  // These are deliberate rewordings of questions already covered, so a
+  // regression in phrasing robustness shows up as a number rather than as a
+  // surprise in production.
+  {
+    question: "Which of Blake's projects are deployed and in use?",
+    expect: ['ai_context_scope-production-vs-prototype'],
+  },
+  { question: 'Which projects are live?', expect: ['ai_context_scope-production-vs-prototype'] },
+  {
+    question: 'What has he actually shipped?',
+    expect: ['ai_context_scope-production-vs-prototype'],
+  },
+  { question: "What's he building at the moment?", expect: ['ai_context_faq-current-work'] },
+  { question: 'How can I reach him?', expect: ['ai_context_faq-contact', 'personal'] },
+  {
+    question: 'What languages does he code in?',
+    expect: ['ai_context_language-breadth', 'skills', 'tools_'],
+  },
+  {
+    question: 'Does he know anything about security?',
+    expect: ['ai_context_auth-and-security'],
+  },
+  {
+    question: 'Where has he worked?',
+    expect: ['experience_', 'ai_context_career-arc'],
+  },
+
   // Scope and honesty — the answers that keep the assistant from overstating
   {
     question: 'Which of these projects are actually in production?',
