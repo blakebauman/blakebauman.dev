@@ -35,6 +35,15 @@ export const ProjectSchema = z.object({
   org: z.string().optional(),
   language: z.string().optional(),
   maturity: MaturitySchema.optional(),
+  // Whether the project appears in the rendered list. Absent means listed.
+  //
+  // Deliberately separate from `visibility`, which describes the repository.
+  // A project can have a public repo and still not earn a slot on the page, and
+  // conflating the two would make the chunker announce "Repository: private, no
+  // public source available" about a repo anyone can clone.
+  //
+  // Unlisted projects stay indexed, so the assistant can still discuss them.
+  listed: z.boolean().optional(),
 });
 
 /**

@@ -88,6 +88,15 @@ index permanently — retrievable, stale, and invisible to every later populate.
 - `app/chat/resume.json` - Single source for both the rendered page and the chat.
   Projects and experience entries carry optional `highlights`, `aliases`, and
   `maturity`; each becomes its own retrievable chunk.
+
+  Two independent fields control display, and they are not interchangeable:
+  `visibility: "private"` means the repository has no public source (the chunker
+  says so in the indexed text), while `listed: false` means the entry is
+  deliberately kept off the page. A project with a public repo that simply has
+  not earned a slot is `listed: false`, never `visibility: "private"` — marking
+  it private would make the assistant claim there is no public source for a repo
+  anyone can clone. Both stay indexed either way, so the chat can still discuss
+  them.
 - `app/chat/ai-context.json` - Chat-only layer, never rendered. Entries are
   `{id, title, text, topics, kind}` where `kind` is `background`, `faq`, or
   `scope`. The `scope` entries are the anti-hallucination layer: they give the

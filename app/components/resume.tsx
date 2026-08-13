@@ -28,6 +28,7 @@ interface ProjectEntry {
   year?: string;
   status?: string;
   visibility?: 'public' | 'private';
+  listed?: boolean;
 }
 
 // Project name -> external site, for linkifying project mentions in the hero subhead.
@@ -55,10 +56,14 @@ function linkifyProjectMentions(text: string) {
 }
 
 export function Resume({ chatEnabled, persona, chatGreeting, suggestedPrompts }: ResumeProps) {
-  // Filter to public projects only for display; private projects remain in JSON for vectorize/chatbot.
+  // Two independent reasons a project is not rendered: the repository is private,
+  // or the entry is deliberately unlisted. Both stay in the JSON and stay indexed,
+  // so the chatbot can still answer about them.
   // Reorder by the visitor's persona (signal-aware, deterministic) — falls back to canonical order.
   const projects = orderProjects(
-    (resumeData.projects as ProjectEntry[]).filter(p => p.visibility !== 'private'),
+    (resumeData.projects as ProjectEntry[]).filter(
+      p => p.visibility !== 'private' && p.listed !== false
+    ),
     persona
   );
   const todayYear = new Date().getFullYear();

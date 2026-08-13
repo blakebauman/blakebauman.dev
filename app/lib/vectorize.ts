@@ -126,7 +126,10 @@ export function buildChunks(resumeData: ResumeData, aiContext?: AIContext): Chun
 
   push(
     'personal',
-    'Blake Bauman — contact and identity',
+    // Not "contact and identity". "Identity" is also a security term, which put
+    // this chunk at rank 2 for "what authentication has he built?" — the
+    // embedding cannot tell which sense was meant, so the word is simply avoided.
+    'Blake Bauman — name, title, location, and links',
     `Name: ${resumeData.name}
 Title: ${resumeData.title}
 Location: ${resumeData.location}
