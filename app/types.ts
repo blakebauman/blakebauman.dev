@@ -56,10 +56,17 @@ export interface Env {
         returnMetadata?: 'all' | 'indexed' | 'none';
       }
     ) => Promise<import('./schemas').VectorQueryResult>;
+    // Vectorize has no "list all ids" API, which is why the populate path keeps
+    // its own manifest in D1 — without one, a renamed or removed chunk leaves an
+    // orphan vector in the index that can still be retrieved into a prompt.
+    deleteByIds: (ids: string[]) => Promise<{ count?: number } | undefined>;
   };
   CF_API_TOKEN?: string;
   VECTORIZE_INDEX?: string;
   VECTORIZE_ADMIN_KEY?: string;
   ADMIN_API_KEY?: string;
   CHAT_ENABLED?: string;
+  // Salt for hashing client IPs before they are written to D1. Absent in local
+  // dev; see logger.ts for the degraded behaviour when it is missing.
+  IP_HASH_SALT?: string;
 }

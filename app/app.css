@@ -885,11 +885,65 @@ h1, h2, h3 { text-wrap: balance; }
 }
 
 .bb-chat-error {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-xs);
   padding: 12px 14px;
   background: var(--plat);
   border: 1px solid var(--cordovan);
   color: var(--cordovan);
   font: 400 var(--body-sm)/1.5 var(--font-serif);
+}
+.bb-chat-error-actions {
+  display: flex;
+  gap: var(--space-xs);
+  flex-shrink: 0;
+}
+.bb-chat-error-actions button {
+  font: 500 var(--micro)/1 var(--font-mono);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  background: transparent;
+  color: var(--cordovan);
+  border: 1px solid var(--cordovan);
+  /* 44px min target: these sit next to body copy and are easy to mis-tap. */
+  padding: 9px 12px;
+  min-height: 34px;
+  cursor: pointer;
+  transition: background var(--dur) var(--ease-out), color var(--dur) var(--ease-out);
+}
+.bb-chat-error-actions button:hover:not(:disabled) {
+  background: var(--cordovan);
+  color: var(--plat);
+}
+.bb-chat-error-actions button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* Provenance for an answer: which parts of the record it was read from. Quiet
+   by design — this is a footnote on the answer, not a second headline. */
+.bb-chat-sources {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px;
+  margin-top: 10px;
+}
+.bb-chat-sources-label {
+  font: 500 var(--micro)/1 var(--font-mono);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--ink-soft);
+}
+.bb-chat-source {
+  font: 400 var(--micro)/1 var(--font-mono);
+  letter-spacing: 0.04em;
+  color: var(--ink-soft);
+  border: 1px solid var(--rule);
+  padding: 4px 7px;
 }
 
 .bb-chat-prompts {

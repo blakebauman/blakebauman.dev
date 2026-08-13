@@ -1,11 +1,18 @@
 import { lazy, Suspense, useCallback, useEffect, useRef, useState } from 'react';
 import { v7 as uuidv7 } from 'uuid';
 
+export interface ContextSource {
+  label: string;
+  title: string;
+}
+
 interface Message {
   role: 'assistant' | 'user';
   content: string;
   id: string;
   timestamp: number;
+  /** Which sections of the record grounded this answer. */
+  sources?: ContextSource[];
 }
 
 interface ChatResponse {
@@ -14,11 +21,17 @@ interface ChatResponse {
       content: string;
     };
   }>;
+  sources?: ContextSource[];
   error?: string;
 }
 
+// The stream carries three frame shapes: a leading sources frame, the content
+// frames, and an error frame if generation breaks mid-response.
 interface StreamChunk {
-  content: string;
+  type?: 'sources' | 'error';
+  content?: string;
+  sources?: ContextSource[];
+  error?: string;
 }
 
 // Session storage keys
@@ -102,6 +115,9 @@ export default function Chatbot({ greeting, suggestedPrompts }: ChatbotProps = {
   const [input, setInput] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  // The prompt that failed, kept so the error state can offer a retry instead of
+  // making the visitor retype it. Cleared on success.
+  const [failedPrompt, setFailedPrompt] = useState<string | null>(null);
   const [isExpanded, setIsExpanded] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const messagesContainerRef = useRef<HTMLDivElement>(null);
@@ -188,6 +204,7 @@ export default function Chatbot({ greeting, suggestedPrompts }: ChatbotProps = {
     setInput('');
     setIsLoading(true);
     setError(null);
+    setFailedPrompt(null);
 
     // Create a placeholder message for streaming
     const assistantTimestamp = Date.now() + 1;
@@ -237,12 +254,30 @@ export default function Chatbot({ greeting, suggestedPrompts }: ChatbotProps = {
         const decoder = new TextDecoder();
         let accumulatedContent = '';
 
+        let streamError: string | null = null;
+
         const processLine = (line: string) => {
           if (!line.startsWith('data: ')) return;
           const data = line.slice(6).trim();
           if (data === '[DONE]') return;
           try {
             const parsed = JSON.parse(data) as StreamChunk;
+
+            // Sources arrive before the first token, so the citation is on
+            // screen while the answer is still being written.
+            if (parsed.type === 'sources' && parsed.sources) {
+              const sources = parsed.sources;
+              setMessages(prev =>
+                prev.map(msg => (msg.id === assistantMessageId ? { ...msg, sources } : msg))
+              );
+              return;
+            }
+
+            if (parsed.type === 'error') {
+              streamError = parsed.error ?? 'The response was interrupted.';
+              return;
+            }
+
             if (parsed.content) {
               accumulatedContent += parsed.content;
               // Update the message with accumulated content
@@ -276,6 +311,11 @@ export default function Chatbot({ greeting, suggestedPrompts }: ChatbotProps = {
           }
         }
 
+        // A stream that broke after emitting text keeps what it produced; the
+        // error only replaces the answer when there is no answer to keep.
+        if (streamError && !accumulatedContent) {
+          throw new Error(streamError);
+        }
         if (!accumulatedContent) {
           throw new Error('No content received from stream');
         }
@@ -293,6 +333,7 @@ export default function Chatbot({ greeting, suggestedPrompts }: ChatbotProps = {
             content: data.choices[0].message.content,
             id: assistantMessageId,
             timestamp: assistantTimestamp,
+            sources: data.sources,
           };
           setMessages(prev => [...prev, assistantMessage]);
         } else {
@@ -310,8 +351,12 @@ export default function Chatbot({ greeting, suggestedPrompts }: ChatbotProps = {
         errorMessage = 'Unknown error.';
       }
       setError(`The index couldn't answer. ${errorMessage}`);
-      // Remove placeholder message on error
-      setMessages(prev => prev.filter(msg => msg.id !== assistantMessageId));
+      setFailedPrompt(messageText);
+      // Remove the placeholder and the user turn that produced it, so a retry
+      // does not stack a duplicate question in the transcript.
+      setMessages(prev =>
+        prev.filter(msg => msg.id !== assistantMessageId && msg.id !== newMessage.id)
+      );
       console.error('Chat error:', err);
     } finally {
       setIsLoading(false);
@@ -335,6 +380,15 @@ export default function Chatbot({ greeting, suggestedPrompts }: ChatbotProps = {
     sendMessage(prompt);
   };
 
+  const handleRetry = () => {
+    if (failedPrompt) sendMessage(failedPrompt);
+  };
+
+  const handleDismissError = useCallback(() => {
+    setError(null);
+    setFailedPrompt(null);
+  }, []);
+
   const handleToggleExpand = useCallback(() => {
     setIsExpanded(prev => !prev);
   }, []);
@@ -354,6 +408,7 @@ export default function Chatbot({ greeting, suggestedPrompts }: ChatbotProps = {
         input={input}
         isLoading={isLoading}
         error={error}
+        canRetry={Boolean(failedPrompt)}
         isExpanded={isExpanded}
         messagesEndRef={messagesEndRef}
         messagesContainerRef={messagesContainerRef}
@@ -364,6 +419,8 @@ export default function Chatbot({ greeting, suggestedPrompts }: ChatbotProps = {
         onSendMessage={sendMessage}
         onClearInput={handleClearInput}
         onSuggestedPrompt={handleSuggestedPrompt}
+        onRetry={handleRetry}
+        onDismissError={handleDismissError}
         onToggleExpand={handleToggleExpand}
       />
     </Suspense>

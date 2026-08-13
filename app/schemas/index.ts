@@ -3,10 +3,13 @@ export {
   type AIContext,
   type AIContextItem,
   AIContextItemSchema,
+  type AIContextKind,
+  AIContextKindSchema,
   AIContextSchema,
 } from './ai-context';
 // Chat schemas and types
 export {
+  CHAT_LIMITS,
   type ChatQueryParams,
   ChatQueryParamsSchema,
   type ChatRequest,
@@ -26,10 +29,16 @@ export {
 export {
   type ChunkMetadata,
   ChunkMetadataSchema,
+  type ChunkType,
+  ChunkTypeSchema,
   type Experience,
   ExperienceSchema,
+  type Maturity,
+  MaturitySchema,
   type Project,
   ProjectSchema,
+  type Recognition,
+  RecognitionSchema,
   type ResumeData,
   ResumeDataSchema,
   type VectorMatch,

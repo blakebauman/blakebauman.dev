@@ -1,6 +1,0 @@
-# Vectorize worker - copy to .dev.vars and fill in values
-# Used when running: wrangler dev -c workers/vectorize/wrangler.jsonc --remote
-# .dev.vars is gitignored - never commit real secrets
-
-# Required for /populate and /insert endpoints (Bearer token authentication)
-VECTORIZE_ADMIN_KEY = "your-secret-key-here"

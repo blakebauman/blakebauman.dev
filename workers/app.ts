@@ -1,8 +1,21 @@
 import { createRequestHandler } from 'react-router';
+import aiContextData from '../app/chat/ai-context.json';
+import { RETRIEVAL_CONFIG } from '../app/chat/context';
+import resumeData from '../app/chat/resume.json';
+import { isAuthorized, jsonResponse, serverErrorResponse } from '../app/lib/http';
 import { populateVectorizeIndex } from '../app/lib/vectorize';
-import type { Env, ResumeData } from '../app/types';
+import { ChatLogsQuerySchema } from '../app/schemas/admin';
+import type { Env } from '../app/types';
 
 interface CloudflareEnvironment extends Env {}
+
+// Resolved at build time by Vite, same mechanism the request handler uses.
+const IS_DEV = import.meta.env.MODE === 'development';
+
+// How long chat logs are kept. Interpolated into SQL rather than bound because
+// SQLite's datetime modifier takes a literal; the value is a constant here and
+// never reaches this from a request.
+const LOG_RETENTION_DAYS = 90;
 
 function hasSeenCookie(request: Request): boolean {
   const cookie = request.headers.get('Cookie');
@@ -15,38 +28,71 @@ function isDocumentRequest(request: Request): boolean {
   return (request.headers.get('Accept') || '').includes('text/html');
 }
 
+/**
+ * Cloudflare sets CF-Connecting-IP itself and it cannot be spoofed by the
+ * client. X-Forwarded-For can be, which made it a way to rotate or share rate
+ * limit buckets, so it is no longer consulted. Requests without the header
+ * (only possible off-platform) share the 'unknown' bucket, which is the
+ * conservative direction to fail in.
+ */
 function getClientIP(request: Request): string {
-  return (
-    request.headers.get('CF-Connecting-IP') ||
-    request.headers.get('X-Forwarded-For')?.split(',')[0]?.trim() ||
-    'anonymous'
-  );
+  return request.headers.get('CF-Connecting-IP') || 'unknown';
 }
 
-// CORS configuration - restrict to allowed origins
+// Exact origins only. The previous check was `origin.includes('localhost')`
+// with no environment gate, which reflected any origin containing that
+// substring anywhere — https://localhost.attacker.example among them — in
+// production.
 const ALLOWED_ORIGINS = ['https://blakebauman.dev', 'https://www.blakebauman.dev'];
+const DEV_ORIGINS = [
+  'http://localhost:5173',
+  'http://127.0.0.1:5173',
+  'http://localhost:8787',
+  'http://127.0.0.1:8787',
+];
 
 function getCorsOrigin(request: Request): string {
   const origin = request.headers.get('Origin');
-  // In development, allow localhost
-  if (origin && (origin.includes('localhost') || origin.includes('127.0.0.1'))) {
-    return origin as string;
-  }
-  // In production, only allow specified origins
-  if (origin && ALLOWED_ORIGINS.includes(origin)) {
-    return origin;
-  }
-  // Default to first allowed origin for same-origin requests
-  return ALLOWED_ORIGINS[0] ?? 'https://blakebauman.dev';
+  if (!origin) return ALLOWED_ORIGINS[0] as string;
+  if (ALLOWED_ORIGINS.includes(origin)) return origin;
+  if (IS_DEV && DEV_ORIGINS.includes(origin)) return origin;
+  return ALLOWED_ORIGINS[0] as string;
 }
 
 function getCorsHeaders(request: Request): Record<string, string> {
   return {
     'Access-Control-Allow-Origin': getCorsOrigin(request),
     'Access-Control-Allow-Methods': 'POST, OPTIONS',
-    'Access-Control-Allow-Headers': 'Content-Type',
+    'Access-Control-Allow-Headers': 'Content-Type, Authorization',
     'Access-Control-Max-Age': '86400',
+    // The response varies by request origin, so caches must not serve one
+    // origin's CORS headers to another.
+    Vary: 'Origin',
   };
+}
+
+/**
+ * Applies the shared rate limiter. Returns a 429 response when the caller is
+ * over the limit, or null to continue. The binding is absent in local dev.
+ */
+async function checkRateLimit(
+  request: Request,
+  env: CloudflareEnvironment,
+  corsHeaders: Record<string, string>
+): Promise<Response | null> {
+  if (!env.CHAT_RATE_LIMITER) return null;
+
+  const { success } = await env.CHAT_RATE_LIMITER.limit({ key: getClientIP(request) });
+  if (success) return null;
+
+  return jsonResponse(
+    { error: 'Too many requests. Please try again later.', retryAfter: 60 },
+    429,
+    {
+      'Retry-After': '60',
+      ...corsHeaders,
+    }
+  );
 }
 
 declare module 'react-router' {
@@ -71,84 +117,123 @@ export default {
 
     // Handle OPTIONS request for CORS
     if (request.method === 'OPTIONS') {
-      return new Response(null, {
-        status: 204,
-        headers: corsHeaders,
-      });
+      return new Response(null, { status: 204, headers: corsHeaders });
     }
 
-    // Handle vectorize population (protected by VECTORIZE_ADMIN_KEY secret)
+    // Rebuild the Vectorize index. This is the only populate path — the
+    // separate vectorize worker that used to own a second, divergent copy has
+    // been removed. It passes ai-context.json, which the old copy of this
+    // handler did not, silently dropping the entire chat-only knowledge layer
+    // whenever the index was rebuilt from here.
     if (url.pathname === '/api/populate-vectorize' && request.method === 'POST') {
-      const authHeader = request.headers.get('Authorization');
-      const token = authHeader?.startsWith('Bearer ') ? authHeader.slice(7) : null;
-      if (!env.VECTORIZE_ADMIN_KEY || token !== env.VECTORIZE_ADMIN_KEY) {
-        return new Response(JSON.stringify({ error: 'Unauthorized' }), {
-          status: 401,
-          headers: { 'Content-Type': 'application/json', ...corsHeaders },
-        });
+      if (!(await isAuthorized(request.headers.get('Authorization'), env.VECTORIZE_ADMIN_KEY))) {
+        return jsonResponse({ error: 'Unauthorized' }, 401, corsHeaders);
       }
+
+      const limited = await checkRateLimit(request, env, corsHeaders);
+      if (limited) return limited;
+
       try {
-        // Import resume data
-        const resumeData = (await import('../app/chat/resume.json')) as { default: ResumeData };
-
-        // Use the shared library function to populate the index
-        await populateVectorizeIndex(env, resumeData.default);
-
-        return new Response(
-          JSON.stringify({
-            success: true,
-            message: 'Vectorize index population complete!',
-          }),
+        const result = await populateVectorizeIndex(env, resumeData, aiContextData);
+        return jsonResponse(
           {
-            status: 200,
-            headers: {
-              'Content-Type': 'application/json',
-              ...corsHeaders,
-            },
-          }
+            success: true,
+            message: 'Vectorize index population complete',
+            inserted: result.inserted,
+            deleted: result.deleted,
+          },
+          200,
+          corsHeaders
         );
       } catch (error: unknown) {
-        console.error('Error populating Vectorize index:', error);
-        const errorMessage = error instanceof Error ? error.message : 'Unknown error';
-        return new Response(
-          JSON.stringify({
-            success: false,
-            error: errorMessage,
-          }),
+        return serverErrorResponse(
+          'populate-vectorize',
+          error,
+          corsHeaders,
+          'Failed to populate the Vectorize index.'
+        );
+      }
+    }
+
+    // Retrieval inspection for the golden-set eval (scripts/eval-retrieval.ts).
+    // Returns what Vectorize matched and at what score, with no model call — the
+    // only way to measure retrieval quality separately from answer quality.
+    // Authenticated because it exposes the index and burns an embedding per call.
+    if (url.pathname === '/api/debug/retrieval' && request.method === 'POST') {
+      if (!(await isAuthorized(request.headers.get('Authorization'), env.VECTORIZE_ADMIN_KEY))) {
+        return jsonResponse({ error: 'Unauthorized' }, 401, corsHeaders);
+      }
+
+      try {
+        const body = (await request.json()) as { prompt?: unknown };
+        if (typeof body.prompt !== 'string' || !body.prompt.trim()) {
+          return jsonResponse({ error: 'A non-empty "prompt" is required' }, 400, corsHeaders);
+        }
+
+        const embeddings = await env.AI.run('@cf/baai/bge-base-en-v1.5', { text: [body.prompt] });
+        const queryVector = embeddings.data?.[0];
+        if (!queryVector) {
+          return jsonResponse({ error: 'Failed to embed the prompt' }, 502, corsHeaders);
+        }
+
+        // Unfiltered on purpose: the eval tunes MIN_SCORE, so it has to see the
+        // scores the floor would have discarded.
+        const results = await env.VECTORIZE.query(queryVector, {
+          topK: RETRIEVAL_CONFIG.topK,
+          returnMetadata: 'all',
+        });
+
+        return jsonResponse(
           {
-            status: 500,
-            headers: {
-              'Content-Type': 'application/json',
-              ...corsHeaders,
-            },
-          }
+            prompt: body.prompt,
+            config: RETRIEVAL_CONFIG,
+            matches: (results.matches ?? []).map(match => ({
+              id: match.id,
+              score: match.score,
+              type: match.metadata?.type ?? null,
+              title: match.metadata?.title ?? null,
+            })),
+          },
+          200,
+          corsHeaders
+        );
+      } catch (error: unknown) {
+        return serverErrorResponse(
+          'debug-retrieval',
+          error,
+          corsHeaders,
+          'Retrieval check failed.'
         );
       }
     }
 
     // Admin endpoint for viewing chat logs (protected by ADMIN_API_KEY)
     if (url.pathname === '/api/admin/chat-logs' && request.method === 'GET') {
-      const authHeader = request.headers.get('Authorization');
-      const token = authHeader?.startsWith('Bearer ') ? authHeader.slice(7) : null;
-      if (!env.ADMIN_API_KEY || token !== env.ADMIN_API_KEY) {
-        return new Response(JSON.stringify({ error: 'Unauthorized' }), {
-          status: 401,
-          headers: { 'Content-Type': 'application/json', ...corsHeaders },
-        });
+      if (!(await isAuthorized(request.headers.get('Authorization'), env.ADMIN_API_KEY))) {
+        return jsonResponse({ error: 'Unauthorized' }, 401, corsHeaders);
       }
+
+      const limited = await checkRateLimit(request, env, corsHeaders);
+      if (limited) return limited;
 
       if (!env.CHAT_LOGS_DB) {
-        return new Response(JSON.stringify({ error: 'Chat logs database not configured' }), {
-          status: 500,
-          headers: { 'Content-Type': 'application/json', ...corsHeaders },
-        });
+        return jsonResponse({ error: 'Chat logs database not configured' }, 500, corsHeaders);
       }
 
-      try {
-        const days = parseInt(url.searchParams.get('days') || '7', 10);
-        const limit = Math.min(parseInt(url.searchParams.get('limit') || '100', 10), 1000);
+      const parsedQuery = ChatLogsQuerySchema.safeParse({
+        days: url.searchParams.get('days') ?? undefined,
+        limit: url.searchParams.get('limit') ?? undefined,
+      });
+      if (!parsedQuery.success) {
+        return jsonResponse(
+          { error: parsedQuery.error.issues[0]?.message ?? 'Invalid query parameters' },
+          400,
+          corsHeaders
+        );
+      }
+      const { days, limit } = parsedQuery.data;
 
-        // Get sessions with message counts
+      try {
         const sessionsResult = await env.CHAT_LOGS_DB.prepare(
           `SELECT s.id, s.created_at, s.last_activity_at, s.ip_hash, s.user_agent, s.message_count
            FROM chat_sessions s
@@ -159,9 +244,9 @@ export default {
           .bind(days, limit)
           .all();
 
-        // Get recent messages grouped by session
         const messagesResult = await env.CHAT_LOGS_DB.prepare(
-          `SELECT m.session_id, m.role, m.content, m.created_at, m.response_time_ms, m.was_redirected
+          `SELECT m.session_id, m.role, m.content, m.created_at, m.response_time_ms,
+                  m.was_redirected, m.vector_matches_count
            FROM chat_messages m
            INNER JOIN chat_sessions s ON m.session_id = s.id
            WHERE s.created_at >= datetime('now', '-' || ? || ' days')
@@ -180,65 +265,50 @@ export default {
           messagesBySession[sessionId].push(msg);
         }
 
-        // Combine sessions with their messages
         const sessions = sessionsResult.results.map(session => ({
           ...session,
           messages: messagesBySession[session.id as string] || [],
         }));
 
-        return new Response(
-          JSON.stringify({
+        return jsonResponse(
+          {
             sessions,
             meta: {
               days,
               sessionCount: sessions.length,
               messageCount: messagesResult.results.length,
             },
-          }),
-          {
-            status: 200,
-            headers: { 'Content-Type': 'application/json', ...corsHeaders },
-          }
+          },
+          200,
+          corsHeaders
         );
       } catch (error: unknown) {
-        console.error('Error fetching chat logs:', error);
-        const errorMessage = error instanceof Error ? error.message : 'Unknown error';
-        return new Response(JSON.stringify({ error: errorMessage }), {
-          status: 500,
-          headers: { 'Content-Type': 'application/json', ...corsHeaders },
-        });
-      }
-    }
-
-    // Check if chat is disabled
-    if (url.pathname === '/api/chat' && env.CHAT_ENABLED !== 'true') {
-      return new Response(JSON.stringify({ error: 'Chat is temporarily unavailable.' }), {
-        status: 503,
-        headers: { 'Content-Type': 'application/json', ...corsHeaders },
-      });
-    }
-
-    // Rate limit check for /api/chat (in-memory edge rate limiter; limits are set in
-    // wrangler.jsonc). Binding is absent in local dev, where the check is skipped.
-    if (url.pathname === '/api/chat' && request.method === 'POST' && env.CHAT_RATE_LIMITER) {
-      const { success } = await env.CHAT_RATE_LIMITER.limit({ key: getClientIP(request) });
-
-      if (!success) {
-        return new Response(
-          JSON.stringify({
-            error: 'Too many requests. Please try again later.',
-            retryAfter: 60,
-          }),
-          {
-            status: 429,
-            headers: {
-              'Content-Type': 'application/json',
-              'Retry-After': '60',
-              ...corsHeaders,
-            },
-          }
+        return serverErrorResponse(
+          'admin-chat-logs',
+          error,
+          corsHeaders,
+          'Failed to fetch chat logs.'
         );
       }
+    }
+
+    if (url.pathname === '/api/chat') {
+      if (env.CHAT_ENABLED !== 'true') {
+        return jsonResponse({ error: 'Chat is temporarily unavailable.' }, 503, corsHeaders);
+      }
+
+      // Only POST reaches the model. The route module used to export a loader
+      // as well, so a GET ran the whole chat path while this check — keyed on
+      // POST — waved it through unmetered.
+      if (request.method !== 'POST') {
+        return jsonResponse({ error: 'Method not allowed' }, 405, {
+          Allow: 'POST, OPTIONS',
+          ...corsHeaders,
+        });
+      }
+
+      const limited = await checkRateLimit(request, env, corsHeaders);
+      if (limited) return limited;
     }
 
     // Handle all other routes with React Router
@@ -258,5 +328,38 @@ export default {
     }
 
     return response;
+  },
+
+  /**
+   * Retention. Chat logs hold full prompt and response text plus a hashed IP,
+   * and nothing previously removed them — the only bound on how long a
+   * conversation was kept was how long the database existed. Sessions are
+   * pruned by last activity and messages by their own timestamp, so a session
+   * that stayed active keeps its recent turns rather than being dropped whole.
+   */
+  async scheduled(_event: ScheduledController, env: CloudflareEnvironment, ctx: ExecutionContext) {
+    if (!env.CHAT_LOGS_DB) return;
+
+    ctx.waitUntil(
+      (async () => {
+        try {
+          const results = await env.CHAT_LOGS_DB.batch([
+            env.CHAT_LOGS_DB.prepare(
+              `DELETE FROM chat_messages
+               WHERE created_at < datetime('now', '-${LOG_RETENTION_DAYS} days')`
+            ),
+            env.CHAT_LOGS_DB.prepare(
+              `DELETE FROM chat_sessions
+               WHERE last_activity_at < datetime('now', '-${LOG_RETENTION_DAYS} days')`
+            ),
+          ]);
+          console.log(
+            `Chat log retention: removed ${results[0]?.meta?.changes ?? 0} messages, ${results[1]?.meta?.changes ?? 0} sessions`
+          );
+        } catch (error) {
+          console.error('Chat log retention failed:', error);
+        }
+      })()
+    );
   },
 } satisfies ExportedHandler<CloudflareEnvironment>;

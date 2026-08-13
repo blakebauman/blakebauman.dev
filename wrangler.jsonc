@@ -12,8 +12,12 @@
     { "pattern": "blakebauman.dev", "custom_domain": true },
     { "pattern": "www.blakebauman.dev", "custom_domain": true }
   ],
-  // OPENAI_API_KEY: wrangler secret put OPENAI_API_KEY
-  // VECTORIZE_ADMIN_KEY: wrangler secret put VECTORIZE_ADMIN_KEY (required for /api/populate-vectorize)
+  // Secrets (wrangler secret put <NAME>):
+  //   VECTORIZE_ADMIN_KEY - required for POST /api/populate-vectorize
+  //   ADMIN_API_KEY       - required for GET /api/admin/chat-logs
+  //   IP_HASH_SALT        - salts client-IP hashes before they reach D1; without
+  //                         it the hashes are reversible by brute force and rows
+  //                         are written with an "unsalted:" prefix
   "vars": {
     // Deployed (production) value. Local dev sets NODE_ENV=development via the dev
     // server. request.ts gates Vectorize search on process.env.NODE_ENV (baked at
@@ -23,6 +27,10 @@
   },
   "observability": {
     "enabled": true
+  },
+  // Nightly chat-log retention sweep (see the scheduled handler in workers/app.ts).
+  "triggers": {
+    "crons": ["0 4 * * *"]
   },
   "ai": {
     "binding": "AI"
