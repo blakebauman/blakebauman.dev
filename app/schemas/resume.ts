@@ -35,6 +35,11 @@ export const ProjectSchema = z.object({
   org: z.string().optional(),
   language: z.string().optional(),
   maturity: MaturitySchema.optional(),
+  // Date of the most recent push to the repository (YYYY-MM-DD), maintained by
+  // `pnpm run sync:github`. Hand-written `year` strings do not change when you
+  // push, so "what is the most recent project?" was being answered from data
+  // that silently went stale.
+  lastActivity: z.string().optional(),
   // Whether the project appears in the rendered list. Absent means listed.
   //
   // Deliberately separate from `visibility`, which describes the repository.

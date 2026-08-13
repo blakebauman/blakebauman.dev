@@ -180,9 +180,190 @@ function citationTitle(title: string): string {
   return title;
 }
 
+// Words too common to indicate that an answer came from a particular chunk.
+// Every retrieved chunk is about Blake, so his name and the generic vocabulary
+// of the record carry no attribution signal at all.
+const ATTRIBUTION_STOPWORDS = new Set([
+  'blake',
+  'bauman',
+  'he',
+  'his',
+  'him',
+  'the',
+  'and',
+  'for',
+  'with',
+  'that',
+  'this',
+  'from',
+  'has',
+  'have',
+  'had',
+  'was',
+  'were',
+  'are',
+  'is',
+  'been',
+  'not',
+  'but',
+  'you',
+  'they',
+  'them',
+  'its',
+  'it',
+  'a',
+  'an',
+  'of',
+  'to',
+  'in',
+  'on',
+  'at',
+  'as',
+  'by',
+  'or',
+  'be',
+  'which',
+  'who',
+  'what',
+  'when',
+  'where',
+  'how',
+  'why',
+  'work',
+  'works',
+  'worked',
+  'working',
+  'project',
+  'projects',
+  'record',
+  'also',
+  'more',
+  'most',
+  'than',
+  'then',
+  'their',
+  'there',
+  'these',
+  'those',
+  'into',
+  'over',
+  'under',
+  'about',
+  'across',
+  'both',
+  'each',
+  'other',
+  'some',
+  'such',
+  'can',
+  'will',
+  'would',
+  'could',
+  'one',
+  'two',
+  'first',
+  'now',
+  'his',
+  'her',
+]);
+
+// A chunk must reach this share of the best attribution score to be cited.
+// Relative rather than absolute, because the raw scores depend on answer length.
+const ATTRIBUTION_SHARE = 0.3;
+
+// ...and clear this absolute floor as well. Terms are weighted 1/df across the
+// candidate set, so a term unique to one chunk scores 1.0 and a term shared by
+// four scores 0.25 — meaning this threshold is "one distinctive term, or several
+// less distinctive ones".
+//
+// The relative share alone is too permissive on short answers. A refusal shares
+// a handful of incidental words with everything retrieved, all the scores land
+// near zero, and 30% of almost-nothing still qualifies: "how much revenue did
+// his systems generate?" cited four chunks including an FAQ about awards and one
+// about years of experience, neither of which the answer mentioned.
+//
+// A floor of 1 was still one coincidental word. Two distinctive terms is the bar
+// for claiming a chunk contributed: one word can be chance, two is overlap. The
+// cost is that a very short answer may cite nothing — which is the right way to
+// be wrong, since an absent citation misleads nobody and a false one does.
+const MIN_ATTRIBUTION_SCORE = 2;
+
+function contentTerms(text: string): Set<string> {
+  const terms = new Set<string>();
+  for (const raw of text.toLowerCase().split(/[^\p{L}\p{N}.+#-]+/u)) {
+    const term = raw.replace(/^[.-]+|[.-]+$/g, '');
+    if (term.length < 3) continue;
+    if (ATTRIBUTION_STOPWORDS.has(term)) continue;
+    terms.add(term);
+  }
+  return terms;
+}
+
+/**
+ * Works out which retrieved chunks the answer actually drew on, by overlap of
+ * distinctive terms.
+ *
+ * Citing by retrieval score alone is wrong whenever the best-scoring chunk is
+ * not the one that answered. That is not hypothetical: "where has he worked?"
+ * retrieves the employment history at rank 6, so the answer is built from it
+ * while the chips credited the contact card and the frontend FAQ — three
+ * sources, none of which supplied a single fact in the response.
+ *
+ * Terms are weighted by how many candidate chunks contain them, so vocabulary
+ * shared across the retrieved set contributes nothing and a term unique to one
+ * chunk contributes most. An answer that grounds in nothing — a refusal, or
+ * "the record doesn't cover that" — attributes to nothing and cites nothing,
+ * which is the honest outcome.
+ */
+export function attributeSources(matches: RetrievedMatch[], answer: string): ContextSource[] {
+  if (!matches.length || !answer.trim()) return [];
+
+  const answerTerms = contentTerms(answer);
+  if (!answerTerms.size) return [];
+
+  const chunkTerms = matches.map(match => contentTerms(match.text));
+
+  // Document frequency across the candidate set only — this is about telling
+  // the retrieved chunks apart, not about the corpus at large.
+  const documentFrequency = new Map<string, number>();
+  for (const terms of chunkTerms) {
+    for (const term of terms) {
+      documentFrequency.set(term, (documentFrequency.get(term) ?? 0) + 1);
+    }
+  }
+
+  const scored = matches.map((match, index) => {
+    let score = 0;
+    for (const term of chunkTerms[index] as Set<string>) {
+      if (!answerTerms.has(term)) continue;
+      score += 1 / (documentFrequency.get(term) ?? 1);
+    }
+    return { match, score };
+  });
+
+  const best = Math.max(...scored.map(s => s.score));
+  if (best < MIN_ATTRIBUTION_SCORE) return [];
+
+  const seen = new Set<string>();
+  const sources: ContextSource[] = [];
+  for (const { match } of scored
+    .filter(s => s.score >= MIN_ATTRIBUTION_SCORE && s.score >= best * ATTRIBUTION_SHARE)
+    .sort((a, b) => b.score - a.score)) {
+    const key = `${match.type}:${match.sourceId}`;
+    if (seen.has(key)) continue;
+    seen.add(key);
+    sources.push({ label: labelFor(match.type), title: citationTitle(match.title) });
+    if (sources.length >= MAX_SOURCES) break;
+  }
+
+  return sources;
+}
+
 /**
  * Collapses matches to one citation per source entity, in score order. Three
  * chunks of the felix project cite as one "Project: felix", not three.
+ *
+ * Retained for the case where no answer text is available to attribute against.
  */
 export function toSources(matches: RetrievedMatch[]): ContextSource[] {
   const best = matches[0]?.score;

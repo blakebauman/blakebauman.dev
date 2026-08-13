@@ -37,13 +37,17 @@ export function sseMessageResponse(message: string): Response {
  * SSE format (`data: {"content":"text"}`), invoking onComplete with the full
  * accumulated text.
  *
- * When sources are supplied they are emitted as a single leading frame, so the
- * UI can show what grounded the answer while the answer is still streaming.
+ * Sources are emitted as a *trailing* frame, derived from the finished answer by
+ * `resolveSources`. They were previously sent up front, computed from retrieval
+ * scores alone — which meant they named the highest-scoring chunks rather than
+ * the ones the answer was actually built from, and the two are not the same
+ * whenever the best match is not the one that answered. Attribution needs the
+ * answer to exist, so the frame has to come last.
  */
 export function sseTransformResponse(
   stream: ReadableStream,
   onComplete: (accumulatedResponse: string) => void,
-  sources: ContextSource[] = []
+  resolveSources?: (accumulatedResponse: string) => ContextSource[]
 ): Response {
   const encoder = new TextEncoder();
   const decoder = new TextDecoder();
@@ -70,10 +74,6 @@ export function sseTransformResponse(
       };
 
       try {
-        if (sources.length) {
-          controller.enqueue(encoder.encode(frame({ type: 'sources', sources })));
-        }
-
         // SSE events can be split across network chunks, so buffer the trailing
         // partial line and prepend it to the next chunk instead of dropping it.
         let buffer = '';
@@ -82,6 +82,20 @@ export function sseTransformResponse(
           if (done) {
             buffer += decoder.decode();
             if (buffer) processLine(buffer);
+
+            if (accumulatedResponse) {
+              // Attribution failing must not cost the reader their answer, which
+              // has already streamed in full by this point.
+              try {
+                const sources = resolveSources?.(accumulatedResponse) ?? [];
+                if (sources.length) {
+                  controller.enqueue(encoder.encode(frame({ type: 'sources', sources })));
+                }
+              } catch (error) {
+                console.error('[chat-stream] source attribution failed', error);
+              }
+            }
+
             controller.enqueue(encoder.encode(DONE_FRAME));
             if (accumulatedResponse) {
               onComplete(accumulatedResponse);

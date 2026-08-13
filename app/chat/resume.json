@@ -207,7 +207,8 @@
         "Governance runs as a pipeline: policies, command screening, content screening, limits, guardrails, LLM judges, then human approvals.",
         "Canary manifest rollouts with hash-based routing and cron auto-rollback, plus an eval harness with golden datasets wired into CI as a gate.",
         "Felix Commerce adds an Agentic Commerce Protocol merchant endpoint, approval-gated Stripe checkout, per-brand D2C storefronts, and B2B quote-to-cash."
-      ]
+      ],
+      "lastActivity": "2026-08-07"
     },
     {
       "name": "fold",
@@ -241,7 +242,8 @@
         "Operational surface: rate limiting, circuit breakers, caching, load balancing with health checks, dynamic registry discovery, hot config reload, and a Kubernetes discovery controller with a Helm chart.",
         "Passes the official MCP conformance suite 40/40; shipped at v1.4.1 with the API contract frozen at v1.0.0, hardened with fuzzers and chaos tests.",
         "OpenTelemetry tracing and Prometheus metrics throughout."
-      ]
+      ],
+      "lastActivity": "2026-08-13"
     },
     {
       "name": "memoturn",
@@ -279,7 +281,8 @@
         "Ships TypeScript, Python, and Go SDKs with LangChain and OpenAI integrations.",
         "Multi-provider playground with streaming, plus SSO, RBAC, and audit logs for team use.",
         "An MCP server exposes prompts and datasets directly to agent IDEs, so the eval loop reaches the place the prompts are actually written."
-      ]
+      ],
+      "lastActivity": "2026-08-12"
     },
     {
       "name": "skillist",
@@ -312,7 +315,8 @@
         "Hosted sandbox execution environment, so a skill can be tried before an agent is trusted to run it.",
         "Two npm packages published under MIT, including @skillist/cli for local skill development.",
         "Neon Postgres via Hyperdrive with R2 and KV storage, a Vite and TanStack Router console, and Better Auth covering OAuth, magic links, and passkeys."
-      ]
+      ],
+      "lastActivity": "2026-08-11"
     },
     {
       "name": "edgevault",
@@ -347,7 +351,8 @@
         "Audit events drain through a queue into NDJSON on R2, keeping the write path off the request path.",
         "Vectorize-backed semantic search over configuration, plus a Streamable-HTTP MCP server so agents can read and change config under the same policy as humans.",
         "Open-core: the MIT core is public, the Stripe billing layer is kept proprietary."
-      ]
+      ],
+      "lastActivity": "2026-08-09"
     },
     {
       "name": "contentworker",
@@ -381,7 +386,8 @@
         "A transactional outbox with a relay process fans out to webhooks, cache invalidation, and vector reindexing — no dual-write between the database and the message bus.",
         "The MCP server calls the same use-cases as the HTTP API, so agent access and human access cannot drift apart.",
         "UUIDv7 identifiers, a Helm chart with per-cloud values, and a k6 benchmark suite."
-      ]
+      ],
+      "lastActivity": "2026-07-24"
     },
     {
       "name": "memoturn-db",
@@ -403,7 +409,8 @@
         "O(1) copy-on-write branches with epoch fencing, so an agent can fork its memory to try something and throw it away.",
         "Single-writer safety via etcd leases with failover under 15 seconds.",
         "The README is deliberate about status — architecture and working prototype, not a shipped database."
-      ]
+      ],
+      "lastActivity": "2026-06-19"
     },
     {
       "name": "prompton",
@@ -435,7 +442,8 @@
         "Provider-agnostic: Ollama, any OpenAI-compatible endpoint, or Anthropic.",
         "Credentials are held in the OS keyring. macOS and Linux, with CI running typecheck, build, and cargo test.",
         "Self-described MVP."
-      ]
+      ],
+      "lastActivity": "2026-07-24"
     },
     {
       "name": "deckhand",
@@ -454,7 +462,8 @@
         "Covers Docker, Compose, Kubernetes, and Helm from a single surface, plus Firecracker microVMs on Linux.",
         "Adobe Spectrum design system, macOS and Linux, MIT licensed.",
         "Pre-release: DMGs are ad-hoc signed, not notarized."
-      ]
+      ],
+      "lastActivity": "2026-07-20"
     },
     {
       "name": "timetracker-app",
@@ -490,7 +499,8 @@
         "Reports export to CSV and Excel, with AI-generated narrative summaries alongside the numbers.",
         "Pushes time entries to Adobe Workfront and Microsoft Dynamics.",
         "MV3 Chrome extension, and Playwright end-to-end coverage."
-      ]
+      ],
+      "lastActivity": "2026-08-10"
     },
     {
       "name": "offpavement-shop",
@@ -510,7 +520,8 @@
         "Editorial product metadata, so product pages read as content rather than catalog rows.",
         "Demonstrates commerce architecture on a non-Adobe platform: Medusa v2 with pnpm, Docker, and Medusa migrations.",
         "Dormant since March 2026."
-      ]
+      ],
+      "lastActivity": "2026-03-08"
     },
     {
       "name": "blakebauman.dev",
@@ -540,7 +551,8 @@
         "Retrieved chunks are fenced in the prompt as reference material, and replayed conversation history is treated as untrusted input.",
         "Answers surface which sections grounded them, so a claim can be traced back to the record.",
         "Rate limited per IP at the edge with the native Workers rate-limiting binding."
-      ]
+      ],
+      "lastActivity": "2026-08-13"
     },
     {
       "name": "commerceworker",
@@ -571,7 +583,8 @@
         "Emits per-assistant configuration: a Claude Code subagent, Cursor rules, Copilot instructions, and Gemini CLI settings from one source.",
         "Presets plus a REST API and shareable configs, so a team applies one policy rather than each engineer configuring their own.",
         "Git hooks catch emoji at commit time as the last line of defence."
-      ]
+      ],
+      "lastActivity": "2026-05-02"
     },
     {
       "name": "cf-monorepo",
@@ -598,7 +611,8 @@
       "highlights": [
         "A template, not a product — the starting point several of the other Cloudflare projects were built from.",
         "Nine shared packages plus one example Worker, with syncpack keeping versions aligned across the workspace."
-      ]
+      ],
+      "lastActivity": "2025-12-21"
     },
     {
       "name": "vital",
@@ -616,7 +630,8 @@
         "A lead agent scopes the brief and routes to specialists, instead of the user having to know which discipline they need.",
         "Twenty-two skills written as portable SKILL.md files, usable outside the plugin.",
         "Installed via /plugin marketplace add blakebauman/vital."
-      ]
+      ],
+      "lastActivity": "2026-08-08"
     },
     {
       "name": "CaveAcoustics",
@@ -636,13 +651,15 @@
         "Real-time audio is a hard deadline problem: the DSP path cannot allocate or block, which is a different discipline from the request/response work everywhere else on this record.",
         "The storefront reuses the same Cloudflare stack as the rest of the portfolio.",
         "Last active early 2026."
-      ]
+      ],
+      "lastActivity": "2026-03-19"
     },
     {
       "name": "ecommerce-intent-reasoning-engine",
       "year": "2026",
       "status": "Filed",
-      "visibility": "private",
+      "visibility": "public",
+      "listed": false,
       "description": "Reasoning engine for eCommerce intent classification and resolution. 62 intents across 10 categories over chat, email, and form channels; decomposes compound intents, resolves conflicts, and outputs structured action plans.",
       "context": "Not a simple classifier: it handles ambiguous customer intent when multiple signals conflict. An embedding fast path answers roughly half of requests without an LLM call, with the model reserved for compound and ambiguous cases. Adds sentiment and sarcasm detection, entity extraction, and tier-aware escalation, with order connectors for Shopify, Adobe Commerce, WooCommerce, and BigCommerce.",
       "tech": ["Python", "Claude API", "FastAPI", "PostgreSQL", "Docker", "Embeddings"],
@@ -655,7 +672,8 @@
         "Compound intents are decomposed rather than forced into a single label.",
         "Order connectors span four commerce platforms, so intent resolution can act on real order state.",
         "Tier-aware escalation routes on customer tier as well as intent."
-      ]
+      ],
+      "lastActivity": "2026-02-11"
     },
     {
       "name": "catalog-normalize",
@@ -673,20 +691,23 @@
       "name": "fleet-workspace",
       "year": "2025–2026",
       "status": "Filed",
-      "visibility": "private",
+      "visibility": "public",
+      "listed": false,
       "description": "Hierarchical Durable Objects on Cloudflare Workers, with infinite nesting of manager/agent relationships through URL paths.",
       "context": "Explores scalable real-time collaboration patterns at the edge. Self-described in its own README as a demonstration, not a product — it exists to prove the nesting pattern works.",
       "tech": ["TypeScript", "Cloudflare Workers", "Durable Objects", "WebSockets"],
       "github": "https://github.com/blakebauman/fleet-workspace",
       "aliases": ["fleet", "hierarchical durable objects"],
       "language": "TypeScript",
-      "maturity": "reference"
+      "maturity": "reference",
+      "lastActivity": "2026-02-06"
     },
     {
       "name": "adventure-agent",
       "year": "2025–2026",
       "status": "Filed",
-      "visibility": "private",
+      "visibility": "public",
+      "listed": false,
       "description": "Multi-agent AI system for Arizona adventure planning with 17+ specialized agents — trails, BLM land, permits, weather, safety, lodging, transport, food, gear, photography — coordinated by an LLM orchestrator with human checkpoints.",
       "context": "A hobby domain used to work out real multi-agent orchestration problems on LangChain, LangGraph, and LangSmith: how many specialists is too many, where human-in-the-loop checkpoints belong, and how to keep a long planning run observable. The direct ancestor of the orchestration patterns later rebuilt in Felix.",
       "tech": ["Python", "LangChain", "LangGraph", "LangSmith"],
@@ -698,33 +719,38 @@
         "Seventeen-plus specialized agents plus per-town location agents under an LLM orchestrator.",
         "Human-in-the-loop checkpoints built in from the start, which is where the HITL approach in the later work comes from.",
         "Traced end to end with LangSmith — the practical experience that later turned into the Memoturn observability platform."
-      ]
+      ],
+      "lastActivity": "2026-02-08"
     },
     {
       "name": "hono-aws-lambda",
       "year": "2025–2026",
       "status": "Filed",
-      "visibility": "private",
+      "visibility": "public",
+      "listed": false,
       "description": "Hono REST API on the Bun runtime, deployed to AWS Lambda via CDK.",
       "context": "Reference implementation, and the counterweight to the Cloudflare-heavy rest of the record: the same Hono application model running on AWS rather than Workers.",
       "tech": ["TypeScript", "Hono", "Bun", "AWS CDK", "Drizzle ORM"],
       "github": "https://github.com/blakebauman/hono-aws-lambda",
       "aliases": ["hono lambda", "aws serverless api"],
       "language": "TypeScript",
-      "maturity": "reference"
+      "maturity": "reference",
+      "lastActivity": "2026-02-13"
     },
     {
       "name": "contentworker-workspace",
       "year": "2025",
       "status": "Filed",
-      "visibility": "private",
+      "visibility": "public",
+      "listed": false,
       "description": "RAG system on Cloudflare Workers and Hono: document processing, semantic search, and AI query responses.",
       "context": "Reference implementation for retrieval-augmented systems at the edge, and the predecessor to contentworker — the Cloudflare-native version of the idea before it was rebuilt cloud-agnostic on ports and adapters.",
       "tech": ["TypeScript", "Cloudflare Workers", "Hono", "Vectorize", "RAG"],
       "github": "https://github.com/blakebauman/contentworker-workspace",
       "aliases": ["rag workspace", "edge rag"],
       "language": "TypeScript",
-      "maturity": "reference"
+      "maturity": "reference",
+      "lastActivity": "2025-09-19"
     }
   ],
   "recognition": [

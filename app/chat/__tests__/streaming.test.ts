@@ -61,21 +61,42 @@ describe('sseTransformResponse', () => {
     expect(onComplete).toHaveBeenCalledWith('split');
   });
 
-  it('emits sources before any content', async () => {
-    const stream = upstream(['data: {"response":"answer"}\n\n']);
+  it('emits sources as a trailing frame, derived from the finished answer', async () => {
+    // Sources used to lead the stream, computed from retrieval scores alone.
+    // Attribution needs the answer to exist, so the frame now comes last.
+    const stream = upstream(['data: {"response":"Felix is a harness."}\n\n']);
     const sources = [{ label: 'Projects', title: 'felix' }];
+    const resolve = vi.fn().mockReturnValue(sources);
 
-    const frames = await readFrames(sseTransformResponse(stream, vi.fn(), sources));
+    const frames = await readFrames(sseTransformResponse(stream, vi.fn(), resolve));
 
-    expect(JSON.parse(frames[0] as string)).toEqual({ type: 'sources', sources });
+    expect(resolve).toHaveBeenCalledWith('Felix is a harness.');
+    expect(JSON.parse(frames[0] as string)).toEqual({ content: 'Felix is a harness.' });
+    expect(JSON.parse(frames[frames.length - 2] as string)).toEqual({ type: 'sources', sources });
+    expect(frames[frames.length - 1]).toBe('[DONE]');
   });
 
-  it('omits the sources frame when there are none', async () => {
+  it('omits the sources frame when attribution finds nothing', async () => {
     const frames = await readFrames(
-      sseTransformResponse(upstream(['data: {"response":"a"}\n\n']), vi.fn())
+      sseTransformResponse(upstream(['data: {"response":"a"}\n\n']), vi.fn(), () => [])
     );
 
     expect(frames.some(f => f.includes('"sources"'))).toBe(false);
+  });
+
+  it('still delivers the answer when attribution throws', async () => {
+    // The answer has already streamed by the time sources are computed; a bug
+    // in attribution must not cost the reader their response.
+    const onComplete = vi.fn();
+    const frames = await readFrames(
+      sseTransformResponse(upstream(['data: {"response":"kept"}\n\n']), onComplete, () => {
+        throw new Error('attribution blew up');
+      })
+    );
+
+    expect(JSON.parse(frames[0] as string)).toEqual({ content: 'kept' });
+    expect(frames[frames.length - 1]).toBe('[DONE]');
+    expect(onComplete).toHaveBeenCalledWith('kept');
   });
 
   it('sends an error frame instead of aborting the body mid-stream', async () => {
