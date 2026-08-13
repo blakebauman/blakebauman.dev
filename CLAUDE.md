@@ -43,13 +43,24 @@ pnpm run format       # Format all files
 pnpm run format:check # Check formatting only
 ```
 
-### Vectorize Commands (separate worker)
+### Vectorize Commands
 ```bash
-pnpm run vectorize:dev       # Run vectorize worker locally (requires --remote)
-pnpm run vectorize:deploy    # Deploy vectorize worker
-pnpm run vectorize:populate  # Populate vector index (requires VECTORIZE_ADMIN_KEY)
-pnpm run vectorize:query     # Test query against production index
+VECTORIZE_ADMIN_KEY=... pnpm run vectorize:populate  # Rebuild the index from resume.json + ai-context.json
+VECTORIZE_ADMIN_KEY=... pnpm run vectorize:eval      # Golden-set retrieval eval: recall@k, MRR, score distribution
 ```
+
+There is one populate path: `POST /api/populate-vectorize` on the main worker.
+A separate `vectorize-worker` used to own a second, divergent copy of it that
+omitted `ai-context.json`, so rebuilding the index from the main worker silently
+dropped the entire chat-only knowledge layer. That worker has been deleted;
+retire the `vectorize.blakebauman.dev` custom domain in the dashboard if it is
+still bound.
+
+Populate is reconciling, not just additive. Vectorize has no API to list the ids
+it holds, so `migrations/003_vector_manifest.sql` records what the last populate
+wrote; the next one diffs against it and deletes what the current content no
+longer produces. Without that, renaming a project leaves its old vector in the
+index permanently — retrievable, stale, and invisible to every later populate.
 
 ## Architecture
 
@@ -67,23 +78,74 @@ pnpm run vectorize:query     # Test query against production index
 
 ### Key Directories
 - `app/chat/` - AI chat logic (`request.ts` handles AI request flow)
-- `app/schemas/` - Zod schemas for validation (chat, resume, errors)
+- `app/schemas/` - Zod schemas for validation (chat, resume, ai-context, admin, errors)
 - `app/components/` - Resume display components and chatbot UI
-- `app/lib/` - Shared utilities (vectorize population)
-- `workers/` - Cloudflare Worker entry points
+- `app/lib/` - Shared utilities (vectorize population, text normalization, HTTP/auth helpers)
+- `workers/` - Cloudflare Worker entry point
+- `scripts/` - Operational scripts (retrieval eval)
+
+### Content (the whole knowledge base)
+- `app/chat/resume.json` - Single source for both the rendered page and the chat.
+  Projects and experience entries carry optional `highlights`, `aliases`, and
+  `maturity`; each becomes its own retrievable chunk.
+- `app/chat/ai-context.json` - Chat-only layer, never rendered. Entries are
+  `{id, title, text, topics, kind}` where `kind` is `background`, `faq`, or
+  `scope`. The `scope` entries are the anti-hallucination layer: they give the
+  model explicit language for what is a prototype, what is unquantified, and
+  what is outside the record, so it reaches for those instead of inventing.
+- `app/chat/data.ts` - The one place the JSON imports are cast to their schema
+  types. Import content from here, not from the JSON directly.
+
+Both files feed `buildChunks` in `app/lib/vectorize.ts`. Adding a project or an
+ai-context entry automatically teaches the topic guardrail its name and topics —
+there is no separate keyword list to keep in sync.
+
+**Cross-cutting themes need their own entry.** Retrieval matches chunks, and a
+chunk is about one subject. A theme that appears as a clause inside many chunks
+is not retrievable by any phrasing of a question about it: authentication was
+mentioned in six chunks (timetracker, Skillist, edgevault, Fold, contentworker,
+prompton) and *no* wording of "what authentication has he built?" surfaced any of
+them — generic chunks like `personal` and `github-orgs` won instead, because they
+sit near the corpus centroid. The fix is an entry whose subject *is* the theme;
+`ai_context_auth-and-security` and `ai_context_language-breadth` are both that
+shape. When adding content, ask what a visitor would ask about that spans
+projects, and give each of those a home.
+
+Do not add a BGE query-instruction prefix to the embedding call. It was tried
+and measured: it lowers every score and does not improve ranking on this corpus.
 
 ### Cloudflare Bindings (wrangler.jsonc)
 - `AI` - Workers AI for embeddings (@cf/baai/bge-base-en-v1.5) and LLM (@cf/meta/llama-3.3-70b-instruct-fp8-fast)
 - `VECTORIZE` - Vector index for semantic resume search (768 dimensions, index: resume-index-768)
 - `CHAT_RATE_LIMITER` - Native Workers rate limiting binding (20 req/min per IP; absent in local dev)
+- `CHAT_LOGS_DB` - D1: chat logs plus the vector manifest. A nightly cron prunes
+  logs older than 90 days.
+
+Secrets: `VECTORIZE_ADMIN_KEY` (populate + retrieval debug), `ADMIN_API_KEY`
+(chat logs), `IP_HASH_SALT` (without it, IP hashes are brute-forceable and rows
+are written with an `unsalted:` prefix).
 
 ### AI Chat Flow
-1. User sends prompt to `/api/chat` (rate limited: 20 req/min per IP)
-2. `app/chat/guardrails.ts` checks topic relevance (rejects off-topic before LLM call)
-3. `app/chat/request.ts` validates with Zod, generates embeddings
-4. Vectorize queries find relevant resume sections
-5. Workers AI LLM generates response using matched context
-6. Falls back to full resume context if vector search unavailable (dev mode)
+1. `POST /api/chat` only — non-POST returns 405, so nothing bypasses the rate limiter
+2. `app/chat/guardrails.ts` checks topic relevance against a NFKC-normalized,
+   invisible-character-stripped prompt, before any model call. It also screens
+   recent history, since an injection can be split across turns.
+3. `app/chat/request.ts` validates with Zod and embeds the prompt
+4. `app/chat/context.ts` queries Vectorize (topK 16), drops matches below
+   `MIN_SCORE`, validates each match's metadata at runtime, dedupes, and fills a
+   6000-character context budget highest-score-first
+5. `app/chat/prompt.ts` fences the retrieved text in `<context>` and labels it as
+   data. Replayed conversation history is untrusted — a caller can forge an
+   assistant turn — so it is sanitized, capped, and never treated as instructions.
+6. Workers AI streams the response; a leading SSE frame carries the sources that
+   grounded it, which the UI renders as chips
+7. Falls back to the full record (including recognition and the ai-context layer)
+   if vector search is unavailable
+
+Retrieval quality is measurable via `pnpm run vectorize:eval`, which hits
+`POST /api/debug/retrieval` (admin-key gated, no model call) and reports
+recall@k, MRR, and the score distribution. Tune `MIN_SCORE` in
+`app/chat/context.ts` from that distribution rather than by guessing.
 
 ### Type System
 - `app/types.ts` - Re-exports from schemas, defines Env bindings
@@ -95,8 +157,19 @@ pnpm run vectorize:query     # Test query against production index
 
 ### Input Validation
 - Always validate user input with Zod schemas from `app/schemas/`
-- Chat prompts: MAX_PROMPT_LENGTH 1000, MAX_HISTORY_MESSAGES 12
+- Chat prompts: MAX_PROMPT_LENGTH 1000, MAX_HISTORY_MESSAGES 12 (see `CHAT_LIMITS`)
 - Use `createValidationErrorResponse()` for consistent error responses
+- Sanitize with `stripInvisible` / `normalizeForMatch` from `app/lib/text.ts`.
+  Zero-width and bidi characters are what let an "ignore previous instructions"
+  past a regex that looks correct; strip before storing, normalize before matching.
+
+### Error Responses
+Never return `error.message` to a caller. Use `serverErrorResponse()` from
+`app/lib/http.ts`: it logs the real error with a generated request id and returns
+a fixed message plus that id, so a user report can be traced without the response
+describing which binding is misconfigured. Compare secrets with `isAuthorized()`
+from the same module — it does a proper `Bearer` prefix parse and a timing-safe
+comparison.
 
 ### Cloudflare Workers
 - Use TypeScript and ES modules format

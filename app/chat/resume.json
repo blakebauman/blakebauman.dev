@@ -70,10 +70,32 @@
     "Cloudflare Vectorize",
     "Adobe Experience Platform Agent Orchestrator",
     "CX Enterprise Coworker",
-    "Adobe Experience Platform"
+    "Adobe Experience Platform",
+    "C++",
+    "JUCE",
+    "Tauri",
+    "Bun",
+    "Drizzle ORM",
+    "Temporal",
+    "Better Auth",
+    "Medusa",
+    "libSQL",
+    "GraphQL",
+    "Docker",
+    "Helm",
+    "Prometheus",
+    "Firecracker"
   ],
   "tools": {
-    "Edge & Runtime": ["Cloudflare Workers", "Durable Objects", "Edge Computing", "Hono", "Bun"],
+    "Edge & Runtime": [
+      "Cloudflare Workers",
+      "Durable Objects",
+      "Cloudflare Workflows",
+      "Cloudflare Queues",
+      "Edge Computing",
+      "Hono",
+      "Bun"
+    ],
     "AI & Agents": [
       "LangChain",
       "LangGraph",
@@ -84,13 +106,52 @@
       "AgentCore",
       "MCP",
       "A2A",
+      "Workers AI",
+      "Cloudflare Agents SDK",
       "Adobe Agent Orchestrator",
       "Adobe Experience Platform Agent Orchestrator",
       "CX Enterprise Coworker"
     ],
-    "Data & Backend": ["Postgres", "Prisma", "Apache Doris", "Redis", "Drizzle ORM"],
-    "Systems & Infra": ["Go", "Rust", "Kubernetes", "Helm", "OpenTelemetry", "Terraform"],
-    "Frontend": ["JavaScript", "TypeScript", "React"]
+    "Commerce": [
+      "Adobe Commerce",
+      "Magento Commerce",
+      "AEM Edge Delivery Services",
+      "Agentic Commerce Protocol",
+      "Stripe",
+      "Medusa"
+    ],
+    "Data & Backend": [
+      "Postgres",
+      "Prisma",
+      "Drizzle ORM",
+      "Apache Doris",
+      "Redis",
+      "Neon",
+      "Hyperdrive",
+      "libSQL",
+      "pgvector",
+      "Temporal"
+    ],
+    "Systems & Infra": [
+      "Go",
+      "Rust",
+      "Kubernetes",
+      "Helm",
+      "Docker",
+      "OpenTelemetry",
+      "Prometheus",
+      "Terraform",
+      "Firecracker"
+    ],
+    "Native & Desktop": ["C++", "JUCE", "CMake", "Tauri", "DSP"],
+    "Frontend": [
+      "JavaScript",
+      "TypeScript",
+      "React",
+      "React Router",
+      "TanStack Router",
+      "Tailwind CSS"
+    ]
   },
   "exploring": {
     "AI Foundations": ["LLMs", "Machine Learning", "RAG", "Vector Search", "Prompt Engineering"],
@@ -133,7 +194,20 @@
         "Stripe"
       ],
       "github": "https://github.com/blakebauman/felix",
-      "website": "https://docs.felix.run/"
+      "website": "https://docs.felix.run/",
+      "aliases": ["felix harness", "managed agents harness", "agent harness"],
+      "language": "TypeScript",
+      "maturity": "prototype",
+      "highlights": [
+        "Manifest-driven: a Zod-validated orchestrator/v1 manifest compiles into a runnable agent, so changing an agent's behaviour is a config change rather than a code change.",
+        "One agent is exposed over four surfaces at once: OpenAI-compatible /v1 chat, A2A, MCP, and REST/SSE.",
+        "Seven orchestration patterns are registered rather than hard-coded: ReAct, deep planning, router, parallel fan-out, group chat, reflect, and plan-execute.",
+        "Session strategy is a swappable seam: full replay, windowed, summarizing, or semantic, chosen per agent instead of baked into the runtime.",
+        "Tool executors are labelled by transport (local, MCP, A2A, container, sandbox, browser, queue) so the harness knows what kind of trust boundary each call crosses.",
+        "Governance runs as a pipeline: policies, command screening, content screening, limits, guardrails, LLM judges, then human approvals.",
+        "Canary manifest rollouts with hash-based routing and cron auto-rollback, plus an eval harness with golden datasets wired into CI as a gate.",
+        "Felix Commerce adds an Agentic Commerce Protocol merchant endpoint, approval-gated Stripe checkout, per-brand D2C storefronts, and B2B quote-to-cash."
+      ]
     },
     {
       "name": "fold",
@@ -154,7 +228,20 @@
         "Docker"
       ],
       "github": "https://github.com/fold-run/fold",
-      "website": "https://fold.run/"
+      "website": "https://fold.run/",
+      "org": "fold-run",
+      "aliases": ["mcp gateway", "fold gateway", "fold.run"],
+      "language": "Go",
+      "maturity": "production",
+      "highlights": [
+        "Federates many MCP servers behind one endpoint with namespaced tools, so an agent connects once instead of holding N server connections and N sets of credentials.",
+        "Deny-by-default ABAC policy with structured audit events emitted for every request, including denials — the denials are the point, since an ungoverned gateway can't prove what it refused.",
+        "Credential brokering with OAuth 2.0 token exchange (RFC 8693) so agents never hold raw API keys.",
+        "Single static Go binary in a roughly 22 MB distroless image, built on the official MCP Go SDK, with optional Redis for distributed fleet state.",
+        "Operational surface: rate limiting, circuit breakers, caching, load balancing with health checks, dynamic registry discovery, hot config reload, and a Kubernetes discovery controller with a Helm chart.",
+        "Passes the official MCP conformance suite 40/40; shipped at v1.4.1 with the API contract frozen at v1.0.0, hardened with fuzzers and chaos tests.",
+        "OpenTelemetry tracing and Prometheus metrics throughout."
+      ]
     },
     {
       "name": "memoturn",
@@ -179,7 +266,20 @@
         "Go"
       ],
       "github": "https://github.com/memoturn/memoturn",
-      "website": "https://memoturn.com/"
+      "website": "https://memoturn.com/",
+      "org": "memoturn",
+      "aliases": ["memoturn platform", "llm observability", "eval platform"],
+      "language": "TypeScript",
+      "maturity": "production",
+      "highlights": [
+        "Tracing and observability built on OpenTelemetry rather than a bespoke wire format, so LLM spans sit in the same trace as the rest of the system.",
+        "Evaluation spans all three modes that matter in production: offline datasets, online sampling of live traffic, and human review.",
+        "Versioned prompt registry with deployment channels, so a prompt change ships and rolls back like code instead of being edited in place.",
+        "Cost, token, and latency analytics on Apache Doris for OLAP alongside PostgreSQL via Prisma for OLTP.",
+        "Ships TypeScript, Python, and Go SDKs with LangChain and OpenAI integrations.",
+        "Multi-provider playground with streaming, plus SSO, RBAC, and audit logs for team use.",
+        "An MCP server exposes prompts and datasets directly to agent IDEs, so the eval loop reaches the place the prompts are actually written."
+      ]
     },
     {
       "name": "skillist",
@@ -201,7 +301,245 @@
         "Better Auth"
       ],
       "github": "https://github.com/skillist-io/skillist",
-      "website": "https://skillist.io/"
+      "website": "https://skillist.io/",
+      "org": "skillist-io",
+      "aliases": ["skills registry", "agent skills", "agentskills.io"],
+      "language": "TypeScript",
+      "maturity": "production",
+      "highlights": [
+        "A registry for agent skills that follows the agentskills.io spec, so skills are portable rather than tied to one runtime.",
+        "Realtime publish and discovery over WebSocket and SSE backed by Durable Objects — agents see a new skill version without polling.",
+        "Hosted sandbox execution environment, so a skill can be tried before an agent is trusted to run it.",
+        "Two npm packages published under MIT, including @skillist/cli for local skill development.",
+        "Neon Postgres via Hyperdrive with R2 and KV storage, a Vite and TanStack Router console, and Better Auth covering OAuth, magic links, and passkeys."
+      ]
+    },
+    {
+      "name": "edgevault",
+      "year": "2026",
+      "status": "Active",
+      "visibility": "public",
+      "description": "Open-core configuration, secrets, and feature-flag platform built on the Cloudflare Developer Platform. Five Workers split along the control-plane/data-plane line, with an envelope-encrypted secrets vault and sub-10ms flag delivery at the edge.",
+      "context": "The split is the design: an OpenAPI Hono control plane, a delivery Worker serving reads from KV behind an in-isolate L1 cache, a custom auth Worker (Argon2id, EdDSA JWT with JWKS), a React Router 7 console BFF, and an audit Worker draining a queue to NDJSON in R2. Per-workspace SQLite Durable Objects are the system of record for config; Neon Postgres via Hyperdrive holds orgs and membership. Grew out of edgeconfig-monorepo, an earlier multi-format config platform.",
+      "tech": [
+        "TypeScript",
+        "Cloudflare Workers",
+        "Durable Objects",
+        "Hono",
+        "KV",
+        "R2",
+        "Queues",
+        "Vectorize",
+        "Neon Postgres",
+        "Hyperdrive",
+        "MCP"
+      ],
+      "github": "https://github.com/blakebauman/edgevault",
+      "website": "https://edgevault.io/",
+      "aliases": ["edge vault", "feature flags", "secrets platform"],
+      "language": "TypeScript",
+      "maturity": "prototype",
+      "highlights": [
+        "Control plane and data plane are separate Workers on purpose: a slow or failing management API cannot slow down flag evaluation.",
+        "Envelope-encrypted secrets vault, so the storage layer never holds a usable plaintext secret.",
+        "Dev-to-prod promotion runs as a Cloudflare Workflow with an AI risk scan and a waitForEvent human approval gate — a config change gets the same treatment as a deploy.",
+        "Real-time config updates over WebSocket Hibernation, which keeps idle connections free rather than paying per open socket.",
+        "Audit events drain through a queue into NDJSON on R2, keeping the write path off the request path.",
+        "Vectorize-backed semantic search over configuration, plus a Streamable-HTTP MCP server so agents can read and change config under the same policy as humans.",
+        "Open-core: the MIT core is public, the Stripe billing layer is kept proprietary."
+      ]
+    },
+    {
+      "name": "contentworker",
+      "year": "2026",
+      "status": "Active",
+      "visibility": "public",
+      "description": "Headless CMS built cloud-agnostic for Kubernetes on strict ports and adapters. Three API surfaces (management, delivery, preview), per-space generated GraphQL, and a transactional outbox driving webhooks, cache invalidation, and vector reindexing.",
+      "context": "The architectural discipline is the point: the domain layer depends on nothing, and every adapter (Postgres via Drizzle, Redis with BullMQ, S3, Anthropic, Azure OpenAI, pgvector) binds only in each application's composition root. Durable agents are hosted on Temporal behind a single AgentRuntime interface, and an MCP server invokes the same use-cases as the HTTP API rather than reimplementing them. Successor to contentworker-workspace.",
+      "tech": [
+        "TypeScript",
+        "Kubernetes",
+        "PostgreSQL",
+        "Drizzle ORM",
+        "Redis",
+        "BullMQ",
+        "Temporal",
+        "pgvector",
+        "GraphQL",
+        "Helm",
+        "MCP"
+      ],
+      "github": "https://github.com/blakebauman/contentworker",
+      "website": "https://contentworker.io/",
+      "aliases": ["headless cms", "content worker"],
+      "language": "TypeScript",
+      "maturity": "prototype",
+      "highlights": [
+        "Hexagonal architecture enforced rather than aspired to: the domain package has no dependencies, so the CMS can move clouds without the core changing.",
+        "Three separate API surfaces with scoped, hashed keys: content management, content delivery, and preview.",
+        "Per-space GraphQL schemas generated from the content model, so each space gets a typed API instead of a generic one.",
+        "A transactional outbox with a relay process fans out to webhooks, cache invalidation, and vector reindexing — no dual-write between the database and the message bus.",
+        "The MCP server calls the same use-cases as the HTTP API, so agent access and human access cannot drift apart.",
+        "UUIDv7 identifiers, a Helm chart with per-cloud values, and a k6 benchmark suite."
+      ]
+    },
+    {
+      "name": "memoturn-db",
+      "year": "2026",
+      "status": "Active",
+      "visibility": "public",
+      "description": "Agent-memory database in Rust. Typed memories (facts, events, instructions, tasks) under namespace/profile/memory isolation, with hybrid recall that fuses full-text, topic, and vector search.",
+      "context": "Underneath sits a Rust data plane embedding libSQL, hosting many small databases across hot, warm, and cold tiers with object storage as the source of truth: immutable page segments, O(1) copy-on-write branches with epoch fencing, etcd writer leases with sub-15-second failover, and refcount garbage collection. The README labels it architecture plus working prototype, backed by 67 integration tests and a kind/MinIO Kubernetes chaos test. Separate from the Memoturn observability platform despite the shared name.",
+      "tech": ["Rust", "libSQL", "SQLite", "etcd", "Kubernetes", "MCP", "TypeScript", "Python"],
+      "github": "https://github.com/blakebauman/memoturn-db",
+      "aliases": ["agent memory database", "memory db"],
+      "language": "Rust",
+      "maturity": "prototype",
+      "highlights": [
+        "Memories are typed and topic-keyed, so a new fact about a topic supersedes the old one instead of accumulating contradictions.",
+        "Ingest is idempotent and content-addressed — replaying the same input does not duplicate memory.",
+        "Hybrid recall fuses FTS5, topic lookup, and vector ANN with reciprocal rank fusion rather than picking one retrieval mode.",
+        "Many tiny databases per profile rather than one shared table, with hot/warm/cold tiering and object storage as the source of truth.",
+        "O(1) copy-on-write branches with epoch fencing, so an agent can fork its memory to try something and throw it away.",
+        "Single-writer safety via etcd leases with failover under 15 seconds.",
+        "The README is deliberate about status — architecture and working prototype, not a shipped database."
+      ]
+    },
+    {
+      "name": "prompton",
+      "year": "2026",
+      "status": "Active",
+      "visibility": "public",
+      "description": "Native, conversation-first database client with a Rust tool-calling agent. Ask a question in English, watch it write and run the SQL, and keep production connections read-only until a human approves the write.",
+      "context": "Tauri 2 desktop app: TypeScript UI over a Rust core that owns the agent loop and the drivers. Connects to PostgreSQL, MySQL, SQLite, and Cloudflare D1 in one workspace. Skills live on disk as SKILL.md files, so the agent's database-specific knowledge is version-controlled text rather than hidden state. Credentials go to the OS keyring, never a config file.",
+      "tech": [
+        "TypeScript",
+        "Rust",
+        "Tauri",
+        "PostgreSQL",
+        "MySQL",
+        "SQLite",
+        "Cloudflare D1",
+        "Anthropic",
+        "Ollama"
+      ],
+      "github": "https://github.com/blakebauman/prompton",
+      "aliases": ["database client", "sql agent"],
+      "language": "TypeScript",
+      "maturity": "prototype",
+      "highlights": [
+        "Production connections are read-only by default and stay that way until a human approves the specific mutation.",
+        "The agent loop lives in Rust alongside the drivers, not in the UI layer.",
+        "Agent skills are on-disk SKILL.md files, so what the agent knows about a schema is reviewable and diffable.",
+        "Virtualized results grid with in-place cell editing for large result sets.",
+        "Provider-agnostic: Ollama, any OpenAI-compatible endpoint, or Anthropic.",
+        "Credentials are held in the OS keyring. macOS and Linux, with CI running typecheck, build, and cargo test.",
+        "Self-described MVP."
+      ]
+    },
+    {
+      "name": "deckhand",
+      "year": "2026",
+      "status": "Active",
+      "visibility": "public",
+      "description": "Local-first desktop app for Docker and Kubernetes. A Tauri 2 shell over a Go sidecar that exposes Docker, Compose, Kubernetes, Helm, and Linux Firecracker microVMs through one localhost HTTP API.",
+      "context": "Built on Adobe Spectrum for the UI. The sidecar boundary means the container and cluster logic is testable Go rather than app code, and the desktop shell stays a client of it. Ships pre-release DMGs, ad-hoc signed rather than notarized. MIT.",
+      "tech": ["TypeScript", "Go", "Tauri", "Docker", "Kubernetes", "Helm", "Firecracker"],
+      "github": "https://github.com/blakebauman/deckhand",
+      "aliases": ["docker desktop alternative", "kubernetes gui"],
+      "language": "TypeScript",
+      "maturity": "prototype",
+      "highlights": [
+        "A Go sidecar owns every integration and speaks one localhost HTTP API, so the UI never shells out to docker or kubectl itself.",
+        "Covers Docker, Compose, Kubernetes, and Helm from a single surface, plus Firecracker microVMs on Linux.",
+        "Adobe Spectrum design system, macOS and Linux, MIT licensed.",
+        "Pre-release: DMGs are ad-hoc signed, not notarized."
+      ]
+    },
+    {
+      "name": "timetracker-app",
+      "year": "2026",
+      "status": "Active",
+      "visibility": "public",
+      "description": "Toggl-style time tracking on Cloudflare Workers, D1, and Durable Objects, with a Workers AI chat agent that can create and edit entries under human approval, read-only Google Calendar sync with cron auto-tracking, and an offline mutation queue.",
+      "context": "A full product rather than a demo: Better Auth with passkeys, TOTP, magic links and organizations; cross-tab realtime through a Durable Object WebSocket; IndexedDB queueing mutations while offline; reports with CSV and Excel export plus AI-written narratives; pushes to Workfront and Dynamics; and an MV3 Chrome extension. Playwright end-to-end tests.",
+      "tech": [
+        "TypeScript",
+        "Cloudflare Workers",
+        "D1",
+        "Durable Objects",
+        "Hono",
+        "React 19",
+        "Shadcn UI",
+        "Better Auth",
+        "Workers AI",
+        "Agents SDK",
+        "Playwright"
+      ],
+      "github": "https://github.com/blakebauman/timetracker-app",
+      "website": "https://timetracker.run/",
+      "aliases": ["time tracker", "timetracker.run", "toggl alternative"],
+      "language": "TypeScript",
+      "maturity": "production",
+      "highlights": [
+        "Authentication covers passkeys, TOTP two-factor, magic links, and organizations, built on Better Auth — the most complete auth implementation on this record.",
+        "The chat agent is an Agents-SDK Durable Object over Workers AI, and every write it proposes goes through human approval.",
+        "Read-only Google Calendar sync with a cron job that auto-tracks matching events, so the calendar is a source and never a target.",
+        "Offline-first: mutations queue in IndexedDB and drain when the connection returns.",
+        "Cross-tab realtime state through a Durable Object WebSocket rather than polling.",
+        "Reports export to CSV and Excel, with AI-generated narrative summaries alongside the numbers.",
+        "Pushes time entries to Adobe Workfront and Microsoft Dynamics.",
+        "MV3 Chrome extension, and Playwright end-to-end coverage."
+      ]
+    },
+    {
+      "name": "offpavement-shop",
+      "year": "2026",
+      "status": "Filed",
+      "visibility": "public",
+      "description": "Bikepacking e-commerce storefront on Medusa v2, with a custom Kit Builder module and editorial product metadata.",
+      "context": "Commerce work outside the Adobe stack, and the most-starred of the public repositories. The Kit Builder is a custom Medusa module rather than a storefront feature: assembling a bikepacking kit is a domain concept, so it lives in the domain layer.",
+      "tech": ["TypeScript", "Medusa v2", "PostgreSQL", "Docker", "pnpm"],
+      "github": "https://github.com/blakebauman/offpavement-shop",
+      "aliases": ["off pavement", "bikepacking shop", "medusa"],
+      "language": "TypeScript",
+      "maturity": "prototype",
+      "highlights": [
+        "Custom Kit Builder Medusa module for assembling multi-part bikepacking kits.",
+        "Editorial product metadata, so product pages read as content rather than catalog rows.",
+        "Demonstrates commerce architecture on a non-Adobe platform: Medusa v2 with pnpm, Docker, and Medusa migrations.",
+        "Dormant since March 2026."
+      ]
+    },
+    {
+      "name": "blakebauman.dev",
+      "year": "2025–2026",
+      "status": "Active",
+      "visibility": "public",
+      "description": "This site. React Router v7 with SSR on Cloudflare Workers, and a retrieval-grounded resume chatbot: Workers AI embeddings, Vectorize semantic search over the same record the page renders, and a streamed LLM response.",
+      "context": "The chatbot is deliberately narrow. Resume and chat-only context are chunked and embedded at populate time; each question is embedded, matched against the index with a score floor, and only the matched chunks are fenced into the prompt as reference material. Off-topic prompts are refused before any LLM call, so a rejection costs nothing. Retrieved context is treated as data, never as instructions, and answers cite the sections they came from.",
+      "tech": [
+        "TypeScript",
+        "React Router v7",
+        "Cloudflare Workers",
+        "Workers AI",
+        "Vectorize",
+        "D1",
+        "Tailwind CSS",
+        "Zod"
+      ],
+      "github": "https://github.com/blakebauman/blakebauman.dev",
+      "website": "https://blakebauman.dev/",
+      "aliases": ["this site", "this website", "the chatbot", "portfolio site"],
+      "language": "TypeScript",
+      "maturity": "production",
+      "highlights": [
+        "Retrieval over the same record the page renders — the chat and the page cannot disagree, because they read the same source.",
+        "A topic guardrail runs before the model, so off-topic and prompt-injection attempts are refused without spending an inference call.",
+        "Retrieved chunks are fenced in the prompt as reference material, and replayed conversation history is treated as untrusted input.",
+        "Answers surface which sections grounded them, so a claim can be traced back to the record.",
+        "Rate limited per IP at the edge with the native Workers rate-limiting binding."
+      ]
     },
     {
       "name": "commerceworker",
@@ -209,27 +547,74 @@
       "status": "Active",
       "visibility": "private",
       "description": "Magento2-parity e-commerce on Cloudflare Workers.",
-      "context": "Edge-resident commerce that reproduces Magento2 capabilities on the Workers platform.",
-      "tech": ["TypeScript", "Cloudflare Workers", "Durable Objects", "D1", "Queues"]
-    },
-    {
-      "name": "timetracker-app",
-      "year": "2026",
-      "status": "Active",
-      "visibility": "public",
-      "description": "Toggl-like time tracking app on Cloudflare Workers, Hono, React 19, and Shadcn UI.",
-      "tech": ["TypeScript", "Cloudflare Workers", "Hono", "React 19", "Shadcn UI"],
-      "github": "https://github.com/blakebauman/timetracker-app"
+      "context": "Edge-resident commerce that reproduces Magento2 capabilities on the Workers platform. Private repository — the chatbot can describe the shape of the work but has no public source to point at.",
+      "tech": ["TypeScript", "Cloudflare Workers", "Durable Objects", "D1", "Queues"],
+      "aliases": ["commerce worker", "edge commerce"],
+      "language": "TypeScript",
+      "maturity": "prototype"
     },
     {
       "name": "nomoji.dev",
       "year": "2025–2026",
       "status": "Active",
       "visibility": "public",
-      "description": "Configures granular emoji control across AI coding assistants. Stops emojis from cluttering documentation, console logs, CLI tools, and commit messages.",
-      "context": "A tool for engineers who want their machine output to stay legible.",
-      "tech": ["TypeScript", "CLI"],
-      "github": "https://github.com/blakebauman/nomoji.dev"
+      "description": "Configures granular emoji control across AI coding assistants — Claude Code, Cursor, Copilot, Gemini CLI — so emoji stop leaking into documentation, console logs, CLI output, and commit messages.",
+      "context": "A Cloudflare Workers platform with presets, a REST API, text analysis, shareable configs, and git hooks. Small, deployed, and built for engineers who want their machine output to stay legible.",
+      "tech": ["TypeScript", "Cloudflare Workers", "CLI"],
+      "github": "https://github.com/blakebauman/nomoji.dev",
+      "website": "https://nomoji.dev/",
+      "aliases": ["nomoji", "emoji control"],
+      "language": "TypeScript",
+      "maturity": "production",
+      "highlights": [
+        "Emits per-assistant configuration: a Claude Code subagent, Cursor rules, Copilot instructions, and Gemini CLI settings from one source.",
+        "Presets plus a REST API and shareable configs, so a team applies one policy rather than each engineer configuring their own.",
+        "Git hooks catch emoji at commit time as the last line of defence."
+      ]
+    },
+    {
+      "name": "cf-monorepo",
+      "year": "2025",
+      "status": "Filed",
+      "visibility": "public",
+      "description": "Cloudflare Workers monorepo template: Turborepo and pnpm workspaces with one example Worker and nine shared packages.",
+      "context": "The scaffolding decisions extracted once so they stop being remade per project — syncpack for dependency alignment, Biome, Lefthook, Vitest, Changesets, and Just, over Hono, Drizzle, Better Auth, Hyperdrive, and Neon.",
+      "tech": [
+        "TypeScript",
+        "Turborepo",
+        "pnpm",
+        "Hono",
+        "Drizzle ORM",
+        "Better Auth",
+        "Hyperdrive",
+        "Neon"
+      ],
+      "github": "https://github.com/blakebauman/cf-monorepo",
+      "aliases": ["cloudflare monorepo", "workers template"],
+      "language": "TypeScript",
+      "maturity": "reference",
+      "highlights": [
+        "A template, not a product — the starting point several of the other Cloudflare projects were built from.",
+        "Nine shared packages plus one example Worker, with syncpack keeping versions aligned across the workspace."
+      ]
+    },
+    {
+      "name": "vital",
+      "year": "2026",
+      "status": "Active",
+      "visibility": "public",
+      "description": "A Claude Code plugin packaging a go-to-market agency as agents: nine specialists (strategy, GTM, brand, design, marketing, PR, engineering, capital, and a lead that scopes and synthesizes) plus twenty-two portable skills.",
+      "context": "Prompt and context engineering rather than a running system, and interesting for that reason: the skills are portable SKILL.md files and the lead agent decides which specialists to bring in and in what order. Distributed through the Claude Code plugin marketplace.",
+      "tech": ["Python", "Claude Code", "Agent Skills", "Markdown"],
+      "github": "https://github.com/blakebauman/vital",
+      "aliases": ["vital plugin", "gtm agent"],
+      "language": "Python",
+      "maturity": "production",
+      "highlights": [
+        "A lead agent scopes the brief and routes to specialists, instead of the user having to know which discipline they need.",
+        "Twenty-two skills written as portable SKILL.md files, usable outside the plugin.",
+        "Installed via /plugin marketplace add blakebauman/vital."
+      ]
     },
     {
       "name": "CaveAcoustics",
@@ -237,19 +622,38 @@
       "status": "Active",
       "visibility": "public",
       "description": "Org for a suite of JUCE audio plugins for ambient music producers: Cave Delay, Cave Reverb, Cave Chorus, Cave Granular, plus a shared GUI module and licensing system.",
-      "context": "Built alongside client work, exploring DSP and real-time audio processing in C++.",
-      "tech": ["C++", "JUCE", "CMake", "DSP"],
-      "github": "https://github.com/CaveAcoustics"
+      "context": "Built alongside client work, exploring DSP and real-time audio processing in C++. Seven repositories: five plugins, a reusable JUCE license-validation module, and a React Router 7 storefront on Cloudflare Workers with Better Auth and Drizzle over D1. The furthest thing from the day job, and the reason C++ and real-time constraints are on the record at all.",
+      "tech": ["C++", "JUCE", "CMake", "DSP", "TypeScript", "Cloudflare Workers"],
+      "github": "https://github.com/CaveAcoustics",
+      "org": "CaveAcoustics",
+      "aliases": ["cave acoustics", "audio plugins", "juce"],
+      "language": "C++",
+      "maturity": "prototype",
+      "highlights": [
+        "Five JUCE plugins sharing a common GUI module and a reusable licensing module, so the shared parts were factored out rather than copied.",
+        "Real-time audio is a hard deadline problem: the DSP path cannot allocate or block, which is a different discipline from the request/response work everywhere else on this record.",
+        "The storefront reuses the same Cloudflare stack as the rest of the portfolio.",
+        "Last active early 2026."
+      ]
     },
     {
       "name": "ecommerce-intent-reasoning-engine",
       "year": "2026",
       "status": "Filed",
       "visibility": "private",
-      "description": "Reasoning engine for eCommerce intent classification and resolution. Decomposes compound intents, resolves conflicts, outputs structured action plans.",
-      "context": "Not a simple classifier: it handles ambiguous customer intent when multiple signals conflict.",
-      "tech": ["Python", "Claude API", "FastAPI", "PostgreSQL"],
-      "github": "https://github.com/blakebauman/ecommerce-intent-reasoning-engine"
+      "description": "Reasoning engine for eCommerce intent classification and resolution. 62 intents across 10 categories over chat, email, and form channels; decomposes compound intents, resolves conflicts, and outputs structured action plans.",
+      "context": "Not a simple classifier: it handles ambiguous customer intent when multiple signals conflict. An embedding fast path answers roughly half of requests without an LLM call, with the model reserved for compound and ambiguous cases. Adds sentiment and sarcasm detection, entity extraction, and tier-aware escalation, with order connectors for Shopify, Adobe Commerce, WooCommerce, and BigCommerce.",
+      "tech": ["Python", "Claude API", "FastAPI", "PostgreSQL", "Docker", "Embeddings"],
+      "github": "https://github.com/blakebauman/ecommerce-intent-reasoning-engine",
+      "aliases": ["intent engine", "intent classification"],
+      "language": "Python",
+      "maturity": "prototype",
+      "highlights": [
+        "An embedding fast path resolves about half of all requests without invoking an LLM — cost and latency control by routing, not by a cheaper model.",
+        "Compound intents are decomposed rather than forced into a single label.",
+        "Order connectors span four commerce platforms, so intent resolution can act on real order state.",
+        "Tier-aware escalation routes on customer tier as well as intent."
+      ]
     },
     {
       "name": "catalog-normalize",
@@ -257,8 +661,11 @@
       "status": "Filed",
       "visibility": "private",
       "description": "Cloudflare-native product catalog normalization platform. Handles identity resolution and unified attribute schemas across heterogeneous catalogs.",
-      "context": "The data plumbing under the visible commerce layer.",
-      "tech": ["TypeScript", "Cloudflare Workers", "D1"]
+      "context": "The data plumbing under the visible commerce layer. Private repository — no public source.",
+      "tech": ["TypeScript", "Cloudflare Workers", "D1"],
+      "aliases": ["catalog normalization", "product data"],
+      "language": "TypeScript",
+      "maturity": "prototype"
     },
     {
       "name": "fleet-workspace",
@@ -266,46 +673,63 @@
       "status": "Filed",
       "visibility": "private",
       "description": "Hierarchical Durable Objects on Cloudflare Workers, with infinite nesting of manager/agent relationships through URL paths.",
-      "context": "Explores scalable real-time collaboration patterns at the edge.",
+      "context": "Explores scalable real-time collaboration patterns at the edge. Self-described in its own README as a demonstration, not a product — it exists to prove the nesting pattern works.",
       "tech": ["TypeScript", "Cloudflare Workers", "Durable Objects", "WebSockets"],
-      "github": "https://github.com/blakebauman/fleet-workspace"
+      "github": "https://github.com/blakebauman/fleet-workspace",
+      "aliases": ["fleet", "hierarchical durable objects"],
+      "language": "TypeScript",
+      "maturity": "reference"
     },
     {
       "name": "adventure-agent",
       "year": "2025–2026",
       "status": "Filed",
       "visibility": "private",
-      "description": "Multi-agent AI system for Arizona adventure planning with 17+ specialized agents.",
-      "context": "Orchestrated multi-agent workflows for complex, multi-step planning tasks.",
+      "description": "Multi-agent AI system for Arizona adventure planning with 17+ specialized agents — trails, BLM land, permits, weather, safety, lodging, transport, food, gear, photography — coordinated by an LLM orchestrator with human checkpoints.",
+      "context": "A hobby domain used to work out real multi-agent orchestration problems on LangChain, LangGraph, and LangSmith: how many specialists is too many, where human-in-the-loop checkpoints belong, and how to keep a long planning run observable. The direct ancestor of the orchestration patterns later rebuilt in Felix.",
       "tech": ["Python", "LangChain", "LangGraph", "LangSmith"],
-      "github": "https://github.com/blakebauman/adventure-agent"
+      "github": "https://github.com/blakebauman/adventure-agent",
+      "aliases": ["adventure planner", "trip planning agent"],
+      "language": "Python",
+      "maturity": "prototype",
+      "highlights": [
+        "Seventeen-plus specialized agents plus per-town location agents under an LLM orchestrator.",
+        "Human-in-the-loop checkpoints built in from the start, which is where the HITL approach in the later work comes from.",
+        "Traced end to end with LangSmith — the practical experience that later turned into the Memoturn observability platform."
+      ]
     },
     {
       "name": "hono-aws-lambda",
       "year": "2025–2026",
       "status": "Filed",
       "visibility": "private",
-      "description": "Production-ready Hono REST API with Bun runtime and AWS Lambda deployment.",
-      "context": "Reference implementation for serverless REST APIs with modern tooling.",
+      "description": "Hono REST API on the Bun runtime, deployed to AWS Lambda via CDK.",
+      "context": "Reference implementation, and the counterweight to the Cloudflare-heavy rest of the record: the same Hono application model running on AWS rather than Workers.",
       "tech": ["TypeScript", "Hono", "Bun", "AWS CDK", "Drizzle ORM"],
-      "github": "https://github.com/blakebauman/hono-aws-lambda"
+      "github": "https://github.com/blakebauman/hono-aws-lambda",
+      "aliases": ["hono lambda", "aws serverless api"],
+      "language": "TypeScript",
+      "maturity": "reference"
     },
     {
       "name": "contentworker-workspace",
       "year": "2025",
       "status": "Filed",
       "visibility": "private",
-      "description": "Production-ready RAG system on Cloudflare Workers and Hono. Document processing, semantic search, AI-powered query responses.",
-      "context": "Reference implementation for retrieval-augmented systems at the edge.",
+      "description": "RAG system on Cloudflare Workers and Hono: document processing, semantic search, and AI query responses.",
+      "context": "Reference implementation for retrieval-augmented systems at the edge, and the predecessor to contentworker — the Cloudflare-native version of the idea before it was rebuilt cloud-agnostic on ports and adapters.",
       "tech": ["TypeScript", "Cloudflare Workers", "Hono", "Vectorize", "RAG"],
-      "github": "https://github.com/blakebauman/contentworker-workspace"
+      "github": "https://github.com/blakebauman/contentworker-workspace",
+      "aliases": ["rag workspace", "edge rag"],
+      "language": "TypeScript",
+      "maturity": "reference"
     }
   ],
   "recognition": [
     {
       "title": "2nd Place: Adobe AI Summit & Hackathon",
       "year": "2025",
-      "description": "We built a content generation plugin for Adobe DA.live that uses Adobe Commerce catalog data, multi-agent workflow using Langchain domain agents, and LLMs to generate AEM-ready product content. Features context-aware generation, real-time WebSocket streaming, batch page updates, and Adobe Firefly integration."
+      "description": "An award for a content generation plugin for Adobe DA.live that uses Adobe Commerce catalog data, a multi-agent workflow built on LangChain domain agents, and LLMs to generate AEM-ready product content. Features context-aware generation, real-time WebSocket streaming, batch page updates, and Adobe Firefly integration. This second-place finish at the Adobe AI Summit and Hackathon is the only competitive award, prize, or formal recognition on this record."
     }
   ],
   "experience": [
@@ -313,19 +737,55 @@
       "company": "Adobe",
       "role": "Principal Technical Architect",
       "years": "2022–Present",
-      "description": "Delivered one of the first production AEM Edge Delivery Services plus Adobe Commerce B2B integrations, for a Fortune 500 company. Now works the agentic layer on top of that stack from both sides: builds client solutions on Adobe Experience Platform Agent Orchestrator, which plans a task, calls the specialized Experience Platform agents it needs, and returns one response under human oversight, and on CX Enterprise Coworker, Adobe's agentic CX platform that reached general availability in June 2026, and has contributed to the core code behind them. Ran a webinar on Commerce with Edge Delivery that became a reference for Adobe's enterprise teams."
+      "location": "Remote, United States",
+      "clientContext": "Fortune 500 enterprise commerce and customer experience programs.",
+      "description": "Delivered one of the first production AEM Edge Delivery Services plus Adobe Commerce B2B integrations, for a Fortune 500 company. Now works the agentic layer on top of that stack from both sides: builds client solutions on Adobe Experience Platform Agent Orchestrator, which plans a task, calls the specialized Experience Platform agents it needs, and returns one response under human oversight, and on CX Enterprise Coworker, Adobe's agentic CX platform that reached general availability in June 2026, and has contributed to the core code behind them. Ran a webinar on Commerce with Edge Delivery that became a reference for Adobe's enterprise teams.",
+      "highlights": [
+        "Delivered one of the first production integrations of AEM Edge Delivery Services with Adobe Commerce B2B, for a Fortune 500 client.",
+        "Builds client solutions on Adobe Experience Platform Agent Orchestrator, the layer that plans a task, calls the specialized Experience Platform agents it needs, and returns one response with human oversight throughout.",
+        "Works on CX Enterprise Coworker, Adobe's agentic customer experience platform announced at Adobe Summit in April 2026 and generally available in June 2026, which takes multiple actions against a goal across analytics, content production, and journey orchestration.",
+        "Has contributed to the core product code behind both agentic products, not only to client implementations on top of them.",
+        "Ran a webinar on Adobe Commerce with Edge Delivery Services that became a reference for Adobe's enterprise teams.",
+        "Leads cross-functional delivery teams and internal enablement for enterprise Commerce and Edge Delivery engagements."
+      ],
+      "tech": [
+        "Adobe Commerce",
+        "AEM Edge Delivery Services",
+        "Adobe Experience Platform",
+        "Adobe Experience Platform Agent Orchestrator",
+        "CX Enterprise Coworker",
+        "JavaScript",
+        "GraphQL",
+        "PHP"
+      ]
     },
     {
       "company": "Adobe",
       "role": "Technical Architect",
       "years": "2019–2022",
-      "description": "Led migration of a global beverage company from Adobe Commerce on-prem to Cloud, with zero downtime. Built the architectural review process for enterprise Commerce implementations."
+      "location": "Remote, United States",
+      "clientContext": "Enterprise Adobe Commerce implementations and platform migrations.",
+      "description": "Led migration of a global beverage company from Adobe Commerce on-prem to Cloud, with zero downtime. Built the architectural review process for enterprise Commerce implementations.",
+      "highlights": [
+        "Led a global beverage company's migration from Adobe Commerce on-premise to Adobe Commerce Cloud with zero downtime.",
+        "Built the architectural review process Adobe used for enterprise Commerce implementations, turning a case-by-case judgement call into a repeatable gate.",
+        "Worked the failure modes of large Commerce systems directly: what breaks under load, what breaks during migration, and what has to be true before a cutover is safe."
+      ],
+      "tech": ["Adobe Commerce", "Magento Commerce", "PHP", "MySQL", "Redis", "AWS"]
     },
     {
       "company": "Lyons Consulting Group (Capgemini)",
       "role": "Technical Architect",
       "years": "2017–2019",
-      "description": "Led design and implementation of Adobe Commerce for a leading activewear company. Spearheaded Adobe Scene7 integration to optimize product imagery, improving visual merchandising and site performance."
+      "location": "United States",
+      "clientContext": "Retail and activewear commerce implementations.",
+      "description": "Led design and implementation of Adobe Commerce for a leading activewear company. Spearheaded Adobe Scene7 integration to optimize product imagery, improving visual merchandising and site performance.",
+      "highlights": [
+        "Led design and implementation of Adobe Commerce for a leading activewear brand.",
+        "Spearheaded an Adobe Scene7 integration for dynamic product imagery, improving visual merchandising and page performance together rather than trading one for the other.",
+        "This is where the commerce-platform grounding comes from: the Magento and Adobe Commerce depth underneath the later Adobe architecture work."
+      ],
+      "tech": ["Magento Commerce", "Adobe Commerce", "Adobe Scene7", "PHP", "MySQL", "JavaScript"]
     }
   ]
 }

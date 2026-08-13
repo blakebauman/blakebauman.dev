@@ -123,6 +123,10 @@ describe('requestAI', () => {
 
     expect(response.status).toBe(500);
     const data = (await response.json()) as { error: string };
-    expect(data.error).toBe('AI response generation failed');
+    // The raw error text used to be returned verbatim, which leaked binding
+    // and configuration detail. The caller now gets a fixed message plus a
+    // request id that ties their report to the logged cause.
+    expect(data.error).toBe('The assistant could not answer right now. Please try again.');
+    expect(data).toHaveProperty('requestId');
   });
 });

@@ -5,14 +5,23 @@
 import { v7 as uuidv7 } from 'uuid';
 
 /**
- * Hash an IP address using SHA-256 for privacy
+ * Hash an IP address for privacy, salted with a server-side secret.
+ *
+ * An unsalted SHA-256 of an IP address is not anonymization: the IPv4 space is
+ * 32 bits, so anyone holding the hashes can recover every address by hashing
+ * all of them. The salt is what makes the hash useless without server access,
+ * while still being stable enough to group a visitor's messages into a session.
+ *
+ * When the salt is unset (local dev) the hash is still computed but marked, so
+ * unsalted rows are identifiable rather than silently mixed in with real ones.
  */
-export async function hashIP(ip: string): Promise<string> {
+export async function hashIP(ip: string, salt?: string): Promise<string> {
   const encoder = new TextEncoder();
-  const data = encoder.encode(ip);
+  const data = encoder.encode(salt ? `${salt}:${ip}` : ip);
   const hashBuffer = await crypto.subtle.digest('SHA-256', data);
   const hashArray = Array.from(new Uint8Array(hashBuffer));
-  return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+  const hex = hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+  return salt ? hex : `unsalted:${hex}`;
 }
 
 export interface LogMessageMetadata {

@@ -1,24 +1,342 @@
 {
   "context": [
     {
-      "id": "work-style",
-      "text": "Blake prefers working on genuinely hard problems where he can have direct impact. He values roles that combine architecture, client strategy, and hands-on engineering. He has experience leading cross-functional teams and internal enablement initiatives."
+      "id": "adobe-role-scope",
+      "title": "What Blake actually does at Adobe",
+      "kind": "background",
+      "topics": ["adobe", "principal technical architect", "role", "current job", "client work"],
+      "text": "Blake is a Principal Technical Architect at Adobe, where he has worked since 2019 and in the principal role since 2022. He works both sides of Adobe's agentic products: he architects and delivers client solutions on them for Fortune 500 deployments, and he has contributed to the core product code behind them. That combination is unusual and it is the thing worth knowing about him — most people at his level do one or the other. Underneath the agentic work is the enterprise commerce stack he has been shipping since 2022: Adobe Commerce and AEM Edge Delivery Services, including one of the first production integrations of Edge Delivery Services with Adobe Commerce B2B."
+    },
+    {
+      "id": "adobe-agent-orchestrator",
+      "title": "Adobe Experience Platform Agent Orchestrator",
+      "kind": "background",
+      "topics": ["agent orchestrator", "experience platform", "adobe", "orchestration", "agentic"],
+      "text": "Adobe Experience Platform Agent Orchestrator is the orchestration layer behind Experience Platform Agents, and one of the two Adobe products Blake works on. Given a request, it plans the work that request implies, calls the specialized agents needed to carry it out, and returns a single unified response, with human oversight throughout rather than bolted on at the end. Blake builds client solutions on it for Fortune 500 customers and has contributed to its core code. It is the enterprise-scale version of the same orchestration problem he works on independently in Felix."
+    },
+    {
+      "id": "adobe-cx-coworker",
+      "title": "CX Enterprise Coworker",
+      "kind": "background",
+      "topics": [
+        "cx enterprise coworker",
+        "adobe summit",
+        "agentic customer experience",
+        "adobe",
+        "coworker"
+      ],
+      "text": "CX Enterprise Coworker is Adobe's agentic customer experience platform, announced at Adobe Summit in April 2026 and generally available in June 2026. Given a goal and parameters it takes multiple actions on its own, acting as an AI teammate inside planning, production, and workflow tools across the customer lifecycle. It coordinates agents and workflows across analytics, content creation, and journey orchestration, and synthesizes context from both Adobe and third-party applications, with governance and human approval built in. Blake builds client solutions on it and has contributed to its core code."
+    },
+    {
+      "id": "adobe-commerce-eds",
+      "title": "The Adobe Commerce and Edge Delivery Services foundation",
+      "kind": "background",
+      "topics": [
+        "adobe commerce",
+        "aem edge delivery services",
+        "eds",
+        "b2b",
+        "magento",
+        "commerce"
+      ],
+      "text": "The agentic work sits on top of a decade of commerce platform depth. Blake has architected and delivered Adobe Commerce for enterprise clients since 2017, first at Lyons Consulting Group and then at Adobe, and delivered one of the first production integrations of AEM Edge Delivery Services with Adobe Commerce B2B for a Fortune 500 client. He also ran a webinar on Commerce with Edge Delivery Services that became a reference for Adobe's enterprise teams. When he says he knows how large systems fail, this is the specific experience he is referring to: Commerce implementations, migrations, and the failure modes of both."
+    },
+    {
+      "id": "agent-infra-thesis",
+      "title": "The four-layer agent infrastructure thesis",
+      "kind": "background",
+      "topics": [
+        "agent infrastructure",
+        "thesis",
+        "four layers",
+        "side projects",
+        "independent work"
+      ],
+      "text": "Outside client work Blake builds agent infrastructure in four layers, and the layering is the argument: agents in production need a harness to run in, a way to know whether they are working, a governed boundary to reach tools through, and a supply of reusable capability. Felix is the harness. Memoturn is the evaluation and observability layer. Fold is the governance layer, an MCP gateway. Skillist is the skills layer. All four are his own work, built outside client engagements, and all four were active in 2026. Each one exists because building the previous one exposed the gap the next one fills."
+    },
+    {
+      "id": "felix-harness",
+      "title": "Felix, the managed agents harness",
+      "kind": "background",
+      "topics": ["felix", "harness", "manifest", "orchestration patterns", "a2a", "hitl"],
+      "text": "Felix is Blake's managed agents harness on Cloudflare Workers, shaped after Anthropic's Managed Agents architecture. A Zod-validated manifest compiles into a runnable agent exposed simultaneously over OpenAI-compatible chat, A2A, MCP, and REST/SSE. Three seams are deliberately swappable: session strategy (full replay, windowed, summarizing, semantic), pattern and model-provider registries (ReAct, deep planning, router, parallel fan-out, group chat, reflect, plan-execute across Anthropic, OpenAI and Workers AI), and transport-labelled tool executors (local, MCP, A2A, container, sandbox, browser, queue). It adds canary manifest rollouts with cron auto-rollback, a governance pipeline ending in human approvals, durable execution on Cloudflare Workflows, and an eval harness gating CI. Docs at docs.felix.run."
+    },
+    {
+      "id": "memoturn-platform",
+      "title": "Memoturn, the evaluation and observability layer",
+      "kind": "background",
+      "topics": [
+        "memoturn",
+        "evals",
+        "observability",
+        "prompt registry",
+        "opentelemetry",
+        "tracing"
+      ],
+      "text": "Memoturn is Blake's open-source AI engineering platform for building, evaluating, and monitoring LLM applications in production. Tracing is built on OpenTelemetry so LLM spans sit in the same trace as everything else. Evaluation spans offline datasets, online sampling of live traffic, and human review, because in practice all three are needed. A versioned prompt registry with deployment channels means prompt changes ship and roll back like code. Cost, token, and latency analytics run on Apache Doris for OLAP alongside PostgreSQL for OLTP. It ships TypeScript, Python and Go SDKs, and an MCP server that puts prompts and datasets inside agent IDEs. Live at memoturn.com."
+    },
+    {
+      "id": "fold-gateway",
+      "title": "Fold, the MCP governance gateway",
+      "kind": "background",
+      "topics": ["fold", "mcp gateway", "governance", "oauth", "credential brokering", "abac"],
+      "text": "Fold is Blake's enterprise MCP gateway, written in Go: one governed endpoint between every MCP client and every MCP server. It federates many servers behind namespaced tools, enforces deny-by-default ABAC policy, and brokers credentials through OAuth 2.0 token exchange so agents never hold raw API keys. Every request emits a structured audit event, including denials. It ships as a single static Go binary in a roughly 22 MB distroless image on the official MCP Go SDK, with rate limiting, circuit breakers, caching, load balancing, a Kubernetes discovery controller and Helm chart, OpenTelemetry tracing and Prometheus metrics. Passes the official MCP conformance suite 40/40, at v1.4.1 with the API frozen at v1.0.0. Live at fold.run."
+    },
+    {
+      "id": "skillist-registry",
+      "title": "Skillist, the agent skills registry",
+      "kind": "background",
+      "topics": ["skillist", "agent skills", "registry", "agentskills.io", "realtime"],
+      "text": "Skillist is Blake's realtime registry and management platform for AI agent skills: agents publish, version, improve, and discover reusable skills following the agentskills.io spec. Built on Cloudflare Workers with Hono and Durable Objects for realtime WebSocket and SSE updates, Neon Postgres via Hyperdrive, R2 and KV storage, and Workers AI. It includes a hosted sandbox execution environment so a skill can be exercised before an agent is trusted with it, a Vite and TanStack Router console, Better Auth with OAuth, magic links and passkeys, and a CLI for local skill development. Two npm packages published under MIT. Live at skillist.io."
+    },
+    {
+      "id": "agent-work-history",
+      "title": "How the agent work evolved: AWS Bedrock and LangGraph first",
+      "kind": "background",
+      "topics": [
+        "aws bedrock",
+        "agentcore",
+        "langgraph",
+        "langchain",
+        "langsmith",
+        "fastapi",
+        "history"
+      ],
+      "text": "The Cloudflare-based agent infrastructure is not where the work started. Earlier iterations ran on AWS Bedrock and Bedrock AgentCore with LangGraph behind a FastAPI gateway, and the multi-agent orchestration patterns were worked out in adventure-agent, a LangChain/LangGraph/LangSmith system with seventeen-plus specialized agents under an LLM orchestrator with human checkpoints. Tracing that system with LangSmith is where the practical case for Memoturn came from, and its orchestration patterns are the direct ancestors of the seven registered in Felix. Blake is hands-on with LangChain, LangGraph, LangSmith, and Claude, and with prompt engineering, vector search, durable agent memory, human-in-the-loop workflows, and protocol-based agent interop."
+    },
+    {
+      "id": "edgevault-platform",
+      "title": "edgevault, config and secrets on the edge",
+      "kind": "background",
+      "topics": ["edgevault", "feature flags", "secrets", "configuration", "open core"],
+      "text": "edgevault is Blake's open-core configuration, secrets, and feature-flag platform on the Cloudflare Developer Platform. Five Workers split along the control-plane/data-plane line — an OpenAPI Hono control plane, a delivery Worker serving flags from KV behind an in-isolate cache, a custom auth Worker using Argon2id and EdDSA JWTs with JWKS, a React Router 7 console BFF, and an audit Worker draining a queue to NDJSON in R2 — so a failing management API cannot slow flag evaluation. Per-workspace SQLite Durable Objects are the config system of record. Promotion from dev to prod runs as a Workflow with an AI risk scan and a human approval gate. Grew out of edgeconfig-monorepo. edgevault.io."
+    },
+    {
+      "id": "contentworker-cms",
+      "title": "contentworker, a cloud-agnostic headless CMS",
+      "kind": "background",
+      "topics": ["contentworker", "headless cms", "hexagonal", "ports and adapters", "temporal"],
+      "text": "contentworker is Blake's headless CMS, built cloud-agnostic for Kubernetes on strict ports and adapters. The discipline is the point: the domain package depends on nothing, and every adapter — Postgres via Drizzle, Redis with BullMQ, S3, Anthropic, Azure OpenAI, pgvector — binds only in each application's composition root, so the CMS can change clouds without the core changing. Three API surfaces (management, delivery, preview) use scoped hashed keys, each space gets a generated GraphQL schema, and a transactional outbox with a relay fans out to webhooks, cache invalidation and vector reindexing rather than dual-writing. Durable agents run on Temporal behind one interface, and an MCP server invokes the same use-cases as the HTTP API. contentworker.io."
+    },
+    {
+      "id": "memoturn-db-engine",
+      "title": "memoturn-db, agent memory in Rust",
+      "kind": "background",
+      "topics": ["memoturn-db", "rust", "agent memory", "libsql", "hybrid search", "database"],
+      "text": "memoturn-db is Blake's agent-memory database, written in Rust and separate from the Memoturn observability platform despite the shared name. Memories are typed — facts, events, instructions, tasks — isolated by namespace, profile and memory, and topic-keyed so a new fact supersedes the old one instead of accumulating contradictions. Ingest is idempotent and content-addressed. Recall is hybrid: FTS5, topic lookup and vector ANN fused with reciprocal rank fusion. Underneath, a Rust data plane embeds libSQL and hosts many tiny databases across hot, warm and cold tiers with object storage as the source of truth: immutable page segments, O(1) copy-on-write branches with epoch fencing, etcd writer leases failing over in under 15 seconds, and refcount GC."
+    },
+    {
+      "id": "prompton-client",
+      "title": "prompton, a conversation-first database client",
+      "kind": "background",
+      "topics": ["prompton", "tauri", "database client", "sql", "rust", "desktop"],
+      "text": "prompton is Blake's native, conversation-first database client: a Tauri 2 desktop app with a TypeScript UI over a Rust core that owns the agent loop and the drivers. It connects to PostgreSQL, MySQL, SQLite and Cloudflare D1 in one workspace, writes and runs SQL from a plain-English question, and keeps production connections read-only until a human approves the specific mutation. Its agent skills live on disk as SKILL.md files, so what the agent knows about a schema is reviewable, diffable text rather than hidden state. Providers are pluggable — Ollama, any OpenAI-compatible endpoint, or Anthropic — and credentials go to the OS keyring. macOS and Linux. Self-described as an MVP."
+    },
+    {
+      "id": "deckhand-desktop",
+      "title": "deckhand, local-first Docker and Kubernetes",
+      "kind": "background",
+      "topics": ["deckhand", "docker", "kubernetes", "desktop", "go", "tauri", "spectrum"],
+      "text": "deckhand is Blake's local-first desktop app for Docker and Kubernetes: a Tauri 2 shell built on Adobe Spectrum over a Go sidecar that exposes Docker, Compose, Kubernetes, Helm and Linux Firecracker microVMs through one localhost HTTP API. The sidecar boundary means the container and cluster logic is testable Go rather than app code, and the UI never shells out to docker or kubectl itself. MIT licensed, macOS and Linux, currently shipping pre-release DMGs that are ad-hoc signed rather than notarized."
+    },
+    {
+      "id": "timetracker-product",
+      "title": "timetracker, a complete product on Workers",
+      "kind": "background",
+      "topics": [
+        "timetracker",
+        "time tracking",
+        "better auth",
+        "passkeys",
+        "authentication",
+        "two factor",
+        "offline",
+        "agents sdk"
+      ],
+      "text": "timetracker is a Toggl-style time tracking product on Cloudflare Workers, D1 and Durable Objects, and it is the most complete end-to-end product on the record. Its chat agent is an Agents-SDK Durable Object over Workers AI, and every write it proposes goes through human approval. Google Calendar sync is read-only with a cron job that auto-tracks matching events. Mutations queue in IndexedDB while offline and drain on reconnect; cross-tab state is realtime through a Durable Object WebSocket. Better Auth covers passkeys, TOTP, magic links and organizations. Reports export to CSV and Excel with AI-written narratives, entries push to Workfront and Dynamics, and there is an MV3 Chrome extension plus Playwright end-to-end tests. timetracker.run."
+    },
+    {
+      "id": "commerce-outside-adobe",
+      "title": "Commerce work outside the Adobe stack",
+      "kind": "background",
+      "topics": ["medusa", "offpavement", "commerceworker", "catalog", "intent engine", "commerce"],
+      "text": "Blake's commerce work is not limited to Adobe's platforms. offpavement-shop is a bikepacking storefront on Medusa v2 with a custom Kit Builder module, and the most-starred of his public repositories. commerceworker is a private project reproducing Magento2-parity commerce on Cloudflare Workers. catalog-normalize handles identity resolution and unified attribute schemas across heterogeneous product catalogs. The ecommerce intent reasoning engine classifies 62 intents across 10 categories over chat, email and form channels, resolving compound and conflicting intent into structured action plans, with an embedding fast path that answers roughly half of requests without an LLM call and connectors for Shopify, Adobe Commerce, WooCommerce and BigCommerce."
+    },
+    {
+      "id": "cave-acoustics-audio",
+      "title": "CaveAcoustics, audio plugins in C++",
+      "kind": "background",
+      "topics": ["cave acoustics", "juce", "audio", "dsp", "c++", "plugins", "music"],
+      "text": "CaveAcoustics is Blake's audio-plugin organization: five JUCE plugins for ambient music producers — Cave Delay, Cave Reverb, Cave Chorus, Cave Granular — plus a shared GUI module, a reusable license-validation module, and a storefront built on React Router 7 and Cloudflare Workers with Better Auth and Drizzle over D1. It is the furthest thing from the day job and the reason C++ and real-time constraints are on the record at all: real-time audio is a hard-deadline problem where the DSP path cannot allocate or block, which is a genuinely different discipline from the request/response work everywhere else. Last active in early 2026."
+    },
+    {
+      "id": "developer-tooling",
+      "title": "Developer tooling and templates",
+      "kind": "background",
+      "topics": ["nomoji", "cf-monorepo", "vital", "tooling", "templates", "claude code"],
+      "text": "A cluster of smaller work exists because Blake keeps hitting the same friction. nomoji.dev configures granular emoji control across Claude Code, Cursor, Copilot and Gemini CLI, with presets, a REST API, shareable configs and git hooks, so a team applies one policy instead of each engineer configuring their own. cf-monorepo is the Cloudflare Workers monorepo template several of his other projects started from: Turborepo, pnpm workspaces, syncpack, Biome, Lefthook, Vitest, Changesets and Just over Hono, Drizzle, Better Auth, Hyperdrive and Neon. vital is a Claude Code plugin packaging a go-to-market agency as nine specialist agents and twenty-two portable skills."
+    },
+    {
+      "id": "this-site-architecture",
+      "title": "How this site and its chatbot are built",
+      "kind": "background",
+      "topics": ["this site", "chatbot", "rag", "vectorize", "workers ai", "how it works"],
+      "text": "This site is React Router v7 with SSR on Cloudflare Workers, and its chatbot is deliberately narrow retrieval rather than a general assistant. The resume and a chat-only context layer are chunked and embedded with Workers AI at populate time and stored in Vectorize. Each question is embedded, matched against the index with a score floor, and only the matched chunks are fenced into the prompt as reference material — retrieved text is treated as data, never as instructions. A topic guardrail runs before the model, so off-topic prompts and injection attempts are refused without spending an inference call. Answers stream over SSE and cite the sections that grounded them. Source at github.com/blakebauman/blakebauman.dev."
     },
     {
       "id": "cloudflare-expertise",
-      "text": "Blake has deep expertise with Cloudflare's edge platform including Workers, D1, Durable Objects, Workflows, KV, R2, and Queues. He builds production applications on this stack and understands the nuances of edge computing patterns, real-time systems, and serverless architecture at scale."
+      "title": "Cloudflare platform depth",
+      "kind": "background",
+      "topics": [
+        "cloudflare",
+        "workers",
+        "durable objects",
+        "d1",
+        "workflows",
+        "kv",
+        "r2",
+        "queues",
+        "vectorize"
+      ],
+      "text": "Cloudflare is the platform Blake reaches for by default, and the depth is broad rather than nominal: Workers, Durable Objects, D1, Workflows, KV, R2, Queues, Vectorize, Workers AI, Hyperdrive and the Agents SDK, all used in shipped projects rather than tutorials. He understands the patterns that actually matter at the edge — where Durable Objects earn their cost and where they do not, WebSocket Hibernation for idle connections, queue-backed write paths that keep work off the request path, and the isolate model's constraints on cold start and CPU time. felix, edgevault, skillist, timetracker, commerceworker, nomoji.dev and this site all run on it."
     },
     {
-      "id": "ai-focus",
-      "text": "Blake builds agent infrastructure across four layers. The harness: Felix, a managed-agents harness on Cloudflare Workers where manifest-defined agents compile into runtimes exposed over OpenAI-compatible chat, A2A, MCP, and REST/SSE, with swappable session strategies, seven orchestration patterns (ReAct, deep planning, router, parallel fan-out, group-chat, reflect, plan-execute), transport-labelled tool executors, HITL approvals, evals, and an agentic commerce layer (ACP, Stripe, B2B). The evaluation layer: Memoturn, an open-source AI engineering platform for building, evaluating, and monitoring LLM applications in production: OpenTelemetry tracing, offline and online evals with human review, a versioned prompt registry with deployment channels, and cost/token/latency analytics. The governance layer: Fold, an enterprise MCP gateway in Go that federates every MCP server behind one governed endpoint with deny-by-default policy, OAuth token exchange, and credential brokering so agents never hold raw API keys. The skills layer: Skillist, a realtime agent-skills registry on Cloudflare Workers where agents publish, version, improve, and discover reusable skills, following the agentskills.io spec. All four are his own work, built outside client engagements, and all four are active in 2026: Felix at docs.felix.run, Memoturn at memoturn.com, Fold at fold.run, Skillist at skillist.io. Earlier iterations ran on AWS Bedrock and AgentCore with LangGraph behind a FastAPI gateway. For his agentic work at Adobe, see the adobe-agentic context. Hands-on with LangChain, LangGraph, LangSmith, and Claude; he understands prompt engineering, vector search, durable agent memory, human-in-the-loop workflows, and protocol-based agent interop."
+      "id": "career-arc",
+      "title": "Career arc, 2017 to now",
+      "kind": "background",
+      "topics": ["career", "timeline", "history", "trajectory", "capgemini", "lyons", "adobe"],
+      "text": "The through-line is enterprise commerce, then the platforms underneath it, then the agents on top. From 2017 to 2019 Blake was a Technical Architect at Lyons Consulting Group (Capgemini), leading Adobe Commerce design and implementation for a leading activewear brand and an Adobe Scene7 integration. He joined Adobe in 2019 as a Technical Architect, leading a global beverage company's zero-downtime migration from Adobe Commerce on-premise to Cloud and building the architectural review process for enterprise Commerce implementations. He has been a Principal Technical Architect since 2022, delivering Edge Delivery Services and Commerce B2B work and then the agentic layer on top of it. That is roughly nine years of enterprise architecture."
     },
     {
-      "id": "adobe-agentic",
-      "text": "Blake's current work at Adobe is the agentic layer for enterprise customer experience, on top of the Adobe Commerce and AEM Edge Delivery Services stack he has been shipping for Fortune 500 clients since 2022. Two products anchor it. Adobe Experience Platform Agent Orchestrator is the orchestration layer behind Experience Platform Agents: it plans the work a request implies, calls the specialized agents needed to do it, and returns a single unified response, with human oversight throughout. CX Enterprise Coworker is Adobe's agentic customer experience platform, announced at Adobe Summit in April 2026 and generally available in June 2026. Given a goal and parameters it takes multiple actions on its own, acting as an AI teammate inside planning, production, and workflow tools across the customer lifecycle. It coordinates agents and workflows across analytics, content creation, and journey orchestration, and synthesizes context from both Adobe and third-party applications, with governance and human approval built in. Blake works on both sides of these products: he builds client solutions with them for Fortune 500 deployments, and he has contributed to their core code. If someone asks what Blake is working on now, or about agentic AI at Adobe, this is the answer."
+      "id": "work-style",
+      "title": "How Blake works and what he wants from a role",
+      "kind": "background",
+      "topics": ["work style", "preferences", "team", "leadership", "hard problems"],
+      "text": "Blake prefers genuinely hard problems where he can have direct impact, and roles that combine architecture, client strategy, and hands-on engineering rather than forcing a choice between them. His Adobe work is evidence he does not treat those as separate tracks: he architects client solutions and contributes to the core product code behind them. He has led cross-functional teams and internal enablement initiatives. The volume and range of independent work — a Go gateway, a Rust database, C++ audio plugins, a dozen Cloudflare services — says something about how he learns: by building the whole thing rather than reading about it."
     },
     {
       "id": "enterprise-experience",
-      "text": "Blake has led production implementations for Fortune 500 companies at Adobe. He knows how large systems fail and how to migrate them without breaking things. He has experience with zero-downtime migrations, governance frameworks, and architectural review processes."
+      "title": "Enterprise and Fortune 500 experience",
+      "kind": "background",
+      "topics": ["enterprise", "fortune 500", "migration", "governance", "zero downtime", "scale"],
+      "text": "Blake has led production implementations for Fortune 500 companies at Adobe. The specific enterprise competencies are zero-downtime migration of live commerce platforms, architectural review and governance processes for large implementations, and the failure modes of enterprise commerce systems under load and during cutover. His line — that he knows how large systems fail and how to fix them — refers to this work rather than to theory. He also builds the internal enablement material and reference content enterprise teams use, including a webinar on Commerce with Edge Delivery Services that became a reference inside Adobe."
+    },
+    {
+      "id": "auth-and-security",
+      "title": "Authentication and security work across the projects",
+      "kind": "background",
+      "topics": [
+        "authentication",
+        "auth",
+        "passkeys",
+        "better auth",
+        "oauth",
+        "jwt",
+        "security",
+        "encryption",
+        "secrets",
+        "rbac",
+        "two factor"
+      ],
+      "text": "Authentication and authorization show up across most of Blake's projects rather than in one of them. timetracker and Skillist both run Better Auth covering passkeys, TOTP two-factor, magic links, OAuth and organizations. edgevault goes lower-level with a custom auth Worker using Argon2id password hashing and EdDSA-signed JWTs published through JWKS, plus an envelope-encrypted secrets vault so storage never holds a usable plaintext secret. Fold does authorization at the gateway: deny-by-default ABAC policy, JWT/JWKS verification, and OAuth 2.0 token exchange (RFC 8693) that brokers credentials so agents never hold raw API keys. contentworker uses scoped, hashed API keys across its three API surfaces, prompton keeps database credentials in the OS keyring, and Memoturn ships SSO with RBAC and audit logs. Human-in-the-loop approval gates guard privileged actions in Felix, prompton, timetracker and edgevault."
+    },
+    {
+      "id": "language-breadth",
+      "title": "Languages and where each one is actually used",
+      "kind": "background",
+      "topics": ["languages", "typescript", "python", "go", "rust", "c++", "php", "polyglot"],
+      "text": "Blake's public repositories are mostly TypeScript, with about fifteen TypeScript projects, four Python, and one each in Go, Rust and C++. Each language maps to a real project rather than a resume line: TypeScript across felix, edgevault, skillist, contentworker, timetracker and this site; Python for the ecommerce intent reasoning engine, adventure-agent, the LangChain AgentCore work and vital; Go for fold, the MCP gateway, and deckhand's sidecar; Rust for memoturn-db and prompton's agent core; C++ with JUCE for the CaveAcoustics plugins. PHP comes from the Magento and Adobe Commerce years. The pattern is picking the language the problem wants, not defending one."
+    },
+    {
+      "id": "github-orgs",
+      "title": "GitHub organizations and how they relate",
+      "kind": "background",
+      "topics": ["github", "organizations", "fold-run", "memoturn", "repositories", "open source"],
+      "text": "Blake's work spans a personal GitHub account and several organizations, which is why some projects appear under different owners. fold-run holds fold, its console, and the fold.run site. memoturn holds the Memoturn observability platform, while the separate memoturn-db agent-memory database lives on his personal account. skillist-io holds Skillist. CaveAcoustics holds the audio plugins and their storefront. His personal account has around thirty-three public repositories, a handful of which are forks. Anything marked private on this record has no public repository to link to, so the chatbot can describe the work but cannot point at source."
+    },
+    {
+      "id": "superseded-work",
+      "title": "Projects that were superseded by later ones",
+      "kind": "background",
+      "topics": ["superseded", "predecessor", "edgeconfig", "history", "iteration"],
+      "text": "Several projects on the record are ancestors rather than dead ends, and the lineage explains the current work. edgeconfig-monorepo, a multi-format configuration platform with SSE live updates, revision history and environment promotion on Workers and Durable Objects, became edgevault. contentworker-workspace, a Cloudflare-native RAG system, was rebuilt cloud-agnostic on ports and adapters as contentworker. adventure-agent's LangGraph orchestration became the pattern registry in Felix, and tracing it with LangSmith became the case for Memoturn. fleet-workspace is explicitly a demonstration of hierarchical Durable Objects rather than a product."
+    },
+    {
+      "id": "faq-current-work",
+      "title": "FAQ: what is Blake working on right now",
+      "kind": "faq",
+      "topics": ["current work", "now", "latest", "recent", "working on"],
+      "text": "Two things at once. At Adobe, the agentic layer for enterprise customer experience: Adobe Experience Platform Agent Orchestrator and CX Enterprise Coworker, both building client solutions on them for Fortune 500 deployments and contributing to their core code. Independently, agent infrastructure in four layers: Felix, the harness; Memoturn, the evaluation and observability platform; Fold, the MCP governance gateway; and Skillist, the agent skills registry. His most recently active repositories in 2026 were fold, memoturn, edgevault, felix, vital and timetracker. If someone asks what he is working on now, this is the answer."
+    },
+    {
+      "id": "faq-strengths",
+      "title": "FAQ: what is Blake best at",
+      "kind": "faq",
+      "topics": ["strengths", "best at", "good at", "specialty", "expertise", "skills"],
+      "text": "Three things, in order. First, enterprise architecture under real constraints: large commerce systems, zero-downtime migrations, governance and review processes, and the failure modes that show up only at scale. Second, edge and serverless platform work, particularly the Cloudflare Developer Platform used properly rather than as hosting — Durable Objects, Workflows, Queues and Vectorize chosen for the reasons they exist. Third, agent infrastructure: orchestration patterns, protocol interop across MCP and A2A, human-in-the-loop approval, evaluation, and governance. The distinctive combination is that he does all three in the same job rather than specializing into one."
+    },
+    {
+      "id": "faq-contact",
+      "title": "FAQ: how to get in touch with Blake",
+      "kind": "faq",
+      "topics": ["contact", "email", "reach", "hire", "hiring", "linkedin", "availability"],
+      "text": "The links on this page are the way: email at blake.bauman@gmail.com, LinkedIn at linkedin.com/in/blakebauman, GitHub at github.com/blakebauman, and Bluesky at bsky.app/profile/blakebauman.dev. This record does not state whether Blake is currently looking for a new role or open to contract work, so the honest answer to an availability question is that it is not something this record covers and the right move is to ask him directly. What it does say about roles he values: work combining architecture, client strategy and hands-on engineering, on genuinely hard problems with direct impact."
+    },
+    {
+      "id": "faq-leadership",
+      "title": "FAQ: does Blake lead teams",
+      "kind": "faq",
+      "topics": ["leadership", "lead", "team", "manage", "mentoring", "enablement"],
+      "text": "Yes, as a technical lead rather than a people manager on this record. He has led cross-functional delivery teams and internal enablement initiatives at Adobe, led the design and implementation of enterprise Commerce programs at both Adobe and Lyons Consulting Group, and built the architectural review process Adobe used for enterprise Commerce implementations — which is leadership expressed as process rather than headcount. He also produced reference material for Adobe's enterprise teams, including a webinar on Commerce with Edge Delivery Services. This record does not describe direct reports or formal management responsibility."
+    },
+    {
+      "id": "faq-frontend",
+      "title": "FAQ: does Blake do frontend work",
+      "kind": "faq",
+      "topics": ["frontend", "react", "ui", "design", "css", "tailwind"],
+      "text": "Yes, though it is not where his weight sits. He works in React and React Router, TanStack Router, Tailwind CSS and shadcn/ui, and has built real interfaces: the console applications for edgevault and Skillist, the timetracker workspace with a calendar-based timer, desktop UIs for prompton and deckhand, an MV3 Chrome extension, and this site. AEM Edge Delivery Services work is frontend performance work by nature. The accurate framing is full-stack with an architecture and backend centre of gravity, rather than a frontend specialist."
+    },
+    {
+      "id": "faq-awards-and-recognition",
+      "title": "FAQ: awards, recognition, and public speaking",
+      "kind": "faq",
+      "topics": ["award", "awards", "prize", "recognition", "hackathon", "speaking", "webinar"],
+      "text": "One competitive award is on this record: second place at the Adobe AI Summit and Hackathon in 2025, for a content generation plugin for Adobe DA.live that combined Adobe Commerce catalog data, a LangChain multi-agent workflow, and Adobe Firefly to produce AEM-ready product content. On the speaking and influence side, Blake ran a webinar on Adobe Commerce with Edge Delivery Services that became a reference for Adobe's enterprise teams, and he builds internal enablement material. There are no other prizes, certifications, published papers, or conference talks listed here — if asked for more, say the record does not include any."
+    },
+    {
+      "id": "faq-hardest-problem",
+      "title": "FAQ: the hardest problems on this record",
+      "kind": "faq",
+      "topics": ["hardest", "challenge", "difficult", "complex", "proud"],
+      "text": "Three candidates, each hard for a different reason. The zero-downtime migration of a global beverage company from Adobe Commerce on-premise to Cloud: hard because there is no rollback once traffic moves and the failure modes are all in production. The storage engine in memoturn-db: many tiny libSQL databases tiered across hot, warm and cold storage with object storage as the source of truth, O(1) copy-on-write branching with epoch fencing, and etcd writer leases failing over in under 15 seconds — hard because correctness under partition is unforgiving. And Felix's swappable seams: making session strategy, orchestration pattern and tool transport all replaceable without the harness collapsing into abstraction for its own sake."
+    },
+    {
+      "id": "faq-why-cloudflare",
+      "title": "FAQ: why so much Cloudflare",
+      "kind": "faq",
+      "topics": ["cloudflare", "edge computing", "serverless", "aws", "platform choice"],
+      "text": "Because the primitives compose. Durable Objects give single-threaded consistency at an addressable key, which is the missing piece in most serverless architectures; Workflows give durable execution without standing up a separate orchestrator; Queues keep write paths off the request path; and D1, KV, R2 and Vectorize cover the storage shapes most applications need without leaving the runtime. Blake is not exclusively a Cloudflare engineer — fold is Go on Kubernetes, contentworker is deliberately cloud-agnostic for Kubernetes, memoturn runs on Bun with PostgreSQL and Apache Doris, hono-aws-lambda is AWS via CDK, and the earlier agent work ran on AWS Bedrock and AgentCore. Cloudflare is the default, not the limit."
+    },
+    {
+      "id": "scope-production-vs-prototype",
+      "title": "Scope: what is shipped versus what is a prototype",
+      "kind": "scope",
+      "topics": ["status", "production", "prototype", "shipped", "maturity", "deployed"],
+      "text": "This distinction matters and should not be blurred. Deployed and in use: fold at v1.4.1 with a frozen API and 40/40 MCP conformance, Memoturn, Skillist with two published npm packages, timetracker at timetracker.run, nomoji.dev, vital on the Claude Code plugin marketplace, and this site. Working prototypes and early-stage: edgevault, contentworker, memoturn-db — whose own README calls it architecture plus working prototype — prompton, self-described as an MVP, and deckhand, shipping unnotarized pre-release builds. References and templates rather than products: cf-monorepo, hono-aws-lambda, contentworker-workspace, and fleet-workspace, which its README calls a demonstration. If asked whether something is production-ready, use this list and do not upgrade a prototype."
+    },
+    {
+      "id": "scope-metrics-and-scale",
+      "title": "Scope: what this record does not quantify",
+      "kind": "scope",
+      "topics": ["metrics", "numbers", "scale", "traffic", "revenue", "unknown"],
+      "text": "This record is qualitative by design and does not contain traffic figures, revenue impact, team sizes, latency benchmarks, user counts or contract values. If someone asks how much traffic a system handled, how large a team was, or what a migration was worth, the correct answer is that this record does not include those numbers and Blake would have to provide them. Do not estimate, infer from company size, or reach for a plausible-sounding figure. The same applies to GitHub popularity: the public repositories have very few stars, which reflects that the work was built to be used rather than promoted, and star counts should not be offered as evidence of anything."
+    },
+    {
+      "id": "scope-boundaries",
+      "title": "Scope: what is outside the record",
+      "kind": "scope",
+      "topics": ["boundaries", "unknown", "not covered", "limits", "personal"],
+      "text": "The assistant answers from this record and nothing else. Things genuinely not covered here: Blake's current availability or compensation expectations, his education, certifications, personal life, opinions on companies or technologies he has not worked with, and anything about clients beyond what is written — the Fortune 500 clients are described by industry, not named, and that is deliberate. Several projects are private and have no public source. When a question falls outside this record, say so plainly and point at the contact links rather than constructing a likely-sounding answer. Being wrong here is worse than being unhelpful, because the whole point of this record is that it is accurate."
     }
   ]
 }

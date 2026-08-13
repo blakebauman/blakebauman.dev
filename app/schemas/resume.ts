@@ -1,6 +1,14 @@
 import { z } from 'zod';
 
 /**
+ * How far along a project actually is. Indexed and surfaced to the chatbot so
+ * it has concrete language for the difference between something deployed and
+ * something that is a working prototype — without it the model reaches for
+ * "production-ready" by default and overstates the record.
+ */
+export const MaturitySchema = z.enum(['production', 'prototype', 'reference', 'archived']);
+
+/**
  * Schema for a project in the resume
  */
 export const ProjectSchema = z.object({
@@ -13,6 +21,20 @@ export const ProjectSchema = z.object({
   year: z.string().optional(),
   status: z.string().optional(),
   visibility: z.string().optional(),
+  // Retrieval-facing additions. All optional so existing entries keep validating.
+  //
+  // `highlights` exist because a single prose `description` embeds as one
+  // averaged vector: a question about one specific capability matches it only
+  // weakly. Each highlight becomes its own chunk.
+  highlights: z.array(z.string()).optional(),
+  // Alternate names a visitor might use ("the MCP gateway", "felix harness").
+  // Feeds both the chunk title line and the guardrail's on-topic matching, so
+  // adding a project no longer means hand-editing a keyword list.
+  aliases: z.array(z.string()).optional(),
+  role: z.string().optional(),
+  org: z.string().optional(),
+  language: z.string().optional(),
+  maturity: MaturitySchema.optional(),
 });
 
 /**
@@ -23,6 +45,12 @@ export const ExperienceSchema = z.object({
   role: z.string(),
   years: z.string(),
   description: z.string(),
+  // Same reasoning as ProjectSchema.highlights: without these, "what did Blake
+  // use at Capgemini?" has nothing to retrieve but one averaged paragraph.
+  highlights: z.array(z.string()).optional(),
+  tech: z.array(z.string()).optional(),
+  location: z.string().optional(),
+  clientContext: z.string().optional(),
 });
 
 /**
@@ -97,20 +125,33 @@ export const ResumeDataSchema = z.object({
 /**
  * Schema for chunk metadata used in vector storage
  */
+export const ChunkTypeSchema = z.enum([
+  'personal',
+  'skills',
+  'experience',
+  'tools',
+  'exploring',
+  'projects',
+  'summary',
+  'recognition',
+  'ai_context',
+]);
+
+// Vectorize metadata values must be primitives, so list-shaped fields (topics)
+// are stored comma-joined rather than as arrays.
 export const ChunkMetadataSchema = z.object({
-  type: z.enum([
-    'personal',
-    'skills',
-    'experience',
-    'tools',
-    'exploring',
-    'projects',
-    'summary',
-    'recognition',
-    'ai_context',
-  ]),
+  type: ChunkTypeSchema,
   section: z.string(),
   text: z.string(),
+  // Human-readable name for the thing this chunk is about ("felix",
+  // "Adobe — Principal Technical Architect"). Rendered as a source chip in the
+  // UI and used as the chunk's first embedded line.
+  title: z.string().optional(),
+  // The entity this chunk came from, so several chunks of one project can be
+  // collapsed to a single citation.
+  sourceId: z.string().optional(),
+  topics: z.string().optional(),
+  kind: z.string().optional(),
   company: z.string().optional(),
   role: z.string().optional(),
   years: z.string().optional(),
@@ -138,6 +179,8 @@ export type Project = z.infer<typeof ProjectSchema>;
 export type Experience = z.infer<typeof ExperienceSchema>;
 export type Recognition = z.infer<typeof RecognitionSchema>;
 export type ResumeData = z.infer<typeof ResumeDataSchema>;
+export type Maturity = z.infer<typeof MaturitySchema>;
+export type ChunkType = z.infer<typeof ChunkTypeSchema>;
 export type ChunkMetadata = z.infer<typeof ChunkMetadataSchema>;
 export type VectorMatch = z.infer<typeof VectorMatchSchema>;
 export type VectorQueryResult = z.infer<typeof VectorQueryResultSchema>;
