@@ -1,0 +1,93 @@
+name: Retrieval Eval
+
+# Measures retrieval quality against the LIVE index, so it can only run where a
+# deployment exists. This is a different question from the CI workflow: CI asks
+# "does the code build and pass tests", this asks "does the deployed assistant
+# still find the right thing when asked".
+#
+# Triggers are deliberately limited. This repository is public, and secrets are
+# available to workflows running in the base repository context — so there is no
+# `pull_request` trigger here. A fork PR must never be able to run a workflow
+# holding a credential.
+#
+# The credential is EVAL_API_KEY, which only unlocks the read-only retrieval
+# endpoint. CI has no key that can rebuild the index.
+#
+# There is no `push` trigger either: deploys are manual (`pnpm run deploy`), so a
+# push to main lands *before* production has the new code. Evaluating then would
+# measure the previous deployment and report a phantom pass or fail. Run this
+# from the Actions tab after deploying, or let the nightly run catch drift.
+on:
+  workflow_dispatch:
+    inputs:
+      base_url:
+        description: 'Deployment to evaluate'
+        required: false
+        default: 'https://blakebauman.dev'
+  schedule:
+    # 04:30 UTC, half an hour after the chat-log retention cron, so the two do
+    # not contend. Catches the drift case that has no other alarm: content
+    # merged and deployed, but the Vectorize index never repopulated.
+    - cron: '30 4 * * *'
+
+concurrency:
+  group: retrieval-eval
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+
+jobs:
+  eval:
+    name: Golden-set retrieval eval
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 9
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'pnpm'
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Fail early if the eval key is not configured
+        env:
+          EVAL_API_KEY: ${{ secrets.EVAL_API_KEY }}
+        run: |
+          if [ -z "$EVAL_API_KEY" ]; then
+            echo "::error::EVAL_API_KEY repository secret is not set."
+            echo "Set it with: gh secret set EVAL_API_KEY"
+            echo "It must match the EVAL_API_KEY secret on the blakebauman-dev Worker."
+            exit 1
+          fi
+
+      - name: Run retrieval eval
+        env:
+          EVAL_API_KEY: ${{ secrets.EVAL_API_KEY }}
+          EVAL_BASE_URL: ${{ inputs.base_url || 'https://blakebauman.dev' }}
+        # pipefail matters here: without it the pipeline's exit code is tee's,
+        # which is always 0, so a failing eval would report a passing job — the
+        # exact failure this workflow exists to catch.
+        shell: bash
+        run: |
+          set -euo pipefail
+          pnpm run vectorize:eval | tee eval-output.txt
+
+      - name: Summarize
+        if: always()
+        run: |
+          {
+            echo '## Retrieval eval'
+            echo
+            echo '```'
+            tail -n 24 eval-output.txt 2>/dev/null || echo 'No output captured.'
+            echo '```'
+          } >> "$GITHUB_STEP_SUMMARY"

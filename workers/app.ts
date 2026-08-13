@@ -160,7 +160,15 @@ export default {
     // only way to measure retrieval quality separately from answer quality.
     // Authenticated because it exposes the index and burns an embedding per call.
     if (url.pathname === '/api/debug/retrieval' && request.method === 'POST') {
-      if (!(await isAuthorized(request.headers.get('Authorization'), env.VECTORIZE_ADMIN_KEY))) {
+      // Accepts either the read-only eval key or the admin key. CI is given only
+      // the former, so a compromised Actions secret can read rankings but cannot
+      // trigger a repopulate. Both are checked so local use with the admin key
+      // keeps working.
+      const authHeader = request.headers.get('Authorization');
+      const authorized =
+        (await isAuthorized(authHeader, env.EVAL_API_KEY)) ||
+        (await isAuthorized(authHeader, env.VECTORIZE_ADMIN_KEY));
+      if (!authorized) {
         return jsonResponse({ error: 'Unauthorized' }, 401, corsHeaders);
       }
 

@@ -64,6 +64,9 @@ export interface Env {
   CF_API_TOKEN?: string;
   VECTORIZE_INDEX?: string;
   VECTORIZE_ADMIN_KEY?: string;
+  // Read-only credential for /api/debug/retrieval, so the CI eval can inspect
+  // rankings without holding a key that can also rebuild the index.
+  EVAL_API_KEY?: string;
   ADMIN_API_KEY?: string;
   CHAT_ENABLED?: string;
   // Salt for hashing client IPs before they are written to D1. Absent in local

@@ -7,9 +7,10 @@
  *
  * It runs against a deployed instance, because Vectorize has no local
  * implementation (the same constraint documented in CLAUDE.md). It needs the
- * debug retrieval endpoint, which is gated behind VECTORIZE_ADMIN_KEY.
+ * debug retrieval endpoint, which is gated behind EVAL_API_KEY (read-only) or
+ * VECTORIZE_ADMIN_KEY.
  *
- *   VECTORIZE_ADMIN_KEY=... pnpm run vectorize:eval
+ *   EVAL_API_KEY=... pnpm run vectorize:eval
  *   EVAL_BASE_URL=https://staging.example.dev pnpm run vectorize:eval
  *
  * Reports recall@k, MRR, and the score distribution — the distribution is what
@@ -219,8 +220,22 @@ const GOLDEN_SET: GoldenCase[] = [
 ];
 
 const BASE_URL = process.env.EVAL_BASE_URL ?? 'https://blakebauman.dev';
-const ADMIN_KEY = process.env.VECTORIZE_ADMIN_KEY;
+// EVAL_API_KEY is the read-only credential and the one CI holds. Falls back to
+// the admin key so a local run works with whatever is already in .dev.vars.
+const ADMIN_KEY = process.env.EVAL_API_KEY ?? process.env.VECTORIZE_ADMIN_KEY;
 const TOP_K_REPORTED = [1, 3, 5, 10];
+
+// Floors, not targets. Set below the measured numbers at the time of writing
+// (recall@1 86.3%, recall@3 100%, MRR 0.928) so ordinary content edits do not
+// trip them, while a real regression does. Raise them as the numbers improve —
+// a floor that nothing can ever hit is not a gate.
+//
+// Override per-run with EVAL_MIN_RECALL_AT_1 / _AT_3 / EVAL_MIN_MRR.
+const THRESHOLDS = {
+  recallAt1: Number(process.env.EVAL_MIN_RECALL_AT_1 ?? 0.78),
+  recallAt3: Number(process.env.EVAL_MIN_RECALL_AT_3 ?? 0.94),
+  mrr: Number(process.env.EVAL_MIN_MRR ?? 0.85),
+};
 
 interface DebugMatch {
   id: string;
@@ -260,8 +275,8 @@ function percentile(sorted: number[], p: number): number {
 
 async function main() {
   if (!ADMIN_KEY) {
-    console.error('VECTORIZE_ADMIN_KEY is required.');
-    console.error('Usage: VECTORIZE_ADMIN_KEY=... pnpm run vectorize:eval');
+    console.error('An API key is required: set EVAL_API_KEY or VECTORIZE_ADMIN_KEY.');
+    console.error('Usage: EVAL_API_KEY=... pnpm run vectorize:eval');
     process.exit(1);
   }
 
@@ -322,12 +337,44 @@ async function main() {
   console.log(`  median ${percentile(sorted, 50).toFixed(3)}`);
   console.log(`  max    ${percentile(sorted, 100).toFixed(3)}`);
 
+  // Gate on the aggregate numbers, not only on outright misses.
+  //
+  // Exiting non-zero solely when a question retrieves nothing relevant is far too
+  // permissive for CI: recall@1 could fall from 86% to 60% with every question
+  // still scraping a hit somewhere in its top 16, and the run would pass.
+  const recallAt = (k: number) => ranks.filter(r => r !== null && r <= k).length / total;
+  const failures: string[] = [];
+
+  const check = (label: string, actual: number, floor: number) => {
+    if (actual < floor) {
+      failures.push(
+        `${label} ${(actual * 100).toFixed(1)}% is below the ${(floor * 100).toFixed(1)}% floor`
+      );
+    }
+  };
+
+  check('recall@1', recallAt(1), THRESHOLDS.recallAt1);
+  check('recall@3', recallAt(3), THRESHOLDS.recallAt3);
+  if (mrr < THRESHOLDS.mrr) {
+    failures.push(`MRR ${mrr.toFixed(3)} is below the ${THRESHOLDS.mrr.toFixed(3)} floor`);
+  }
   if (misses.length) {
-    console.log(`\n${misses.length} question(s) retrieved nothing relevant.`);
+    failures.push(`${misses.length} question(s) retrieved nothing relevant`);
+  }
+
+  if (failures.length) {
+    console.log('\nFAIL');
+    for (const failure of failures) console.log(`  - ${failure}`);
+    console.log(
+      '\nIf a new chunk now answers one of these better than the old expectation,\n' +
+        'confirm the new ranking via /api/debug/retrieval and update GOLDEN_SET.\n' +
+        'If the index was just repopulated, give Vectorize time to finish indexing\n' +
+        'and re-run before treating this as a regression.'
+    );
     process.exit(1);
   }
 
-  console.log('\nEvery question retrieved a relevant chunk.');
+  console.log('\nPASS — every question retrieved a relevant chunk and all floors met.');
 }
 
 main().catch(error => {
