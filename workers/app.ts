@@ -200,6 +200,12 @@ export default {
               score: match.score,
               type: match.metadata?.type ?? null,
               title: match.metadata?.title ?? null,
+              // The stored chunk body, so a caller can confirm *what is actually
+              // in the index* rather than inferring it from rankings. Without
+              // this there is no way to distinguish "the content is wrong" from
+              // "the index has not caught up with a repopulate" — the two
+              // failure modes look identical from the outside.
+              text: match.metadata?.text ?? null,
             })),
           },
           200,
