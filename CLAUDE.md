@@ -109,6 +109,41 @@ Both files feed `buildChunks` in `app/lib/vectorize.ts`. Adding a project or an
 ai-context entry automatically teaches the topic guardrail its name and topics —
 there is no separate keyword list to keep in sync.
 
+**Only `title` and `text` are embedded.** `buildChunks` joins them as the chunk
+body; `topics` goes into Vectorize metadata and feeds the guardrail vocabulary,
+and has no effect whatsoever on retrieval. Adding a phrasing to `topics` to make
+a chunk findable does nothing — the phrasing has to appear in the title or the
+body. The title is the first embedded line and carries disproportionate weight,
+which makes it the strongest lever available.
+
+**Write titles that name the subject, not titles shaped like the question.**
+Embedding similarity is not keyword matching, and the obvious-seeming move backfires.
+Measured on "where has he worked?", the same chunk under three titles:
+
+| title | rank |
+|---|---|
+| `Career arc, 2017 to now` | not in top 16 |
+| `Where Blake has worked: the companies, …` | **5** |
+| `Where has Blake worked? The companies, …` | 9 |
+
+Naming the subject in the words a visitor would use is what worked. Phrasing the
+title as a question made it *worse* — an interrogative pulls the vector toward
+question-shaped text rather than toward the subject.
+
+**Some queries cannot be won by editing content.** Questions with no proper noun
+and few content words flatten the whole corpus into a narrow band: "where has he
+worked?" spans 0.057 across its top ten, and the three chunks above the right
+answer did not move across two separate rewrites. The same question with "Blake"
+in it scores ~0.12 higher and ranks correctly. When the spread is that tight,
+ranking is noise and further content tuning is wasted effort — get the chunk
+above the floor so it reaches the model, and stop.
+
+**Retitling to win one phrasing can lose another.** The scope entry's title once
+carried "shipped"; a rewrite carried "deployed" and "live" and dropped it, and
+"what has he actually shipped?" fell from rank 1 to outside the top 16. After
+any retitle, re-run the eval — the golden set carries paraphrases specifically
+to catch this.
+
 **Cross-cutting themes need their own entry.** Retrieval matches chunks, and a
 chunk is about one subject. A theme that appears as a clause inside many chunks
 is not retrievable by any phrasing of a question about it: authentication was

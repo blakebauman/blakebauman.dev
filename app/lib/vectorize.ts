@@ -193,6 +193,7 @@ Links: LinkedIn: ${resumeData.linkedin} | GitHub: ${resumeData.github} | Website
       project.context ? `Context: ${project.context}` : '',
       `Technologies: ${project.tech.join(', ')}`,
       project.year ? `Year: ${project.year}` : '',
+      project.lastActivity ? `Last repository activity: ${project.lastActivity}` : '',
       project.status ? `Status: ${project.status}` : '',
       project.maturity ? `Maturity: ${project.maturity}` : '',
       project.language ? `Primary language: ${project.language}` : '',
@@ -230,6 +231,29 @@ Links: LinkedIn: ${resumeData.linkedin} | GitHub: ${resumeData.github} | Website
         }
       );
     });
+  }
+
+  // Derived, not authored. "What is the most recent project?" is one of the
+  // default suggested prompts, and answering it from hand-written `year` strings
+  // meant the answer drifted every time something was pushed. This chunk is
+  // regenerated from lastActivity on every populate, so it cannot go stale
+  // without the data going stale first.
+  const dated = resumeData.projects
+    .filter((p): p is typeof p & { lastActivity: string } => Boolean(p.lastActivity))
+    .sort((a, b) => b.lastActivity.localeCompare(a.lastActivity));
+
+  if (dated.length) {
+    const ranked = dated
+      .slice(0, 10)
+      .map(p => `- ${p.name} (${p.lastActivity}${p.maturity ? `, ${p.maturity}` : ''})`)
+      .join('\n');
+
+    push(
+      'projects_by_recency',
+      'Most recent projects, by last repository activity',
+      `Ranked by the most recent push to each repository, newest first. Use this to answer which projects are most recent, most active, or what Blake has worked on lately.\n${ranked}\n\nDates come from the repositories themselves and are refreshed by a sync script, so they reflect real activity rather than a hand-written year.`,
+      { type: 'projects', section: 'projects', sourceId: 'projects_by_recency' }
+    );
   }
 
   for (const exp of resumeData.experience) {

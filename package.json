@@ -25,7 +25,8 @@
     "check:fix": "biome check --write .",
     "prepare": "lefthook install",
     "vectorize:populate": "curl -sS -X POST -H \"Authorization: Bearer $VECTORIZE_ADMIN_KEY\" https://blakebauman.dev/api/populate-vectorize",
-    "vectorize:eval": "tsx scripts/eval-retrieval.ts"
+    "vectorize:eval": "tsx scripts/eval-retrieval.ts",
+    "sync:github": "tsx scripts/sync-github.ts"
   },
   "dependencies": {
     "@fontsource/ibm-plex-mono": "^5.2.7",
