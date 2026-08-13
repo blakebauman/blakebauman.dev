@@ -197,7 +197,7 @@
       "website": "https://docs.felix.run/",
       "aliases": ["felix harness", "managed agents harness", "agent harness"],
       "language": "TypeScript",
-      "maturity": "prototype",
+      "maturity": "production",
       "highlights": [
         "Manifest-driven: a Zod-validated orchestrator/v1 manifest compiles into a runnable agent, so changing an agent's behaviour is a config change rather than a code change.",
         "One agent is exposed over four surfaces at once: OpenAI-compatible /v1 chat, A2A, MCP, and REST/SSE.",
@@ -338,7 +338,7 @@
       "website": "https://edgevault.io/",
       "aliases": ["edge vault", "feature flags", "secrets platform"],
       "language": "TypeScript",
-      "maturity": "prototype",
+      "maturity": "production",
       "highlights": [
         "Control plane and data plane are separate Workers on purpose: a slow or failing management API cannot slow down flag evaluation.",
         "Envelope-encrypted secrets vault, so the storage layer never holds a usable plaintext secret.",
