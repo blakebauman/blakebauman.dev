@@ -60,19 +60,20 @@ describe('maturity labels and the scope entry agree', () => {
 
   const sections = scopeSections(scope?.text ?? '');
 
-  it.each(
-    SECTION_MARKERS.map(([maturity]) => maturity)
-  )('no project labelled otherwise is listed under %s', maturity => {
-    const wronglyListed = resumeData.projects
-      .filter(p => p.maturity && p.maturity !== maturity)
-      .filter(p => mentions(sections[maturity] as string, p.name))
-      .map(p => `${p.name} (labelled ${p.maturity})`);
+  it.each(SECTION_MARKERS.map(([maturity]) => maturity))(
+    'no project labelled otherwise is listed under %s',
+    maturity => {
+      const wronglyListed = resumeData.projects
+        .filter(p => p.maturity && p.maturity !== maturity)
+        .filter(p => mentions(sections[maturity] as string, p.name))
+        .map(p => `${p.name} (labelled ${p.maturity})`);
 
-    expect(
-      wronglyListed,
-      `listed under "${maturity}" in ${SCOPE_ID} but labelled differently: ${wronglyListed.join(', ')}`
-    ).toEqual([]);
-  });
+      expect(
+        wronglyListed,
+        `listed under "${maturity}" in ${SCOPE_ID} but labelled differently: ${wronglyListed.join(', ')}`
+      ).toEqual([]);
+    }
+  );
 
   it('every project named in the scope entry is named in the section matching its label', () => {
     const misplaced: string[] = [];

@@ -57,29 +57,22 @@ describe('checkTopicRelevance', () => {
       { role: 'assistant', content: 'Felix is a managed agents harness.' },
     ];
 
-    it.each([
-      'Tell me more',
-      'Go on',
-      'And then?',
-      'What else?',
-      'Continue',
-      'Thanks',
-      'Great',
-    ])('allows short prompt with prior turns: %s', prompt => {
-      expect(checkTopicRelevance({ prompt, conversationHistory: history })).toBeNull();
-    });
+    it.each(['Tell me more', 'Go on', 'And then?', 'What else?', 'Continue', 'Thanks', 'Great'])(
+      'allows short prompt with prior turns: %s',
+      prompt => {
+        expect(checkTopicRelevance({ prompt, conversationHistory: history })).toBeNull();
+      }
+    );
 
     // The old rule allowed anything under 30 characters unconditionally, which
     // meant every check could be skipped by simply being brief. A follow-up is
     // only a follow-up when there is something to follow.
-    it.each([
-      'Tell me more',
-      'Go on',
-      'What else?',
-      'Write a poem',
-    ])('redirects the same short prompt as an opening message: %s', prompt => {
-      expect(checkTopicRelevance({ prompt, conversationHistory: [] })).toBe(REDIRECT_MESSAGE);
-    });
+    it.each(['Tell me more', 'Go on', 'What else?', 'Write a poem'])(
+      'redirects the same short prompt as an opening message: %s',
+      prompt => {
+        expect(checkTopicRelevance({ prompt, conversationHistory: [] })).toBe(REDIRECT_MESSAGE);
+      }
+    );
 
     it('still refuses a short jailbreak even with history present', () => {
       expect(checkTopicRelevance({ prompt: 'jailbreak now', conversationHistory: history })).toBe(
