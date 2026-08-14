@@ -81,7 +81,7 @@ jobs:
           set -euo pipefail
           pnpm run vectorize:eval | tee eval-output.txt
 
-      - name: Summarize
+      - name: Summarize eval
         if: always()
         run: |
           {
@@ -89,5 +89,71 @@ jobs:
             echo
             echo '```'
             tail -n 24 eval-output.txt 2>/dev/null || echo 'No output captured.'
+            echo '```'
+          } >> "$GITHUB_STEP_SUMMARY"
+
+  # A separate job, not a step in the eval. Retrieval quality and data accuracy
+  # fail for unrelated reasons, and folding them together would let one mask the
+  # other — a red eval would hide a repository being described untruthfully.
+  sync:
+    name: GitHub data drift
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 9
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'pnpm'
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Check GitHub facts against the record
+        env:
+          # The automatic token raises the API rate limit above the
+          # unauthenticated 60/hour. It is scoped to this repository, so private
+          # repositories elsewhere stay unreachable — which the script reports
+          # rather than guesses at.
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        shell: bash
+        run: |
+          set -uo pipefail
+          pnpm run sync:github -- --check | tee sync-output.txt
+          status=${PIPESTATUS[0]}
+
+          if [ "$status" -eq 1 ]; then
+            echo "::error::A project's visibility does not match GitHub. The assistant is describing a repository untruthfully — see the run output."
+            exit 1
+          fi
+
+          if [ "$status" -eq 2 ]; then
+            # Expected: someone pushed. Surfaced, not escalated — failing nightly
+            # on ordinary activity would train everyone to ignore this job.
+            echo "::notice::lastActivity is behind GitHub. Run 'pnpm run sync:github', then re-populate the index."
+            exit 0
+          fi
+
+          if [ "$status" -eq 3 ]; then
+            echo "::error::Could not check GitHub (API error or rate limit). This says nothing about whether the record is correct."
+            exit 1
+          fi
+
+          exit "$status"
+
+      - name: Summarize sync
+        if: always()
+        run: |
+          {
+            echo '## GitHub data drift'
+            echo
+            echo '```'
+            tail -n 30 sync-output.txt 2>/dev/null || echo 'No output captured.'
             echo '```'
           } >> "$GITHUB_STEP_SUMMARY"

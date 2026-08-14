@@ -243,7 +243,7 @@
         "Passes the official MCP conformance suite 40/40; shipped at v1.4.1 with the API contract frozen at v1.0.0, hardened with fuzzers and chaos tests.",
         "OpenTelemetry tracing and Prometheus metrics throughout."
       ],
-      "lastActivity": "2026-08-13"
+      "lastActivity": "2026-08-14"
     },
     {
       "name": "memoturn",
