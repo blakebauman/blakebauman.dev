@@ -105,7 +105,9 @@ declare module 'react-router' {
 }
 
 const requestHandler = createRequestHandler(
-  // @ts-expect-error - virtual module provided by React Router at build time
+  // The `virtual:react-router/server-build` module is provided by React Router
+  // at build time. This used to need a @ts-expect-error; the updated typings
+  // resolve it, and TypeScript now reports the suppression itself as unused.
   () => import('virtual:react-router/server-build'),
   import.meta.env.MODE
 );
