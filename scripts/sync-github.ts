@@ -18,7 +18,11 @@
  *
  * Usage:
  *   pnpm run sync:github            # write lastActivity, report mismatches
- *   pnpm run sync:github -- --check # report only, non-zero exit on drift (CI)
+ *   pnpm run sync:github -- --check # report only, do not write
+ *
+ * Exit codes: 0 clean, 1 visibility mismatch (an untrue claim), 2 stale dates
+ * only (expected drift), 3 could not check (API error or rate limit). See the
+ * note above the exit calls at the bottom.
  *
  * Unauthenticated by default (60 requests/hour, and this makes roughly 20).
  * Set GITHUB_TOKEN to raise that ceiling or to see private repositories.
@@ -111,8 +115,11 @@ async function main() {
         ? await fetchRepo(parsed.owner, parsed.repo)
         : await fetchOrg(parsed.owner);
     } catch (error) {
+      // Exit 3, not 1. A rate limit or a network blip is an operational failure,
+      // and reporting it as a visibility mismatch would claim the record states
+      // something untrue when nothing was actually checked.
       console.error(`  ERROR  ${project.name}: ${(error as Error).message}`);
-      process.exit(1);
+      process.exit(3);
     }
 
     if (!facts) {
@@ -158,12 +165,25 @@ async function main() {
     console.log('\nEverything in sync.');
   }
 
-  // Mismatches always fail: they mean the assistant is stating something untrue.
-  // Stale dates only fail in --check mode, since a normal run just fixes them.
-  if (mismatches.length || (CHECK_ONLY && updates.length)) process.exit(1);
+  // Two failure kinds, deliberately distinguished by exit code, because they
+  // deserve different responses when this runs on a schedule:
+  //
+  //   1  a visibility mismatch — the assistant is stating something untrue about
+  //      a repository. Always an error, always worth waking up for.
+  //   2  stale lastActivity only — time passed and something got pushed. Expected
+  //      and frequent; failing on it nightly would train everyone to ignore the
+  //      job, which costs more than the drift does.
+  //   3  could not check — API error or rate limit. Kept separate from 1 so an
+  //      operational blip never masquerades as the record being wrong.
+  //
+  // A normal (non-check) run just fixes staleness and never exits 2.
+  if (mismatches.length) process.exit(1);
+  if (CHECK_ONLY && updates.length) process.exit(2);
 }
 
 main().catch(error => {
+  // Also 3: an unexpected throw means the check did not complete, not that the
+  // record is wrong.
   console.error(error);
-  process.exit(1);
+  process.exit(3);
 });
