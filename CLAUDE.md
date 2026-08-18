@@ -147,8 +147,8 @@ to catch this.
 **Cross-cutting themes need their own entry.** Retrieval matches chunks, and a
 chunk is about one subject. A theme that appears as a clause inside many chunks
 is not retrievable by any phrasing of a question about it: authentication was
-mentioned in six chunks (timetracker, Skillist, edgevault, Fold, contentworker,
-prompton) and *no* wording of "what authentication has he built?" surfaced any of
+mentioned in several chunks (timetracker, Skillist, edgevault, Fold, prompton)
+and *no* wording of "what authentication has he built?" surfaced any of
 them — generic chunks like `personal` and `github-orgs` won instead, because they
 sit near the corpus centroid. The fix is an entry whose subject *is* the theme;
 `ai_context_auth-and-security` and `ai_context_language-breadth` are both that

@@ -25,7 +25,7 @@ describe('checkTopicRelevance', () => {
       'What exactly does Felix do and how does it compare to other frameworks?',
       'Can you explain what nomoji is and why someone would want to use it?',
       'What is memoturn-db and what problem does it solve for AI agents?',
-      'I heard about something called commerceworker, what can you tell me about that?',
+      'I heard about something called timetracker, what can you tell me about that?',
     ])('allows: %s', prompt => {
       expect(checkTopicRelevance(prompt)).toBeNull();
     });
@@ -122,7 +122,7 @@ describe('checkTopicRelevance', () => {
   describe('knows the newly indexed projects', () => {
     it.each([
       'What is edgevault?',
-      'Tell me about contentworker',
+      'Tell me about skillist',
       'Has he used Medusa on offpavement-shop?',
       'What does prompton do?',
       'Explain deckhand',
