@@ -112,13 +112,6 @@
       "text": "edgevault is Blake's open-core configuration, secrets, and feature-flag platform on the Cloudflare Developer Platform. Five Workers split along the control-plane/data-plane line — an OpenAPI Hono control plane, a delivery Worker serving flags from KV behind an in-isolate cache, a custom auth Worker using Argon2id and EdDSA JWTs with JWKS, a React Router 7 console BFF, and an audit Worker draining a queue to NDJSON in R2 — so a failing management API cannot slow flag evaluation. Per-workspace SQLite Durable Objects are the config system of record. Promotion from dev to prod runs as a Workflow with an AI risk scan and a human approval gate. Grew out of edgeconfig-monorepo. edgevault.io."
     },
     {
-      "id": "contentworker-cms",
-      "title": "contentworker, a cloud-agnostic headless CMS",
-      "kind": "background",
-      "topics": ["contentworker", "headless cms", "hexagonal", "ports and adapters", "temporal"],
-      "text": "contentworker is Blake's headless CMS, built cloud-agnostic for Kubernetes on strict ports and adapters. The discipline is the point: the domain package depends on nothing, and every adapter — Postgres via Drizzle, Redis with BullMQ, S3, Anthropic, Azure OpenAI, pgvector — binds only in each application's composition root, so the CMS can change clouds without the core changing. Three API surfaces (management, delivery, preview) use scoped hashed keys, each space gets a generated GraphQL schema, and a transactional outbox with a relay fans out to webhooks, cache invalidation and vector reindexing rather than dual-writing. Durable agents run on Temporal behind one interface, and an MCP server invokes the same use-cases as the HTTP API. contentworker.io."
-    },
-    {
       "id": "memoturn-db-engine",
       "title": "memoturn-db, agent memory in Rust",
       "kind": "background",
@@ -159,8 +152,8 @@
       "id": "commerce-outside-adobe",
       "title": "Commerce work outside the Adobe stack",
       "kind": "background",
-      "topics": ["medusa", "offpavement", "commerceworker", "catalog", "intent engine", "commerce"],
-      "text": "Blake's commerce work is not limited to Adobe's platforms. offpavement-shop is a bikepacking storefront on Medusa v2 with a custom Kit Builder module, and the most-starred of his public repositories. commerceworker is a private project reproducing Magento2-parity commerce on Cloudflare Workers. catalog-normalize handles identity resolution and unified attribute schemas across heterogeneous product catalogs. The ecommerce intent reasoning engine classifies 62 intents across 10 categories over chat, email and form channels, resolving compound and conflicting intent into structured action plans, with an embedding fast path that answers roughly half of requests without an LLM call and connectors for Shopify, Adobe Commerce, WooCommerce and BigCommerce."
+      "topics": ["medusa", "offpavement", "catalog", "intent engine", "commerce"],
+      "text": "Blake's commerce work is not limited to Adobe's platforms. offpavement-shop is a bikepacking storefront on Medusa v2 with a custom Kit Builder module, and the most-starred of his public repositories. catalog-normalize handles identity resolution and unified attribute schemas across heterogeneous product catalogs. The ecommerce intent reasoning engine classifies 62 intents across 10 categories over chat, email and form channels, resolving compound and conflicting intent into structured action plans, with an embedding fast path that answers roughly half of requests without an LLM call and connectors for Shopify, Adobe Commerce, WooCommerce and BigCommerce."
     },
     {
       "id": "cave-acoustics-audio",
@@ -198,7 +191,7 @@
         "queues",
         "vectorize"
       ],
-      "text": "Cloudflare is the platform Blake reaches for by default, and the depth is broad rather than nominal: Workers, Durable Objects, D1, Workflows, KV, R2, Queues, Vectorize, Workers AI, Hyperdrive and the Agents SDK, all used in shipped projects rather than tutorials. He understands the patterns that actually matter at the edge — where Durable Objects earn their cost and where they do not, WebSocket Hibernation for idle connections, queue-backed write paths that keep work off the request path, and the isolate model's constraints on cold start and CPU time. felix, edgevault, skillist, timetracker, commerceworker, nomoji.dev and this site all run on it."
+      "text": "Cloudflare is the platform Blake reaches for by default, and the depth is broad rather than nominal: Workers, Durable Objects, D1, Workflows, KV, R2, Queues, Vectorize, Workers AI, Hyperdrive and the Agents SDK, all used in shipped projects rather than tutorials. He understands the patterns that actually matter at the edge — where Durable Objects earn their cost and where they do not, WebSocket Hibernation for idle connections, queue-backed write paths that keep work off the request path, and the isolate model's constraints on cold start and CPU time. felix, edgevault, skillist, timetracker, nomoji.dev and this site all run on it."
     },
     {
       "id": "career-arc",
@@ -266,7 +259,7 @@
         "contributed",
         "both sides"
       ],
-      "text": "Both, and that is the unusual part. Most architects at Blake's level do one or the other: either they implement a vendor's product for clients, or they build the product. He does both on the same products. For Adobe Experience Platform Agent Orchestrator and CX Enterprise Coworker he architects and delivers Fortune 500 client solutions built on them, and he has also contributed to the core product code behind them. Outside Adobe, everything in the projects list is product work he owns end to end rather than client delivery — Felix, Memoturn, Fold, Skillist, edgevault, contentworker and the rest are his own. So the honest answer to \"is he a consultant or an engineer\" is that the record shows both, consistently, at the same time."
+      "text": "Both, and that is the unusual part. Most architects at Blake's level do one or the other: either they implement a vendor's product for clients, or they build the product. He does both on the same products. For Adobe Experience Platform Agent Orchestrator and CX Enterprise Coworker he architects and delivers Fortune 500 client solutions built on them, and he has also contributed to the core product code behind them. Outside Adobe, everything in the projects list is product work he owns end to end rather than client delivery — Felix, Memoturn, Fold, Skillist, edgevault and the rest are his own. So the honest answer to \"is he a consultant or an engineer\" is that the record shows both, consistently, at the same time."
     },
     {
       "id": "faq-years-of-experience",
@@ -300,14 +293,14 @@
         "rbac",
         "two factor"
       ],
-      "text": "Authentication and authorization show up across most of Blake's projects rather than in one of them. timetracker and Skillist both run Better Auth covering passkeys, TOTP two-factor, magic links, OAuth and organizations. edgevault goes lower-level with a custom auth Worker using Argon2id password hashing and EdDSA-signed JWTs published through JWKS, plus an envelope-encrypted secrets vault so storage never holds a usable plaintext secret. Fold does authorization at the gateway: deny-by-default ABAC policy, JWT/JWKS verification, and OAuth 2.0 token exchange (RFC 8693) that brokers credentials so agents never hold raw API keys. contentworker uses scoped, hashed API keys across its three API surfaces, prompton keeps database credentials in the OS keyring, and Memoturn ships SSO with RBAC and audit logs. Human-in-the-loop approval gates guard privileged actions in Felix, prompton, timetracker and edgevault."
+      "text": "Authentication and authorization show up across most of Blake's projects rather than in one of them. timetracker and Skillist both run Better Auth covering passkeys, TOTP two-factor, magic links, OAuth and organizations. edgevault goes lower-level with a custom auth Worker using Argon2id password hashing and EdDSA-signed JWTs published through JWKS, plus an envelope-encrypted secrets vault so storage never holds a usable plaintext secret. Fold does authorization at the gateway: deny-by-default ABAC policy, JWT/JWKS verification, and OAuth 2.0 token exchange (RFC 8693) that brokers credentials so agents never hold raw API keys. prompton keeps database credentials in the OS keyring, and Memoturn ships SSO with RBAC and audit logs. Human-in-the-loop approval gates guard privileged actions in Felix, prompton, timetracker and edgevault."
     },
     {
       "id": "language-breadth",
       "title": "Languages and where each one is actually used",
       "kind": "background",
       "topics": ["languages", "typescript", "python", "go", "rust", "c++", "php", "polyglot"],
-      "text": "Blake's public repositories are mostly TypeScript, with about fifteen TypeScript repositories, four Python, and one each in Go, Rust and C++. Each language is tied to something he actually built rather than a resume line: TypeScript across felix, edgevault, skillist, contentworker, timetracker and this site; Python for the ecommerce intent reasoning engine, adventure-agent, the LangChain AgentCore work and vital; Go for fold, the MCP gateway, and deckhand's sidecar; Rust for memoturn-db and prompton's agent core; C++ with JUCE for the CaveAcoustics plugins. PHP comes from the Magento and Adobe Commerce years. The pattern is picking the language the problem wants, not defending one."
+      "text": "Blake's public repositories are mostly TypeScript, with about a dozen TypeScript repositories, four Python, and one each in Go, Rust and C++. Each language is tied to something he actually built rather than a resume line: TypeScript across felix, edgevault, skillist, timetracker and this site; Python for the ecommerce intent reasoning engine, adventure-agent, the LangChain AgentCore work and vital; Go for fold, the MCP gateway, and deckhand's sidecar; Rust for memoturn-db and prompton's agent core; C++ with JUCE for the CaveAcoustics plugins. PHP comes from the Magento and Adobe Commerce years. The pattern is picking the language the problem wants, not defending one."
     },
     {
       "id": "github-orgs",
@@ -321,7 +314,7 @@
       "title": "Projects that were superseded by later ones",
       "kind": "background",
       "topics": ["superseded", "predecessor", "edgeconfig", "history", "iteration"],
-      "text": "Several projects on the record are ancestors rather than dead ends, and the lineage explains the current work. edgeconfig-monorepo, a multi-format configuration platform with SSE live updates, revision history and environment promotion on Workers and Durable Objects, became edgevault. contentworker-workspace, a Cloudflare-native RAG system, was rebuilt cloud-agnostic on ports and adapters as contentworker. adventure-agent's LangGraph orchestration became the pattern registry in Felix, and tracing it with LangSmith became the case for Memoturn. fleet-workspace is explicitly a demonstration of hierarchical Durable Objects rather than a product."
+      "text": "Several projects on the record are ancestors rather than dead ends, and the lineage explains the current work. edgeconfig-monorepo, a multi-format configuration platform with SSE live updates, revision history and environment promotion on Workers and Durable Objects, became edgevault. adventure-agent's LangGraph orchestration became the pattern registry in Felix, and tracing it with LangSmith became the case for Memoturn. fleet-workspace is explicitly a demonstration of hierarchical Durable Objects rather than a product."
     },
     {
       "id": "faq-current-work",
@@ -377,7 +370,7 @@
       "title": "FAQ: why so much Cloudflare",
       "kind": "faq",
       "topics": ["cloudflare", "edge computing", "serverless", "aws", "platform choice"],
-      "text": "Because the primitives compose. Durable Objects give single-threaded consistency at an addressable key, which is the missing piece in most serverless architectures; Workflows give durable execution without standing up a separate orchestrator; Queues keep write paths off the request path; and D1, KV, R2 and Vectorize cover the storage shapes most applications need without leaving the runtime. Blake is not exclusively a Cloudflare engineer — fold is Go on Kubernetes, contentworker is deliberately cloud-agnostic for Kubernetes, memoturn runs on Bun with PostgreSQL and Apache Doris, hono-aws-lambda is AWS via CDK, and the earlier agent work ran on AWS Bedrock and AgentCore. Cloudflare is the default, not the limit."
+      "text": "Because the primitives compose. Durable Objects give single-threaded consistency at an addressable key, which is the missing piece in most serverless architectures; Workflows give durable execution without standing up a separate orchestrator; Queues keep write paths off the request path; and D1, KV, R2 and Vectorize cover the storage shapes most applications need without leaving the runtime. Blake is not exclusively a Cloudflare engineer — fold is Go on Kubernetes, memoturn runs on Bun with PostgreSQL and Apache Doris, hono-aws-lambda is AWS via CDK, and the earlier agent work ran on AWS Bedrock and AgentCore. Cloudflare is the default, not the limit."
     },
     {
       "id": "scope-production-vs-prototype",
@@ -396,7 +389,7 @@
         "running",
         "released"
       ],
-      "text": "Which of Blake's projects are deployed and in use, and which are not. The distinction matters and should not be blurred. Deployed and in use: Felix, the agents harness behind docs.felix.run; fold at v1.4.1 with a frozen API and 40/40 MCP conformance; edgevault at edgevault.io; Memoturn; Skillist with two published npm packages; timetracker at timetracker.run; nomoji.dev; vital on the Claude Code plugin marketplace; and this site. Working prototypes and early-stage: contentworker, memoturn-db — whose own README calls it architecture plus working prototype — prompton, self-described as an MVP, deckhand, shipping unnotarized pre-release builds, and the CaveAcoustics plugins, built for the craft rather than commercially released. References and templates rather than products: cf-monorepo, hono-aws-lambda, contentworker-workspace, and fleet-workspace, which its README calls a demonstration. If asked which projects are live, shipped, or production-ready, use this list and never upgrade a prototype."
+      "text": "Which of Blake's projects are deployed and in use, and which are not. The distinction matters and should not be blurred. Deployed and in use: Felix, the agents harness behind docs.felix.run; fold at v1.4.1 with a frozen API and 40/40 MCP conformance; edgevault at edgevault.io; Memoturn; Skillist with two published npm packages; timetracker at timetracker.run; nomoji.dev; vital on the Claude Code plugin marketplace; and this site. Working prototypes and early-stage: memoturn-db — whose own README calls it architecture plus working prototype — prompton, self-described as an MVP, deckhand, shipping unnotarized pre-release builds, and the CaveAcoustics plugins, built for the craft rather than commercially released. References and templates rather than products: cf-monorepo, hono-aws-lambda, and fleet-workspace, which its README calls a demonstration. If asked which projects are live, shipped, or production-ready, use this list and never upgrade a prototype."
     },
     {
       "id": "scope-metrics-and-scale",

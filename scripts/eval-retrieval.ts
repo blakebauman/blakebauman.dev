@@ -98,14 +98,6 @@ const GOLDEN_SET: GoldenCase[] = [
     ],
   },
   {
-    question: 'What is contentworker?',
-    expect: ['project_contentworker', 'ai_context_contentworker-cms'],
-  },
-  {
-    question: 'Does he know hexagonal architecture?',
-    expect: ['project_contentworker', 'ai_context_contentworker-cms'],
-  },
-  {
     question: 'What is memoturn-db?',
     expect: ['project_memoturn-db', 'ai_context_memoturn-db-engine'],
   },
@@ -167,7 +159,7 @@ const GOLDEN_SET: GoldenCase[] = [
   },
   {
     question: 'Does he know Kubernetes?',
-    expect: ['tools_systems-infra', 'project_fold', 'project_contentworker'],
+    expect: ['tools_systems-infra', 'project_fold'],
   },
   {
     question: 'How deep is his Cloudflare experience?',
