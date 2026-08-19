@@ -1,8 +1,15 @@
-import tsconfigPaths from 'vite-tsconfig-paths';
+import { fileURLToPath } from 'node:url';
 import { defineConfig } from 'vitest/config';
 
+// Vitest still runs on its own Vite 5 (its peer range excludes Vite 8), so the
+// native resolve.tsconfigPaths option used in vite.config.ts is not available
+// here. The tsconfig defines a single alias; mirror it directly.
 export default defineConfig({
-  plugins: [tsconfigPaths()],
+  resolve: {
+    alias: {
+      '@': fileURLToPath(new URL('./app', import.meta.url)),
+    },
+  },
   test: {
     globals: true,
     environment: 'jsdom',
