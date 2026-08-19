@@ -3,7 +3,6 @@ import { cloudflareDevProxy } from '@react-router/dev/vite/cloudflare';
 import tailwindcss from '@tailwindcss/vite';
 import type { AppLoadContext } from 'react-router';
 import { defineConfig } from 'vite';
-import tsconfigPaths from 'vite-tsconfig-paths';
 
 // The Cloudflare dev proxy is only needed for `react-router dev` (it provides live
 // bindings via wrangler's getPlatformProxy). During `react-router build` it would try
@@ -23,6 +22,9 @@ const isDevServer = process.argv.some(arg => arg === 'dev' || arg.endsWith('/dev
 const useRemoteBindings = process.env.REMOTE_BINDINGS === 'true';
 
 export default defineConfig(({ isSsrBuild }) => ({
+  resolve: {
+    tsconfigPaths: true,
+  },
   build: {
     rollupOptions: isSsrBuild
       ? {
@@ -43,6 +45,5 @@ export default defineConfig(({ isSsrBuild }) => ({
       : []),
     tailwindcss(),
     reactRouter(),
-    tsconfigPaths(),
   ],
 }));
