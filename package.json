@@ -29,9 +29,9 @@
     "sync:github": "tsx scripts/sync-github.ts"
   },
   "dependencies": {
-    "@fontsource/ibm-plex-mono": "^5.3.0",
-    "@fontsource/ibm-plex-sans-condensed": "^5.3.0",
-    "@fontsource/ibm-plex-serif": "^5.3.0",
+    "@fontsource-variable/archivo": "^5.3.0",
+    "@fontsource-variable/jetbrains-mono": "^5.3.0",
+    "@fontsource-variable/literata": "^5.3.0",
     "@react-router/node": "^7.18.2",
     "@react-router/serve": "^7.18.2",
     "isbot": "^5.2.1",

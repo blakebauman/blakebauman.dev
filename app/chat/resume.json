@@ -12,11 +12,17 @@
   "website": "https://blakebauman.dev",
   "bluesky": "https://bsky.app/profile/blakebauman.dev",
   "summary": [
-    "I'm a Principal Technical Architect at Adobe. For Fortune 500 clients I architect and ship enterprise commerce on Adobe Commerce and AEM Edge Delivery Services, including one of the first production EDS plus Commerce B2B integrations, and increasingly the agentic layer on top of it. I build client solutions on Adobe Experience Platform Agent Orchestrator and CX Enterprise Coworker, which coordinate agents across analytics, content production, and journey orchestration with governance and human approval in the loop, and I've contributed to the core code behind them. I know how Commerce systems fail, how to migrate them, and how to build teams around them.",
-    "Outside client work I build agent infrastructure across four layers: the harness (Felix, a managed-agents harness on Cloudflare Workers with manifest-defined agents, swappable session strategies, and an agentic commerce layer), the evaluation layer (Memoturn, an open-source AI engineering platform for building, evaluating, and monitoring LLM applications in production: tracing, evals, prompt registry, cost analytics), the governance layer (Fold, an enterprise MCP gateway in Go that federates every MCP server behind one governed endpoint with deny-by-default policy and credential brokering), and the skills layer (Skillist, a realtime registry where agents publish, version, and discover reusable skills). Earlier iterations of this work ran on AWS Bedrock, AgentCore, and LangGraph. The list below is the live record; the chatbot below it answers questions about it."
+    "I'm a Principal Technical Architect at Adobe. For Fortune 500 clients I architect and ship enterprise commerce on Adobe Commerce and AEM Edge Delivery Services, including one of the first production EDS plus Commerce B2B integrations.",
+    "Increasingly that means the agentic layer on top of it. I build client solutions on Adobe Experience Platform Agent Orchestrator and CX Enterprise Coworker, which coordinate agents across analytics, content production, and journey orchestration with governance and human approval in the loop, and I've contributed to the core code behind them.",
+    "I know how Commerce systems fail, how to migrate them, and how to build teams around them.",
+    "Outside client work I build agent infrastructure in four layers, and the layering is the argument: agents in production need a harness to run in, a way to know whether they are working, a governed boundary to reach tools through, and a supply of reusable capability.",
+    "Felix is the harness. Agents are authored as YAML manifests and compiled into governed runtimes with durable execution, memory, skills, and approvals, served over REST, an OpenAI-compatible API, A2A, and MCP at the same time. Python, self-hostable, Apache-2.0.",
+    "Memoturn is the evaluation layer, an open-source AI engineering platform for building, evaluating, and monitoring LLM applications in production: tracing, evals, a prompt registry, and cost analytics, all OpenTelemetry-native.",
+    "Fold is the governance layer, an enterprise MCP gateway in Go that federates every MCP server behind one governed endpoint with deny-by-default policy and credential brokering. Skillist is the skills layer, a realtime registry where agents publish, version, and discover reusable skills.",
+    "Earlier iterations of this work ran on AWS Bedrock, AgentCore, and LangGraph. The list below is the live record; the chatbot below it answers questions about it."
   ],
   "copy": {
-    "subhead": "Principal Technical Architect. Enterprise commerce on Adobe Commerce and AEM Edge Delivery Services. Agentic CX on Adobe Experience Platform Agent Orchestrator and CX Enterprise Coworker. Edge-platform work on Cloudflare, plus independent agent infrastructure: Felix (harness), Memoturn (evals & observability), Fold (MCP gateway), Skillist (skills registry).",
+    "subhead": "Principal Technical Architect. Enterprise commerce on Adobe Commerce and AEM Edge Delivery Services. Agentic CX on Adobe Experience Platform Agent Orchestrator and CX Enterprise Coworker. Edge-platform work on Cloudflare, plus independent agent infrastructure: Felix (agents harness), Memoturn (evals & observability), Fold (MCP gateway), Skillist (skills registry).",
     "positionFootnote": "8+ YEARS · ENTERPRISE COMMERCE · EDGE PLATFORMS · MULTI-AGENT AI WORKFLOWS · ZERO-DOWNTIME MIGRATIONS · COMMERCE FAILURE MODES & HOW TO FIX THEM.",
     "artifactHeading": "Ask the resume",
     "artifactSubhead": "It will tell you what I've worked on and what I haven't.",
@@ -175,11 +181,52 @@
   "projects": [
     {
       "name": "felix",
-      "year": "2025–2026",
+      "year": "2026",
       "status": "Active",
       "visibility": "public",
-      "description": "Managed agents harness on Cloudflare Workers, shaped after Anthropic's Managed Agents architecture. Manifest-defined agents compile into runnable agents exposed over OpenAI-compatible chat, A2A, MCP, and REST/SSE. On top sits Felix Commerce, an agentic commerce layer (Agentic Commerce Protocol merchant endpoint, approval-gated Stripe checkout, per-brand D2C storefronts, B2B quote-to-cash), on top.",
-      "context": "Three swappable seams: session strategies (full replay, windowed, summarizing, semantic), pattern and model-provider registries (ReAct, Deep, Router, Parallel, GroupChat, Reflect, Plan-Execute across Anthropic, OpenAI, and Workers AI), and transport-labelled tool executors (local, MCP, A2A, container, sandbox, browser, queue). Includes HITL approvals, append-only audit log, eval harness with golden datasets, guardrails, and A2A federation. Evolved from an earlier AWS Bedrock + LangGraph implementation. Docs at docs.felix.run.",
+      "description": "Self-hostable agents harness in Python. Agents are authored as felix/v1 YAML manifests and compiled into governed runtimes with durable fibers, memory, skills, eval, approvals, and sandboxes. One agent is served over four surfaces at once: REST/SSE, an OpenAI-compatible /v1, A2A JSON-RPC, and MCP. Live runs can be forked, rewound, and steered.",
+      "context": "Runs on infrastructure you operate: FastAPI on Granian, a Taskiq worker and a separate cron scheduler, Postgres with pgvector as the system of record, Valkey, and a pluggable object store (filesystem, S3, or GCS). Storage, secrets, and the analytics warehouse are Protocols rather than vendor SDKs, so a small VM needs no cloud dependencies at all. Deploys via Docker, Helm, AWS, or GCP. Apache-2.0, released at v0.2.0 in August 2026. A complete rewrite of an earlier TypeScript harness, which itself replaced an AWS Bedrock and LangGraph implementation. Docs at docs.felix.run.",
+      "tech": [
+        "Python",
+        "FastAPI",
+        "Granian",
+        "Taskiq",
+        "PostgreSQL",
+        "pgvector",
+        "Valkey",
+        "Docker",
+        "Helm",
+        "MCP",
+        "A2A",
+        "OpenTelemetry"
+      ],
+      "github": "https://github.com/felix-run/felix",
+      "website": "https://docs.felix.run/",
+      "aliases": ["felix harness", "agents harness", "managed agents harness", "felix-run"],
+      "language": "Python",
+      "maturity": "prototype",
+      "highlights": [
+        "Manifest-driven: an apiVersion: felix/v1 YAML document compiles into a runnable governed agent, so changing behaviour is a config change rather than a code change.",
+        "One agent is exposed over four surfaces simultaneously: REST/SSE, an OpenAI-compatible /v1 where the manifest name is the model id, A2A JSON-RPC, and MCP.",
+        "Durable execution: spec.execution.mode durable enqueues a fiber and returns 202 with a resume token, with Temporal optional rather than required.",
+        "Sessions can be forked, rewound, and steered mid-run, with compacting, windowed, semantic, and full-replay strategies chosen per agent.",
+        "A dropped stream is recoverable: structural SSE frames carry an id cursor and the thread can be replayed and tailed, though the abandoned turn itself is torn down.",
+        "Tools declare whether they are safe to re-run after a crash; the default is that they are not, because re-running a search costs latency while re-running a payment charges twice.",
+        "Extended thinking is replayed correctly across tool calls: signed reasoning blocks are persisted and replayed, and a block whose signature was not captured is dropped rather than sent.",
+        "Everything the harness knows about a model lives in one record per family, and an unknown model id defaults to the current request shape but a conservative context window.",
+        "Governance is first-class: auth, approvals, an append-only audit trail, usage meters, and opt-in SOC 2 and EU AI Act mappings.",
+        "Vendor independence by construction: object store, secrets backend, and warehouse are Protocols, so the same code runs on a filesystem-only VM or on AWS and GCP."
+      ],
+      "lastActivity": "2026-08-25"
+    },
+    {
+      "name": "felix-workers",
+      "year": "2025–2026",
+      "status": "Filed",
+      "visibility": "public",
+      "listed": false,
+      "description": "The TypeScript predecessor to felix: a managed agents harness on Cloudflare Workers with manifest-defined agents, swappable session strategies, pattern and provider registries, and transport-labelled tool executors. On top sat Felix Commerce, an agentic commerce layer with an Agentic Commerce Protocol merchant endpoint, approval-gated Stripe checkout, per-brand D2C storefronts, and B2B quote-to-cash.",
+      "context": "Superseded in August 2026 by the Python rewrite at felix-run/felix, which is self-hostable and vendor-neutral rather than bound to Workers. The commerce layer did not carry over. The repository is still public at github.com/blakebauman/felix.",
       "tech": [
         "TypeScript",
         "Cloudflare Workers",
@@ -194,19 +241,13 @@
         "Stripe"
       ],
       "github": "https://github.com/blakebauman/felix",
-      "website": "https://docs.felix.run/",
-      "aliases": ["felix harness", "managed agents harness", "agent harness"],
+      "aliases": ["felix on cloudflare", "the typescript felix", "felix commerce", "old felix"],
       "language": "TypeScript",
-      "maturity": "production",
+      "maturity": "archived",
       "highlights": [
-        "Manifest-driven: a Zod-validated orchestrator/v1 manifest compiles into a runnable agent, so changing an agent's behaviour is a config change rather than a code change.",
-        "One agent is exposed over four surfaces at once: OpenAI-compatible /v1 chat, A2A, MCP, and REST/SSE.",
-        "Seven orchestration patterns are registered rather than hard-coded: ReAct, deep planning, router, parallel fan-out, group chat, reflect, and plan-execute.",
-        "Session strategy is a swappable seam: full replay, windowed, summarizing, or semantic, chosen per agent instead of baked into the runtime.",
-        "Tool executors are labelled by transport (local, MCP, A2A, container, sandbox, browser, queue) so the harness knows what kind of trust boundary each call crosses.",
-        "Governance runs as a pipeline: policies, command screening, content screening, limits, guardrails, LLM judges, then human approvals.",
-        "Canary manifest rollouts with hash-based routing and cron auto-rollback, plus an eval harness with golden datasets wired into CI as a gate.",
-        "Felix Commerce adds an Agentic Commerce Protocol merchant endpoint, approval-gated Stripe checkout, per-brand D2C storefronts, and B2B quote-to-cash."
+        "Ran the whole harness on Cloudflare Workers with Durable Objects for session state, D1, R2, Vectorize, and Queues.",
+        "Felix Commerce added an Agentic Commerce Protocol merchant endpoint, approval-gated Stripe checkout, per-brand D2C storefronts, and B2B quote-to-cash.",
+        "Replaced by a Python rewrite that removed the Cloudflare dependency; the commerce layer was not carried forward."
       ],
       "lastActivity": "2026-08-07"
     },
@@ -236,7 +277,7 @@
       "maturity": "production",
       "highlights": [
         "Federates many MCP servers behind one endpoint with namespaced tools, so an agent connects once instead of holding N server connections and N sets of credentials.",
-        "Deny-by-default ABAC policy with structured audit events emitted for every request, including denials — the denials are the point, since an ungoverned gateway can't prove what it refused.",
+        "Deny-by-default ABAC policy with structured audit events emitted for every request, including denials. The denials are the point, since an ungoverned gateway can't prove what it refused.",
         "Credential brokering with OAuth 2.0 token exchange (RFC 8693) so agents never hold raw API keys.",
         "Single static Go binary in a roughly 22 MB distroless image, built on the official MCP Go SDK, with optional Redis for distributed fleet state.",
         "Operational surface: rate limiting, circuit breakers, caching, load balancing with health checks, dynamic registry discovery, hot config reload, and a Kubernetes discovery controller with a Helm chart.",
@@ -311,7 +352,7 @@
       "maturity": "production",
       "highlights": [
         "A registry for agent skills that follows the agentskills.io spec, so skills are portable rather than tied to one runtime.",
-        "Realtime publish and discovery over WebSocket and SSE backed by Durable Objects — agents see a new skill version without polling.",
+        "Realtime publish and discovery over WebSocket and SSE backed by Durable Objects, so agents see a new skill version without polling.",
         "Hosted sandbox execution environment, so a skill can be tried before an agent is trusted to run it.",
         "Two npm packages published under MIT, including @skillist/cli for local skill development.",
         "Neon Postgres via Hyperdrive with R2 and KV storage, a Vite and TanStack Router console, and Better Auth covering OAuth, magic links, and passkeys."
@@ -346,7 +387,7 @@
       "highlights": [
         "Control plane and data plane are separate Workers on purpose: a slow or failing management API cannot slow down flag evaluation.",
         "Envelope-encrypted secrets vault, so the storage layer never holds a usable plaintext secret.",
-        "Dev-to-prod promotion runs as a Cloudflare Workflow with an AI risk scan and a waitForEvent human approval gate — a config change gets the same treatment as a deploy.",
+        "Dev-to-prod promotion runs as a Cloudflare Workflow with an AI risk scan and a waitForEvent human approval gate: a config change gets the same treatment as a deploy.",
         "Real-time config updates over WebSocket Hibernation, which keeps idle connections free rather than paying per open socket.",
         "Audit events drain through a queue into NDJSON on R2, keeping the write path off the request path.",
         "Vectorize-backed semantic search over configuration, plus a Streamable-HTTP MCP server so agents can read and change config under the same policy as humans.",
@@ -368,12 +409,12 @@
       "maturity": "prototype",
       "highlights": [
         "Memories are typed and topic-keyed, so a new fact about a topic supersedes the old one instead of accumulating contradictions.",
-        "Ingest is idempotent and content-addressed — replaying the same input does not duplicate memory.",
+        "Ingest is idempotent and content-addressed: replaying the same input does not duplicate memory.",
         "Hybrid recall fuses FTS5, topic lookup, and vector ANN with reciprocal rank fusion rather than picking one retrieval mode.",
         "Many tiny databases per profile rather than one shared table, with hot/warm/cold tiering and object storage as the source of truth.",
         "O(1) copy-on-write branches with epoch fencing, so an agent can fork its memory to try something and throw it away.",
         "Single-writer safety via etcd leases with failover under 15 seconds.",
-        "The README is deliberate about status — architecture and working prototype, not a shipped database."
+        "The README is deliberate about status: architecture and working prototype, not a shipped database."
       ],
       "lastActivity": "2026-06-19"
     },
@@ -456,7 +497,7 @@
       "language": "TypeScript",
       "maturity": "production",
       "highlights": [
-        "Authentication covers passkeys, TOTP two-factor, magic links, and organizations, built on Better Auth — the most complete auth implementation on this record.",
+        "Authentication covers passkeys, TOTP two-factor, magic links, and organizations, built on Better Auth, the most complete auth implementation on this record.",
         "The chat agent is an Agents-SDK Durable Object over Workers AI, and every write it proposes goes through human approval.",
         "Read-only Google Calendar sync with a cron job that auto-tracks matching events, so the calendar is a source and never a target.",
         "Offline-first: mutations queue in IndexedDB and drain when the connection returns.",
@@ -511,7 +552,7 @@
       "language": "TypeScript",
       "maturity": "production",
       "highlights": [
-        "Retrieval over the same record the page renders — the chat and the page cannot disagree, because they read the same source.",
+        "Retrieval over the same record the page renders: the chat and the page cannot disagree, because they read the same source.",
         "A topic guardrail runs before the model, so off-topic and prompt-injection attempts are refused without spending an inference call.",
         "Retrieved chunks are fenced in the prompt as reference material, and replayed conversation history is treated as untrusted input.",
         "Answers surface which sections grounded them, so a claim can be traced back to the record.",
@@ -524,7 +565,7 @@
       "year": "2025–2026",
       "status": "Active",
       "visibility": "public",
-      "description": "Configures granular emoji control across AI coding assistants — Claude Code, Cursor, Copilot, Gemini CLI — so emoji stop leaking into documentation, console logs, CLI output, and commit messages.",
+      "description": "Configures granular emoji control across AI coding assistants (Claude Code, Cursor, Copilot, Gemini CLI), so emoji stop leaking into documentation, console logs, CLI output, and commit messages.",
       "context": "A Cloudflare Workers platform with presets, a REST API, text analysis, shareable configs, and git hooks. Small, deployed, and built for engineers who want their machine output to stay legible.",
       "tech": ["TypeScript", "Cloudflare Workers", "CLI"],
       "github": "https://github.com/blakebauman/nomoji.dev",
@@ -546,7 +587,7 @@
       "visibility": "public",
       "listed": false,
       "description": "Cloudflare Workers monorepo template: Turborepo and pnpm workspaces with one example Worker and nine shared packages.",
-      "context": "The scaffolding decisions extracted once so they stop being remade per project — syncpack for dependency alignment, Biome, Lefthook, Vitest, Changesets, and Just, over Hono, Drizzle, Better Auth, Hyperdrive, and Neon.",
+      "context": "The scaffolding decisions extracted once so they stop being remade per project: syncpack for dependency alignment, Biome, Lefthook, Vitest, Changesets, and Just, over Hono, Drizzle, Better Auth, Hyperdrive, and Neon.",
       "tech": [
         "TypeScript",
         "Turborepo",
@@ -562,7 +603,7 @@
       "language": "TypeScript",
       "maturity": "reference",
       "highlights": [
-        "A template, not a product — the starting point several of the other Cloudflare projects were built from.",
+        "A template, not a product: the starting point several of the other Cloudflare projects were built from.",
         "Nine shared packages plus one example Worker, with syncpack keeping versions aligned across the workspace."
       ],
       "lastActivity": "2025-12-21"
@@ -621,7 +662,7 @@
       "language": "Python",
       "maturity": "prototype",
       "highlights": [
-        "An embedding fast path resolves about half of all requests without invoking an LLM — cost and latency control by routing, not by a cheaper model.",
+        "An embedding fast path resolves about half of all requests without invoking an LLM: cost and latency control by routing, not by a cheaper model.",
         "Compound intents are decomposed rather than forced into a single label.",
         "Order connectors span four commerce platforms, so intent resolution can act on real order state.",
         "Tier-aware escalation routes on customer tier as well as intent."
@@ -634,7 +675,7 @@
       "status": "Filed",
       "visibility": "private",
       "description": "Cloudflare-native product catalog normalization platform. Handles identity resolution and unified attribute schemas across heterogeneous catalogs.",
-      "context": "The data plumbing under the visible commerce layer. Private repository — no public source.",
+      "context": "The data plumbing under the visible commerce layer. Private repository, no public source.",
       "tech": ["TypeScript", "Cloudflare Workers", "D1"],
       "aliases": ["catalog normalization", "product data"],
       "language": "TypeScript",
@@ -647,7 +688,7 @@
       "visibility": "public",
       "listed": false,
       "description": "Hierarchical Durable Objects on Cloudflare Workers, with infinite nesting of manager/agent relationships through URL paths.",
-      "context": "Explores scalable real-time collaboration patterns at the edge. Self-described in its own README as a demonstration, not a product — it exists to prove the nesting pattern works.",
+      "context": "Explores scalable real-time collaboration patterns at the edge. Self-described in its own README as a demonstration, not a product: it exists to prove the nesting pattern works.",
       "tech": ["TypeScript", "Cloudflare Workers", "Durable Objects", "WebSockets"],
       "github": "https://github.com/blakebauman/fleet-workspace",
       "aliases": ["fleet", "hierarchical durable objects"],
@@ -661,7 +702,7 @@
       "status": "Filed",
       "visibility": "public",
       "listed": false,
-      "description": "Multi-agent AI system for Arizona adventure planning with 17+ specialized agents — trails, BLM land, permits, weather, safety, lodging, transport, food, gear, photography — coordinated by an LLM orchestrator with human checkpoints.",
+      "description": "Multi-agent AI system for Arizona adventure planning with 17+ specialized agents (trails, BLM land, permits, weather, safety, lodging, transport, food, gear, photography) coordinated by an LLM orchestrator with human checkpoints.",
       "context": "A hobby domain used to work out real multi-agent orchestration problems on LangChain, LangGraph, and LangSmith: how many specialists is too many, where human-in-the-loop checkpoints belong, and how to keep a long planning run observable. The direct ancestor of the orchestration patterns later rebuilt in Felix.",
       "tech": ["Python", "LangChain", "LangGraph", "LangSmith"],
       "github": "https://github.com/blakebauman/adventure-agent",
@@ -671,7 +712,7 @@
       "highlights": [
         "Seventeen-plus specialized agents plus per-town location agents under an LLM orchestrator.",
         "Human-in-the-loop checkpoints built in from the start, which is where the HITL approach in the later work comes from.",
-        "Traced end to end with LangSmith — the practical experience that later turned into the Memoturn observability platform."
+        "Traced end to end with LangSmith, the practical experience that later turned into the Memoturn observability platform."
       ],
       "lastActivity": "2026-02-08"
     },

@@ -1,309 +1,358 @@
 ---
 name: blakebauman.dev
-description: A senior engineer's portfolio. Cloudflare-platform commerce and edge AI, set in IBM Plex on Slate Mist.
+description: A senior engineer's portfolio. Enterprise commerce and agent infrastructure, set in Archivo and Literata on near-pure black.
 colors:
-  slate-mist: "#E5E7EA"
-  plat-deep: "#D9DCE0"
-  inkpress: "#22252A"
-  cordovan: "#11141A"
-  vermilion: "#3D4148"
-  margin-rose: "#7E8289"
+  black: "#040404"
+  panel: "#121212"
+  line: "#242424"
+  ink: "#F5F5F5"
+  muted: "#9E9E9E"
+  ox: "#510433"
+  gold: "#F5AE39"
 typography:
   display:
-    fontFamily: "IBM Plex Sans Condensed, Helvetica Neue, Arial, sans-serif"
-    fontSize: "clamp(60px, 8vw, 120px)"
-    fontWeight: 700
-    lineHeight: 0.92
-    letterSpacing: "-0.02em"
+    fontFamily: "Archivo Variable, Helvetica Neue, Arial, sans-serif"
+    fontSize: "clamp(56px, 9vw, 96px)"
+    fontWeight: 800
+    fontStretch: "118%"
+    lineHeight: 0.86
+    letterSpacing: "-0.035em"
   headline:
-    fontFamily: "IBM Plex Sans Condensed, Helvetica Neue, Arial, sans-serif"
-    fontSize: "clamp(32px, 3.8vw, 46px)"
-    fontWeight: 600
-    lineHeight: 1.05
-    letterSpacing: "-0.012em"
+    fontFamily: "Archivo Variable, Helvetica Neue, Arial, sans-serif"
+    fontSize: "clamp(30px, 4vw, 44px)"
+    fontWeight: 700
+    fontStretch: "108%"
+    lineHeight: 1.06
+    letterSpacing: "-0.022em"
   title:
-    fontFamily: "IBM Plex Sans Condensed, Helvetica Neue, Arial, sans-serif"
-    fontSize: "22px"
-    fontWeight: 600
+    fontFamily: "Archivo Variable, Helvetica Neue, Arial, sans-serif"
+    fontSize: "21px"
+    fontWeight: 650
+    fontStretch: "100%"
     lineHeight: 1.25
-    letterSpacing: "-0.005em"
+    letterSpacing: "-0.008em"
   body:
-    fontFamily: "IBM Plex Serif, Georgia, serif"
+    fontFamily: "Literata Variable, Georgia, Times New Roman, serif"
     fontSize: "17px"
     fontWeight: 400
-    lineHeight: 1.6
+    lineHeight: 1.62
     letterSpacing: "normal"
   label:
-    fontFamily: "IBM Plex Mono, ui-monospace, SF Mono, Menlo, monospace"
+    fontFamily: "Archivo Variable, Helvetica Neue, Arial, sans-serif"
     fontSize: "12px"
-    fontWeight: 500
-    lineHeight: 1
-    letterSpacing: "0.18em"
-  button:
-    fontFamily: "IBM Plex Sans Condensed, Helvetica Neue, Arial, sans-serif"
-    fontSize: "13px"
     fontWeight: 600
+    fontStretch: "88%"
+    lineHeight: 1.1
+    letterSpacing: "0.14em"
+  button:
+    fontFamily: "Archivo Variable, Helvetica Neue, Arial, sans-serif"
+    fontSize: "13px"
+    fontWeight: 700
+    fontStretch: "88%"
     lineHeight: 1
-    letterSpacing: "0.04em"
+    letterSpacing: "0.1em"
 rounded:
   none: "0px"
-  hairline: "2px"
 spacing:
   xs: "4px"
   s: "8px"
   m: "16px"
   l: "32px"
   xl: "64px"
-  xxl: "96px"
+  xxl: "104px"
 components:
-  button-cordovan:
-    backgroundColor: "{colors.cordovan}"
-    textColor: "{colors.slate-mist}"
+  button-gold:
+    backgroundColor: "{colors.gold}"
+    textColor: "{colors.black}"
     typography: "{typography.button}"
-    rounded: "{rounded.hairline}"
-    padding: "16px 28px"
-  button-cordovan-hover:
-    backgroundColor: "{colors.vermilion}"
-  button-inked:
-    backgroundColor: "{colors.inkpress}"
-    textColor: "{colors.slate-mist}"
-    typography: "{typography.button}"
-    rounded: "{rounded.hairline}"
-    padding: "11px 19px"
-  button-inked-hover:
-    backgroundColor: "{colors.cordovan}"
+    rounded: "{rounded.none}"
+    padding: "14px 26px"
+  button-gold-hover:
+    backgroundColor: "transparent"
+    textColor: "{colors.gold}"
   button-ghost:
     backgroundColor: "transparent"
-    textColor: "{colors.inkpress}"
+    textColor: "{colors.muted}"
     typography: "{typography.button}"
-    rounded: "{rounded.hairline}"
-    padding: "9px 17px"
+    rounded: "{rounded.none}"
+    padding: "11px 18px"
   button-ghost-hover:
-    backgroundColor: "{colors.inkpress}"
-    textColor: "{colors.slate-mist}"
+    textColor: "{colors.ink}"
 ---
 
 # Design System: blakebauman.dev
 
 ## 1. Overview
 
-**Creative North Star: "The Listing Office"**
+**Creative North Star: "Scale is ranking."**
 
-The site is a 1960s real-estate listing office, transposed to a senior engineer's portfolio. The page reads as a platted document with five numbered sections (01 Masthead, 02 Position, 03 Record, 04 Working artifact, 05 Colophon). Every entry is filed, dated, stamped. Type carries hierarchy; lightness punctuates. The voice is considered, exact, dry.
+A near-pure black page where typographic scale, not decoration, states what matters.
+Three projects carry the site at display weight and each owns a case study; the
+remaining eleven are one quiet index line. A visitor cannot misread the hierarchy
+because the hierarchy *is* the type size.
 
-What the system explicitly rejects: the SaaS / Vercel-template default (cream ground, gradient blob hero, three-card feature grid, Inter-everywhere typography). Cream is substituted for cool monochrome Slate Mist to escape the warm-on-warm archival-editorial reflex (the saturated default for "tasteful engineer site" in 2024–2026). Inter is rejected for IBM Plex Serif as the body face. Skill walls are absent: stack information lives inline in each record entry, never in a logo grid.
+This system replaced "The Listing Office" (Slate Mist monochrome, IBM Plex, the
+Enamel Mark, a five-part platted-document register) in a full identity departure.
+Nothing from that system carries over.
 
-The signature gesture is the **Enamel Mark**, a 6–8px solid-ink square that recurs as a load-bearing indicator across the system — current section in nav, active listing entry, group label, section eyebrow, colophon stamp. Single-purpose, single-tone, derived from the seed's enamel-sign craft. It carries meaning, not decoration. The mark renders in the system's deepest ink (Cordovan in the token graph) so it always reads as the strongest tone in any composition.
+What the system explicitly rejects: the SaaS / Vercel-template default, crypto
+neon-on-black, Awwwards-bait scroll choreography, and resume-PDF-as-website. The
+live risk is the first one: near-pure black with a saturated accent sits close
+to the Vercel and Linear default, and that adjacency was accepted knowingly. The
+three things that keep it out of that lane are load-bearing and must not be
+traded away:
+
+1. **A serif body face on black.** Literata carries every paragraph. The lane
+   this design sits next to never does this; it is the single strongest
+   separator and the cheapest one to lose by accident.
+2. **The width ladder** (below), which no template uses.
+3. **Scale-as-ranking** instead of a card grid.
 
 **Key Characteristics:**
 
-- Type carries hierarchy; ink-weight punctuates. The system is monochromatic: a single cool-tinted hue (~250°) at five lightness stops.
-- Two committed themes, selected by `prefers-color-scheme` alone. No toggle, no control in the UI: the page is a record, not a preferences panel. Slate Mist is the primary ground and the one the frontmatter documents; the dark ground is its designed counterpart, not an inversion.
-- Hairline-only rounding: 0px (display, marks, masthead) and 2px (buttons, tinted surfaces). No SaaS-default 8–12px radii.
-- Real-estate-listing register: **listing block**, **plat rule**, **enamel mark**, **recordation stamp** are the four signature motifs.
-- IBM Plex three-voice: Sans Condensed (display), Serif (body, anchoring the editorial register), Mono (eyebrows, metadata, code).
-- Motion budget: state transitions only (120ms ease-out). No scroll choreography, no parallax, no autoplay, no "wow on load."
+- Neutrals at chroma exactly 0, so black stays black rather than acquiring a tint.
+- One committed look for every visitor. No light theme, no toggle, selected by
+  nothing. Print resets to ink on white.
+- Zero border radius. Not 2px, not 8px. Square.
+- Flat by default: no shadows, no gradients, no glassmorphism, no glow.
+- Motion budget: state transitions only, 120–220ms, ease-out-quart.
 
-## 2. Colors: The Recordation Palette
+## 2. Colors
 
-A monochromatic ink scale on a cool-tinted ground. Every value sits on the same 250° hue with chroma ≤0.005 — pure neutrals, no saturated accent. Emphasis is carried by lightness alone, the way ink weight differentiates type in a printed document. The token names from the prior warm-accent system (Cordovan, Vermilion, Margin Rose) are preserved as scale labels; their values now express ink depth, not hue.
+A neutral ramp at chroma 0 with exactly two hues in the whole system. Oxblood is
+structural (it fills things); gold is the single signal (it marks things).
 
 ### Primary
 
-- **Cordovan** (`#11141A` / `oklch(10% 0.005 250)`): The deepest ink in the system. Links, CTA fill, the Enamel Mark, current-page indicator, signature button. The visual role of the load-bearing accent, expressed as the strongest lightness step rather than a saturated hue. Used at ≤10% of any given screen surface.
+- **Gold** (`#F5AE39` / `oklch(0.800 0.150 75)`): The one signal colour. Current
+  nav item, active status chips, links on hover, the primary button, focus rings,
+  code keywords, the streaming cursor. **10.9:1 on black**, and black text on a
+  gold fill is also **10.9:1**, so filled chips need no special handling.
 
 ### Secondary
 
-- **Vermilion** (`#3D4148` / `oklch(30% 0.005 250)`): Hover and focus states for Cordovan elements. The hover lifts: ink lightens from 10% to 30% on interaction — print-document feedback, not a saturation swap. Never a primary fill.
-
-### Tertiary
-
-- **Margin Rose** (`#7E8289` / `oklch(55% 0.005 250)`): Mid-grey for marginalia, low-emphasis annotations, quiet panels in long-form. Rare appearances.
+- **Oxblood** (`#510433` / `oklch(0.290 0.115 350)`): Structural fill, never
+  text. Code-block headers, the audit bar in the fold diagram, harness nodes,
+  error surfaces, text selection. Ink on oxblood is **13.6:1**.
+- **Oxblood lift** (`#681946` / `oklch(0.360 0.120 350)`): Hover and marker
+  states for oxblood elements.
 
 ### Neutral
 
-- **Slate Mist** (`#E5E7EA` / `oklch(91% 0.005 250)`): Page ground. The substrate the listing is set on. ~85% of pixel surface.
-- **Plat Deep** (`#D9DCE0` / `oklch(87% 0.005 250)`): Secondary surface. Recognition blocks, the chat frame, type-row demonstrations. Low-contrast lift on the ground.
-- **Inkpress** (`#22252A` / `oklch(18% 0.005 250)`): Body text, headings, primary text. Cool-tinted near-black, never pure `#000`.
+- **Black** (`#040404` / `oklch(0.110 0 0)`): Page ground. ~90% of pixel surface.
+- **Panel** (`#121212` / `oklch(0.175 0 0)`): Lifted surface: chat frame, code
+  blocks, figure containers.
+- **Line** (`#242424` / `oklch(0.280 0 0)`): Component borders.
+- **Ink** (`#F5F5F5` / `oklch(0.970 0 0)`): Body and headings. **19.0:1** on black.
+- **Muted** (`#9E9E9E` / `oklch(0.700 0 0)`): Metadata, captions, secondary prose.
+  **7.7:1** on black, comfortably past AA at body size, which is the point.
+- **Sep** (`#7A7A7A` / `oklch(0.580 0 0)`): Decorative separators only.
 
 ### Named Rules
 
-**The One Voice Rule.** Cordovan (the deepest-ink stop) is the single committed emphasis tone. It carries CTAs, links, the Enamel Mark, and current-state indicators. No second hue enters the system. Vermilion is its hover lift, not a peer.
+**The Chroma-Zero Rule.** Every neutral sits at chroma exactly 0. Not 0.005, not
+"a touch of warmth." A tinted near-black is the tell of a designer hedging on a
+black page. Only `--ox` and `--gold` carry hue.
 
-**The Cool-Ground Rule.** The page ground is cool monochrome-tint, never cream or any cream rebrand (vellum, kami, bone, ivory, eggshell, oatmeal). The cream-ground default is the editorial-archival reflex this brand explicitly rejects. If a designer is tempted to "warm the ground a touch," that's the reflex.
+**The Two-Hue Rule.** Oxblood fills, gold marks. No third hue enters the system,
+and neither of the two crosses roles: oxblood is never text, gold is never a
+large background field.
 
-**The Punctuation Rule.** Cordovan-stop ink punctuates ≤10% of pixel surface. The body sits at Inkpress (18% ink); Cordovan (10% ink) is reserved for marks, links, CTAs, and current-state indicators. If the deepest stop reaches 30%+, something is wrong with the typesetting.
+**The Measured-Not-Asserted Rule.** Every contrast figure in this document was
+computed from the rendered sRGB values, not estimated. An automated audit over the
+live DOM (106 text elements on the home page, 70 on a case study) returns zero
+failures. Re-run it after any palette change; do not reason about OKLCH lightness
+and assume it passes.
 
-**The Single-Hue Rule.** Every color in the system sits on hue 250° with chroma ≤0.005. No saturated accent, no warm-cool contrast, no second hue. The brand commits to monochrome; emphasis is lightness, not saturation. If a designer reaches for a saturated value to "add warmth" or "make it pop," that's the reflex this rule exists to refuse. The rule replaces the prior Warm-Cool Inversion Rule, which was retired with the move to monochrome.
-
-### After Hours: the dark ramp
-
-Served on `prefers-color-scheme: dark`. Same hue, same chroma, same five roles. The ramp is rebuilt end-for-end rather than flipped, because the organising idea is *emphasis is the strongest tone on the page*: on paper that is the deepest stop, on a dark ground it is the brightest.
-
-- **Cordovan** `oklch(97% 0.005 250)` / `#F3F5F8` — emphasis. Same role, opposite end. Still ≤10% of surface.
-- **Vermilion** `oklch(78% 0.005 250)` / `#B5B8BA` — hover lift. Still moves *toward the ground*: ink lightened 10%→30% on paper, so here it dims 97%→78%. Same gesture, same direction of travel.
-- **Inkpress** `oklch(90% 0.005 250)` / `#DBDEE1` — body. Never pure white; 100% blooms on a dark ground.
-- **Slate Mist** `oklch(22% 0.005 250)` / `#191B1D` — ground. Never pure black.
-- **Plat Deep** `oklch(27% 0.005 250)` / `#242628` — lifted surface. In dark, a lift is *lighter*. Flipping the light values would sink it into a hole instead.
-- **Ink-soft** `oklch(70% 0.005 250)` / `#9C9FA1` — AA metadata.
-
-**The Perceptual-Floor Rule.** OKLCH lightness is perceptual, not sRGB-linear: `oklch(14%)` renders `#08090B`, which is black for practical purposes and collapses the gap between ground and lifted surface. The dark ground sits at 22% and Plat Deep at 27%, preserving the same perceptual step the light theme has between 91% and 87%. Verify a dark value's rendered hex before trusting its lightness number.
-
-**The Alpha-Asymmetry Rule.** Plat Rules invert to light-on-dark, and their alphas come down with them: a white hairline at 0.55 reads far heavier than a black one at the same value. Dark uses 0.16 / 0.40 / 0.09 against light's 0.18 / 0.55 / 0.10.
-
-**The No-Dimmed-Emphasis Rule.** Disabled states never dim an emphasis fill with `opacity`. That reads as muted on paper and as a bright grey block in dark, where it becomes the loudest element on screen while being non-interactive. Disabled controls go ghost: transparent fill, ink-soft label, hairline rule.
-
-Print resets the ramp to ink-on-white regardless of scheme, so a dark-mode visitor's printout is not a sheet of black.
+**The Ghost-Disabled Rule.** Disabled controls never dim a gold fill with
+`opacity`. On a black ground that produces a bright grey block that is the
+loudest thing on screen while being non-interactive. Disabled goes transparent
+with a muted label.
 
 ## 3. Typography
 
-**Display Font:** IBM Plex Sans Condensed (with Helvetica Neue, Arial, sans-serif fallbacks)
-**Body Font:** IBM Plex Serif (with Georgia, serif fallbacks)
-**Label / Mono Font:** IBM Plex Mono (with ui-monospace, SF Mono, Menlo fallbacks)
+**Display Font:** Archivo Variable (with Helvetica Neue, Arial, sans-serif fallbacks)
+**Body Font:** Literata Variable (with Georgia, Times New Roman, serif fallbacks)
+**Label / Mono Font:** JetBrains Mono Variable (with ui-monospace, SF Mono, Menlo fallbacks)
 
-**Character:** A three-voice IBM Plex system. Sans Condensed handles display gravity without theatrics — condensed weight gives editorial weight without serif display pastiche. Plex Serif anchors body copy in the editorial register, deliberately rejecting the "developer who picked Inter" reflex. Plex Mono signals engineered without becoming the body face.
+**Character:** Three families, at the cap. Archivo carries weight 100–900 and
+width 62–125% in one file, which is what makes the width ladder possible at all.
+Literata is a screen-reading serif built for long text, and putting a serif on a
+black page is the decision that separates this design from the lane it sits
+beside. JetBrains Mono stays confined to code and readouts. All self-hosted via
+Fontsource; the `wdth` entrypoint for Archivo is required, not optional.
+
+### The width ladder (signature)
+
+Archivo's variable width axis encodes **rank**. Wider means more important.
+There are four stops and no others:
+
+| Stop | Width | Used for |
+|---|---|---|
+| Display | `118%` | The masthead name, case-study titles |
+| Head | `108%` | Section headings |
+| UI | `100%` | Titles, body-adjacent UI, index entries |
+| Meta | `88%` | Labels, chips, metadata, nav, buttons |
+
+Lead project names sit at `112%` and travel to `122%` on hover, which is the
+ladder made interactive: the interaction states the hierarchy rather than
+decorating it. `font-stretch` affects layout, so this transition is bounded to a
+single line and falls back to weight and colour under reduced motion.
 
 ### Hierarchy
 
-- **Display** (700, `clamp(60px, 8vw, 120px)`, 0.92 line-height, -0.02em letter-spacing): The masthead name. One per page. Set tight; tracking pulls in.
-- **Headline** (600, `clamp(32px, 3.8vw, 46px)`, 1.05 line-height, -0.012em letter-spacing): Section h2 — Position, Record, Ask the resume, Colophon. Tight, condensed, on-grid with the body baseline.
-- **Title** (600, 22px, 1.25 line-height, -0.005em letter-spacing): Listing role names, project entry names, callout titles inside listing blocks.
-- **Body** (400, 17px, 1.6 line-height): Prose. Plex Serif. Cap measure 60–70ch. Full ink, no opacity softening.
-- **Label** (500, 12px, 1 line-height, 0.18em letter-spacing, uppercase): Eyebrows, group labels, recordation stamps, mono metadata. The Plex Mono voice.
-- **Button** (600, 13px, 1 line-height, 0.04em letter-spacing): All button labels. Plex Sans Condensed weight 600.
+- **Display** (800, `clamp(56px, 9vw, 96px)`, 0.86, -0.035em): one per page.
+- **Headline** (700, `clamp(30px, 4vw, 44px)`, 1.06, -0.022em): section h2.
+- **Title** (650, 21px, 1.25): role names, callout titles.
+- **Body** (400, 17px, 1.62): Literata. Measure capped at 65ch.
+- **Label** (600, 12px, 0.14em, uppercase): eyebrows, chips, metadata.
 
 ### Named Rules
 
-**The Body-Serif Rule.** Body sets in Plex Serif, never Plex Sans. The serif anchor pulls the site out of the saturated "developer-who-picked-Inter" lane. This is the single most load-bearing typographic decision in the system.
+**The Body-Serif Rule.** Body sets in Literata, never Archivo. This is the single
+most load-bearing typographic decision in the system and the main thing keeping
+the page out of the Vercel-black lane. If body ever becomes a sans, the design
+has failed regardless of what else is right.
 
-**The Mono-Reserved Rule.** Plex Mono is for metadata, eyebrows, recordation stamps, and code only. Mono-as-body is on the watch list ("developer who just discovered IBM Plex Mono").
+**The Display-Ceiling Rule.** No heading exceeds 96px and no letter-spacing goes
+tighter than -0.035em. Above that the page is shouting; tighter than that the
+letters touch.
 
-**The No-Em-Dash Rule.** Em dashes are not used in copy. Year ranges use en dashes (`2022–Present`, never `2022—Present` or `2022-Present`). Sentence interruptions use commas, colons, semicolons, parentheses. Also not `--`.
+**The Mono-Reserved Rule.** JetBrains Mono is for code, diagram labels and
+readouts only. Never body, never headings.
 
-**The Italic-One-Word Rule.** Italic accent is one word per heading at most; usually zero. Italic is for actual emphasis, not decoration.
+**The No-Em-Dash Rule.** Em dashes are not used in copy. Year ranges use en
+dashes (`2022–Present`). Sentence interruptions use commas, colons, semicolons or
+parentheses. Also not `--`.
 
-**The Tabular-Numerals Rule.** Numerals are tabular in tables, listings, and metadata; proportional in prose.
+**The Tabular-Numerals Rule.** Numerals are tabular in metadata, terms and
+tables; proportional in prose.
 
 ## 4. Elevation
 
-The system is **flat by default**. There are no decorative shadows. Depth is conveyed through three mechanisms, in priority order:
+Flat by default. Depth comes from three mechanisms, in priority order:
 
-1. **Surface tint.** Plat Deep (`#D9DCE0`) lifts cards/frames slightly off the Slate Mist ground. The contrast is intentionally low — the lift is a subtle layer, not a card with a drop shadow.
-2. **Plat Rules.** 1px horizontal rules in Inkpress at 18% opacity (`var(--rule)`) for fine subdivisions, 55% (`var(--rule-strong)`) for major section borders. The surveyor's line on a platted document.
-3. **Type weight.** Hierarchy comes from scale + weight contrast (≥1.25 ratio between steps), not from drop shadows or boxed cards.
+1. **Surface tint.** Panel (`#121212`) lifts the chat frame, code blocks and
+   figure containers off the ground. No shadow.
+2. **Hairlines.** `--hair` (ink at 14%) for fine subdivision, `--hair-strong`
+   (ink at 26%) for emphasis. Never thicker than 1px, never coloured.
+3. **Type scale and width.** Hierarchy is typographic before it is spatial.
 
 ### Named Rules
 
-**The Flat-By-Default Rule.** Surfaces are flat at rest. No `box-shadow`. The chat frame and recognition block lift off ground via Plat Deep tint, not via shadow.
+**The Flat-By-Default Rule.** No `box-shadow` anywhere. No blur except the one
+functional case: the sticky top bar's backdrop, which exists so text passing
+underneath stays readable.
 
-**The Plat-Rule Rule.** Horizontal rules are the divider vocabulary. They use `var(--rule)` for fine subdivisions and `var(--rule-strong)` for major section borders. Never thicker than 1px. Never in saturated color (no Cordovan rules — that would violate The Punctuation Rule).
+**The Zero-Radius Rule.** `border-radius: 0` on everything except the chat
+spinner. Square is the commitment; a 2px "softening" reopens the argument.
 
 ## 5. Components
 
+### Top bar
+
+Sticky, 54px, black at 92% with a backdrop blur and a hairline bottom border.
+Name at left in Meta width, section links at right. Current section is gold with
+a gold underline. On narrow viewports the link row scrolls horizontally under a
+mask rather than hard-clipping. Every anchor target carries
+`scroll-margin-top: 54px` so the bar never covers a heading it scrolled to.
+
+### Lead row (signature)
+
+The home page's primary motif and the answer to "what matters here."
+
+- **Structure:** a two-column grid: name and the "Case study →" action on the
+  first line, descriptor spanning both columns beneath.
+- **Name:** `clamp(38px, 5.6vw, 72px)`, weight 750, width 112%.
+- **Hover:** name widens to 122% and turns gold; the bottom hairline strengthens.
+- **Descriptor:** Literata 16px muted, capped at 62ch.
+- Below 560px the action drops to its own line.
+
+### Index line
+
+The eleven projects that are not featured, as one wrapping line of links
+separated by `·` at `--sep`. Deliberately not a card grid: these entries have
+earned a name and a link, not a box.
+
+### Status chips
+
+Archivo Meta width, 10.5px, 0.14em, uppercase, 5px/9px padding, square, 1px
+border. Default is a muted outline. `.active` fills gold with black text.
+`.ox` fills oxblood with ink.
+
 ### Buttons
 
-**Character:** Square geometry from the real-estate-listing register. Hairline rounding (2px) — sharp enough to read engineered, soft enough to not feel crude on body-sized elements. Three patterns, each with a clear emphasis.
+- **Gold (primary):** gold fill, black text, 14px/26px. Hover inverts to
+  transparent with a gold label and border. One per page.
+- **Ghost:** transparent, muted text, `--line` border, 11px/18px. Hover lifts to
+  ink.
 
-- **Shape:** 2px hairline radius (`rounded.hairline`). Never larger; the SaaS-default 8–12px radius is rejected.
-- **Cordovan (signature)** — the brand's headline action. Cordovan fill, Slate Mist text, 16px/28px padding. Hover transitions to Vermilion at 120ms. Used for "Talk to me" — the primary outbound action. One per page.
-- **Inked (default)** — Inkpress fill, Slate Mist text, 11px/19px padding. The default for in-page actions ("Read the case study"). Hover transitions to Cordovan.
-- **Ghost (outline)** — Transparent fill, 1px Inkpress border, Inkpress text, 9px/17px padding. Lowest emphasis. Hover fills with Inkpress and inverts text to Slate Mist.
+### Figures
 
-All button labels: Plex Sans Condensed 600 weight, 13px, 0.04em letter-spacing, uppercase optional (used in colophon CTA, not in inline buttons).
+Hand-authored inline SVG, no charting dependency. Each carries `<title>` and
+`<desc>` and `role="img"`. Wrapped in a panel container with `overflow-x: auto`;
+the SVG has `min-width: 660px` so it **scrolls rather than scaling itself into
+illegibility** on a phone. Caption in Archivo Meta below.
 
-### Listing Block (signature)
+### Code blocks
 
-**Character:** The system's primary content motif. A real-estate-listing-derived metadata block.
+Panel background inside a `--line` border. Header bar in oxblood carrying the
+file path in mono at left and a language tag at right. Body in JetBrains Mono
+13px with gold keywords and muted comments. `overflow-x: auto`.
 
-- **Structure:** A 110px year column on the left, body column on the right. Two-column grid with 12px row gap, 32px column gap.
-- **Header:** title (role/project name) + " at " + company (when applicable) + a status badge.
-- **Stack row:** Plex Mono 12px, uppercase, 0.06em letter-spacing, separated by middle dots. Lists the technologies/systems.
-- **Description:** Plex Serif 17px, 1.6 line-height, max 70ch.
-- **Plat Rule** (1px Inkpress at 55% opacity) divides entries.
+### Chat frame
 
-### Status Badge
-
-A small 1px-bordered mono label sitting inside the listing-block header.
-
-- **Style:** Plex Mono 10.5px, 0.16em letter-spacing, uppercase. 4px/8px padding. 1px ink border at 55% opacity. 70% text opacity.
-- **States:** `Active` uses Cordovan border + Cordovan text at full opacity. `Filed` and `Private` use ink at 70% opacity (default style).
-- **Stacking:** Multiple badges sit side-by-side. A private active project shows `Private` + `Active` as two separate badges.
-
-### Enamel Mark (signature)
-
-**Character:** The brand's load-bearing indicator. A 6–8px Cordovan square. The most consistent visual signal across the site.
-
-- **Used for:** sticky-nav current-page indicator, listing-block group label, section eyebrow prefix, colophon footer mark.
-- **Negative form:** outlined (transparent fill, 1px ink rule at 55% opacity) for inactive/dim states (group labels for "Working artifacts · personal", "Recognition", inactive nav links).
-- **Solid color, no gradient, no shadow, no rotation.** It is always a square at right angles.
-
-### Recordation Stamp
-
-**Character:** Small mono metadata. Format: `Rec. YYYY-MM-DD · v0.1`, `Lot 0042`, `Filed 2026-05-01`, `Set in IBM Plex`.
-
-- **Style:** Plex Mono 11px, 0.12em letter-spacing, uppercase, 60% opacity. Inside a 1px ink rule border at 55% opacity. 4px/10px padding.
-- **Used in:** footer stamps row, article footers, masthead document strip in the catalog-compressed variant, colophon section.
-
-### Chat Frame (Working Artifact)
-
-**Character:** The chatbot lives inside a Plat Deep block. Reads as a working artifact, not a feature box.
-
-- **Container:** Plat Deep background, 36px padding. No border, no shadow. The lift comes from the surface tint.
-- **Stream messages:** each leads with a mono eyebrow ("You" or "Blake (the index)") preceded by an Enamel Mark (filled cordovan for assistant, outline for user). Body text in Plex Serif.
-- **Input row:** Plex Serif input on Slate Mist with 1px ink-strong border. Cordovan submit button flush-right (square edges where it meets the input).
-- **Suggested prompts:** 1px ink-strong border, mono text 11px, no fill. Hover swaps to Cordovan border + Cordovan text.
-
-### Sticky Nav
-
-**Character:** Document header. Slate Mist background, persistent on scroll, separated from content by a 1px hairline rule.
-
-- **Structure:** Logo mark on left (Plex Sans Condensed 700, 13px, 0.06em letter-spacing, uppercase), section links on right (Plex Mono 11px, 0.18em letter-spacing, uppercase).
-- **Each link** prefixed with a 6px Enamel Mark. Outlined for inactive (62% opacity), Cordovan-filled for current (100% opacity).
-- **Border-bottom:** 1px `var(--rule)`. Never a saturated color.
-
-### Inputs / Fields
-
-- **Style:** Slate Mist background, 1px `var(--rule-strong)` border (no rounded corners on chat input; 2px hairline allowed elsewhere).
-- **Focus:** Cordovan outline at 2px offset. No glow, no border-color change in saturated hue.
-- **Disabled:** 50% opacity. No greyed-out backgrounds.
-
-### Code (in chat messages)
-
-- **Inline code:** Plex Mono 0.9em, ink at 6% background tint, 1px/6px padding, 2px radius.
-- **Pre/code blocks:** Plex Mono 0.85em, Slate Mist background (lighter than chat-frame surface), 1px `var(--rule)` border, 14px/16px padding, no shadow.
+Panel background, `--line` border, minimum 340px tall. The stream scrolls inside
+the frame (max 46vh) rather than growing the page. Each message leads with a mono
+eyebrow preceded by a 7px square, gold for the assistant and oxblood-lift for the
+visitor. Input row is a black field inside a `--hair-strong` border that turns
+gold on focus-within, with a gold submit button flush right.
 
 ## 6. Do's and Don'ts
 
 ### Do:
 
-- **Do** carry the Enamel Mark consistently as a load-bearing indicator. It marks meaning (current, primary, latest), never decoration.
-- **Do** use Plex Serif for body. The serif is the anchor that pulls the site out of the "developer who picked Inter" lane.
-- **Do** name systems precisely in copy. "A queue" becomes "a Cloudflare Queue with a 30-second visibility window." Specificity is the dominant rhetorical move.
-- **Do** use full ink for body text. Opacity-softened body (e.g., body at 65%) is on the watch list — that's the Arc-Browser-marketing-site reflex.
-- **Do** keep year ranges in en dashes (`2022–Present`), not em dashes or hyphens.
-- **Do** lift surfaces via Plat Deep tint, never via box-shadow.
-- **Do** cap body measure at 60–70ch.
-- **Do** use tabular numerals in listings and tables; proportional in prose.
-- **Do** verify every claim names the system, the constraint, or the number that backs it up.
+- **Do** keep body copy in Literata. It is the load-bearing anti-Vercel decision.
+- **Do** carry the width ladder consistently. Width means rank, everywhere.
+- **Do** let scale state the hierarchy. Three projects big, the rest small.
+- **Do** re-run the DOM contrast audit after any colour change, and record the
+  measured ratios rather than reasoning about lightness.
+- **Do** give every diagram a `<title>` and `<desc>`, and let it scroll on mobile.
+- **Do** name systems precisely in copy: versions, licences, protocol names.
+- **Do** say what a project is *not*. The felix case study states plainly that it
+  is not battle-tested. That sentence is worth more than the rest of the page.
+- **Do** use en dashes for ranges and tabular numerals in metadata.
 
 ### Don't:
 
-- **Don't** use cream or any cream rebrand (vellum, kami, bone, ivory, eggshell, oatmeal, parchment, washi, biscuit) as the page ground. The Slate Mist ground is committed.
-- **Don't** use Inter, Helvetica Neue, or any neutral grotesque as the primary face. IBM Plex is the brand commitment. Inter is on the explicit anti-references list in PRODUCT.md.
-- **Don't** add gradient backgrounds, glassmorphism, blur effects, or `background-clip: text` gradient text. All on the absolute ban list.
-- **Don't** use `border-left` or `border-right` greater than 1px as a colored stripe accent on cards, list items, or callouts. Side-stripe borders are an absolute ban.
-- **Don't** add the hero-metric template (big number + small label + supporting stats + gradient accent). SaaS cliché, named in the absolute bans.
-- **Don't** stack identical card grids. Three identical icon+heading+text cards in a row is a watch-list pattern from PRODUCT.md.
-- **Don't** extend the dark theme by inverting light values. The dark ramp is a designed variant with its own lightness stops and its own alpha scale; see "After Hours" in the Colors section. New tokens need a dark counterpart chosen by role, not by arithmetic.
-- **Don't** add a theme toggle. The two themes follow `prefers-color-scheme` and nothing else. A control would make the page a preferences panel; it is a record.
-- **Don't** add scroll choreography, parallax, autoplay video, or "wow on load" animations. Motion is permitted only where it serves comprehension. PRODUCT.md anti-reference: Awwwards-bait.
-- **Don't** use exclamation points outside of quoted speech.
-- **Don't** use em dashes in copy. Use commas, colons, semicolons, periods, parentheses.
-- **Don't** use marketing adjectives. Banned list from PRODUCT.md voice rules: artisanal, crafted, premium, curated, beloved, cozy, warm, inviting, thoughtfully, delightfully, lovingly, uncompromising, bespoke, leveraging, passionate.
-- **Don't** invent "Tools" or "Skills" walls. Logo grids of every tool used are an explicit anti-reference. Stack information lives inline in each record entry.
-- **Don't** add a floating "Talk to me" FAB. The colophon CTA + masthead email is sufficient. Three CTAs for the same action is excess (and contradicts brand-board iteration #3).
-- **Don't** soften the "first production" claim back to "the first production." The line is `one of the first production AEM Edge Delivery Services plus Adobe Commerce B2B integrations`. Specificity is honesty, not promotion.
-- **Don't** add sticky bottom CTAs, intercom-style chat bubbles, or banner cookie consents that violate the document register. The page is a record, not a funnel.
-- **Don't** rename the six DESIGN.md sections. Tooling parses Overview / Colors / Typography / Elevation / Components / Do's and Don'ts character-for-character.
+- **Don't** set body copy in a sans-serif. See The Body-Serif Rule.
+- **Don't** tint the neutrals. Chroma stays at exactly 0.
+- **Don't** introduce a third hue, and don't make oxblood a text colour or gold a
+  large background field.
+- **Don't** add border radius. Zero, everywhere.
+- **Don't** add a light theme or a theme toggle. One committed look.
+- **Don't** add `box-shadow`, gradients, `background-clip: text`, or
+  glassmorphism. The sticky bar's backdrop blur is the only blur in the system.
+- **Don't** use `border-left`/`border-right` thicker than 1px as a coloured stripe.
+- **Don't** rebuild the record as identical cards. The index line is the answer.
+- **Don't** add tiny uppercase tracked eyebrows above every section, or numbered
+  section markers (`01 / 02 / 03`). The previous system used both; they are AI
+  scaffolding and they do not come back.
+- **Don't** add scroll choreography, parallax, reveal-on-scroll, or entrance
+  animation. Motion is state transitions only.
+- **Don't** dim a gold fill to indicate disabled. Go ghost.
+- **Don't** let a diagram scale below 660px. It must scroll.
+- **Don't** use em dashes, exclamation points outside quoted speech, or marketing
+  adjectives (crafted, premium, curated, seamless, leveraging, passionate).
+- **Don't** rename the six sections of this document. Tooling parses Overview /
+  Colors / Typography / Elevation / Components / Do's and Don'ts
+  character-for-character.
 
-If someone could look at this interface and say "AI made that," it has failed. The category-reflex test for this brand: a peer engineer, given just the category ("personal portfolio for a Cloudflare-platform commerce engineer"), should NOT be able to predict the palette + theme. The brand now commits to monochrome — that has its own saturated reflex (the "minimal-monochrome editorial" lane: Helvetica or grotesque-on-white, no accent, lots of whitespace). The escape hatch from THAT reflex is the load-bearing IBM Plex three-voice system, the listing-block document register, and the Enamel Mark as a consistent meaning-bearing element. Without those, monochrome would collapse into the next default. With them, it reads as committed.
+If someone could look at this interface and say "AI made that," it has failed.
+The category-reflex test for this brand: a peer engineer, given only the category
+("personal portfolio for a commerce and agent-infrastructure engineer"), should
+not be able to predict the result. Black-with-an-accent is a predictable answer,
+and that is the accepted risk in this direction. What makes it unpredictable is
+the serif body, the width ladder, and a page that ranks three things instead of
+listing fourteen. Remove any one of those and the design collapses back into the
+default it is standing next to.
