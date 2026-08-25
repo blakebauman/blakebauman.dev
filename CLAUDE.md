@@ -66,7 +66,9 @@ index permanently — retrievable, stale, and invisible to every later populate.
 
 ### Stack
 - **Framework**: React Router v7 with SSR
-- **Styling**: Tailwind CSS v4
+- **Styling**: Tailwind CSS v4, plus a hand-written design system in `app/app.css`
+- **Type**: Archivo Variable (display/UI), Literata Variable (body), JetBrains
+  Mono Variable (code). Self-hosted via `@fontsource-variable/*`.
 - **Deployment**: Cloudflare Workers
 - **AI Services**: Workers AI (embeddings + LLM), Vectorize (vector search)
 - **Validation**: Zod v4 for runtime schema validation
@@ -80,9 +82,48 @@ index permanently — retrievable, stale, and invisible to every later populate.
 - `app/chat/` - AI chat logic (`request.ts` handles AI request flow)
 - `app/schemas/` - Zod schemas for validation (chat, resume, ai-context, admin, errors)
 - `app/components/` - Resume display components and chatbot UI
+- `app/content/` - Long-form case-study content, including the hand-authored
+  inline SVG diagrams. See "Case studies" below.
 - `app/lib/` - Shared utilities (vectorize population, text normalization, HTTP/auth helpers)
 - `workers/` - Cloudflare Worker entry point
 - `scripts/` - Operational scripts (retrieval eval)
+
+### Design system
+
+`docs/DESIGN.md` is the contract; `app/app.css` implements it. Read DESIGN.md
+before changing anything visual, and treat its Named Rules as binding rather than
+advisory. The three that are load-bearing and easy to break by accident:
+
+- **Body copy sets in Literata, never a sans.** A serif body on a black ground is
+  the single decision separating this design from the Vercel/Linear default it
+  sits next to. Losing it costs more than any other single change.
+- **Neutrals sit at chroma exactly 0.** No "touch of warmth" in the near-black.
+- **The width ladder.** Archivo's `wdth` axis encodes rank: 118% display, 108%
+  heading, 100% UI, 88% metadata. There are four stops and no others, and the
+  Fontsource `wdth` entrypoint is required for them to exist at all.
+
+Contrast figures in DESIGN.md were measured against the rendered DOM, not
+estimated from OKLCH lightness. Re-measure after any palette change; OKLCH
+lightness is perceptual and reasoning about it produces wrong answers.
+
+### Case studies
+
+`app/content/case-studies.tsx` holds the three long-form entries rendered by
+`app/routes/work.tsx` at `/work/:slug`. `CASE_STUDIES` is the single source for
+the route, the home page's featured tier (`LEAD_SLUGS`), and `sitemap.xml`, so
+adding a fourth entry needs one edit.
+
+The prose is written from the repositories themselves, not from `resume.json`.
+When a project changes, both have to move: `resume.json` feeds the index and the
+page listing, the case study feeds the long form, and nothing keeps them in sync
+automatically.
+
+The diagrams are hand-authored inline SVG rather than a charting dependency, so
+they inherit the page's own CSS custom properties. Each carries `<title>` and
+`<desc>`, and each has `min-width: 660px` inside a scrolling container so it
+scrolls on a phone rather than scaling into illegibility. **A diagram is a claim:
+verify arrow direction and component names against the source before shipping
+one.**
 
 ### Content (the whole knowledge base)
 - `app/chat/resume.json` - Single source for both the rendered page and the chat.

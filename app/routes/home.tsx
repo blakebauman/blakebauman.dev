@@ -15,9 +15,13 @@ export function loader({ context, request }: Route.LoaderArgs) {
 export function meta(_: Route.MetaArgs) {
   return [
     {
-      title: 'Blake Bauman | Enterprise-scale systems, edge computing, and AI',
+      title: 'Blake Bauman | Enterprise commerce and agent infrastructure',
     },
-    { name: 'description', content: 'Welcome to blakebauman.dev!' },
+    {
+      name: 'description',
+      content:
+        'Principal Technical Architect at Adobe. Enterprise commerce on Adobe Commerce and AEM Edge Delivery Services, plus independent agent infrastructure: Felix, Memoturn, Fold.',
+    },
   ];
 }
 

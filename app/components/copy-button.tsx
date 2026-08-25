@@ -28,21 +28,7 @@ export function CopyButton({ text }: CopyButtonProps) {
     <button
       type="button"
       onClick={handleCopy}
-      style={{
-        position: 'absolute',
-        top: 6,
-        right: 6,
-        padding: '4px 9px',
-        font: '500 10px/1 var(--font-mono)',
-        letterSpacing: '0.16em',
-        textTransform: 'uppercase',
-        background: 'var(--plat)',
-        border: '1px solid var(--rule-strong)',
-        color: 'var(--inkpress)',
-        cursor: 'pointer',
-        opacity: copied ? 1 : 0.85,
-        transition: 'background 120ms ease, color 120ms ease',
-      }}
+      className={`bb-copy-btn${copied ? ' is-copied' : ''}`}
       aria-label={copied ? 'Copied' : 'Copy code'}
     >
       {copied ? 'Copied' : 'Copy'}

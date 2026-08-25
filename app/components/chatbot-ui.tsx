@@ -317,15 +317,7 @@ export default function ChatbotUI({
           >
             <div className="bb-chat-modal-head">
               <span className="bb-chat-modal-title">
-                <span
-                  style={{
-                    width: 7,
-                    height: 7,
-                    background: 'var(--cordovan)',
-                    display: 'inline-block',
-                    marginRight: 10,
-                  }}
-                />
+                <span className="mark" aria-hidden="true" />
                 Ask the resume
               </span>
               <button

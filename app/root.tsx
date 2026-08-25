@@ -11,11 +11,12 @@ import type { Route } from './+types/root';
 import resumeData from './chat/resume.json';
 import './app.css';
 
-import monoWoff2 from '@fontsource/ibm-plex-mono/files/ibm-plex-mono-latin-500-normal.woff2?url';
 // Above-the-fold font cuts, imported as URLs so preloads point at the same
 // hashed assets the app.css @font-face rules resolve to (Vite dedupes them).
-import condBoldWoff2 from '@fontsource/ibm-plex-sans-condensed/files/ibm-plex-sans-condensed-latin-700-normal.woff2?url';
-import serifWoff2 from '@fontsource/ibm-plex-serif/files/ibm-plex-serif-latin-400-normal.woff2?url';
+// Two variable files cover the whole type system above the fold: Archivo
+// carries every weight and width, Literata every optical size.
+import displayWoff2 from '@fontsource-variable/archivo/files/archivo-latin-wdth-normal.woff2?url';
+import bodyWoff2 from '@fontsource-variable/literata/files/literata-latin-opsz-normal.woff2?url';
 
 const metaTitle = resumeData.hero
   ? `${resumeData.name} | ${resumeData.hero.headline}`
@@ -25,18 +26,19 @@ const metaDescription =
   (firstSummary ? firstSummary.slice(0, 155) + (firstSummary.length > 155 ? '...' : '') : null) ??
   `${resumeData.name} - ${resumeData.title}. Portfolio with AI-powered resume assistant.`;
 
-// IBM Plex is self-hosted via @fontsource (see app.css @font-face imports).
-// Latin subset only, 5 cuts: Serif 400 + 400i, Sans Condensed 600 + 700, Mono 500.
-// Vite bundles the woff2 files into the build output, served same-origin.
+// Archivo (display, variable weight + width), Literata (body, variable optical
+// size) and JetBrains Mono (code) are self-hosted via @fontsource (see the
+// app.css @import rules). Vite bundles the woff2 files into the build output,
+// served same-origin. Only the two above-the-fold faces are preloaded; the mono
+// cut is below the fold on the home page and inside case studies.
 export const links: Route.LinksFunction = () => [
   { rel: 'icon', href: '/favicon.svg', type: 'image/svg+xml' },
   { rel: 'icon', href: '/favicon.ico', sizes: '32x32' },
   // Preload above-the-fold fonts (body serif, heading condensed, label mono) so they
   // start downloading with the HTML instead of after the CSS is parsed.
   // Font preloads require crossOrigin even for same-origin requests.
-  { rel: 'preload', href: serifWoff2, as: 'font', type: 'font/woff2', crossOrigin: 'anonymous' },
-  { rel: 'preload', href: condBoldWoff2, as: 'font', type: 'font/woff2', crossOrigin: 'anonymous' },
-  { rel: 'preload', href: monoWoff2, as: 'font', type: 'font/woff2', crossOrigin: 'anonymous' },
+  { rel: 'preload', href: displayWoff2, as: 'font', type: 'font/woff2', crossOrigin: 'anonymous' },
+  { rel: 'preload', href: bodyWoff2, as: 'font', type: 'font/woff2', crossOrigin: 'anonymous' },
 ];
 
 export function Layout({ children }: { children: React.ReactNode }) {
@@ -45,9 +47,8 @@ export function Layout({ children }: { children: React.ReactNode }) {
       <head>
         <meta charSet="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
-        {/* Matches the Slate Mist ground / its dark counterpart in app.css. */}
-        <meta name="theme-color" media="(prefers-color-scheme: light)" content="#E5E7EA" />
-        <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#191B1D" />
+        {/* One committed look regardless of scheme, so one theme-color. */}
+        <meta name="theme-color" content="#040404" />
         <meta name="description" content={metaDescription} />
 
         {/* Open Graph */}
@@ -113,94 +114,68 @@ export default function App() {
 }
 
 export function ErrorBoundary({ error }: Route.ErrorBoundaryProps) {
-  let message = 'Oops!';
-  let details = 'An unexpected error occurred.';
+  let message = 'Error';
+  let details = 'Something went wrong on this page.';
   let stack: string | undefined;
 
   if (isRouteErrorResponse(error)) {
-    message = error.status === 404 ? '404' : 'Error';
+    message = error.status === 404 ? '404' : `Error ${error.status}`;
     details =
-      error.status === 404 ? 'The requested page could not be found.' : error.statusText || details;
+      error.status === 404 ? 'That page is not part of the record.' : error.statusText || details;
   } else if (import.meta.env.DEV && error && error instanceof Error) {
     details = error.message;
     stack = error.stack;
   }
 
   return (
-    <main
-      className="flex min-h-screen w-full flex-col items-center justify-center"
-      style={{ padding: 'clamp(48px, 6vw, 96px) var(--gutter)' }}
-    >
-      <div className="w-full max-w-2xl text-center">
-        <div
-          className="mb-6 inline-flex items-center gap-2"
-          style={{
-            font: '500 11px/1 var(--font-mono)',
-            letterSpacing: '0.18em',
-            textTransform: 'uppercase',
-            opacity: 0.65,
-          }}
-        >
-          <span
-            style={{ width: 7, height: 7, background: 'var(--cordovan)', display: 'inline-block' }}
-          />
-          {message}
+    <div className="bb-shell">
+      <header className="bb-top">
+        <div className="bb-wrap bb-top-in">
+          <a className="bb-top-name" href="/">
+            {resumeData.name}
+          </a>
         </div>
-        <h1
-          className="mb-4"
-          style={{
-            font: '700 var(--h1)/1.05 var(--font-cond)',
-            letterSpacing: '-0.012em',
-          }}
-        >
+      </header>
+
+      <main className="bb-wrap" style={{ paddingBlock: 'clamp(64px, 14vh, 150px)' }}>
+        <p className="t-meta">{message}</p>
+        <h1 className="t-display" style={{ marginTop: 18, maxWidth: '14ch' }}>
           {details}
         </h1>
         {stack && (
           <pre
-            className="mb-8 w-full overflow-x-auto p-4 text-left"
+            className="bb-code"
             style={{
-              font: '400 var(--body-sm)/1.55 var(--font-mono)',
-              background: 'var(--plat-deep)',
-              color: 'var(--inkpress)',
-              opacity: 0.85,
+              marginTop: 32,
+              padding: 18,
+              overflowX: 'auto',
+              font: '400 12.5px/1.65 var(--font-mono)',
             }}
           >
             <code>{stack}</code>
           </pre>
         )}
-        <div className="flex flex-col justify-center gap-3 sm:flex-row">
-          <a
-            href="/"
-            className="inline-flex items-center justify-center"
-            style={{
-              padding: '13px 22px',
-              background: 'var(--cordovan)',
-              color: 'var(--plat)',
-              font: '600 13px/1 var(--font-cond)',
-              letterSpacing: '0.05em',
-              textTransform: 'uppercase',
-              borderBottom: 0,
-            }}
-          >
-            Back to home
+        <div style={{ display: 'flex', flexWrap: 'wrap', gap: 12, marginTop: 40 }}>
+          <a className="btn" href="/">
+            Back to the record
           </a>
           <a
+            className="btn-ghost"
             href={`mailto:${resumeData.email}?subject=Error%20on%20blakebauman.dev`}
-            className="inline-flex items-center justify-center"
-            style={{
-              padding: '12px 21px',
-              border: '1px solid var(--inkpress)',
-              color: 'var(--inkpress)',
-              font: '600 13px/1 var(--font-cond)',
-              letterSpacing: '0.05em',
-              textTransform: 'uppercase',
-              borderBottom: '1px solid var(--inkpress)',
-            }}
           >
-            Report an issue
+            Report this
           </a>
         </div>
-      </div>
-    </main>
+      </main>
+
+      <footer className="bb-wrap bb-stamps" style={{ marginTop: 'auto' }}>
+        <div className="bb-stamps-row">
+          <span>Set in Archivo and Literata</span>
+          <span>
+            © {new Date().getFullYear()} {resumeData.name}
+          </span>
+        </div>
+      </footer>
+    </div>
   );
 }

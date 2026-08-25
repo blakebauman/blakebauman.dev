@@ -39,11 +39,18 @@ describe('MarkdownLite', () => {
     expect(container.querySelectorAll('ol li')).toHaveLength(2);
   });
 
-  it('renders headings capped at h3', () => {
+  // An answer renders inside the "Ask the resume" section, whose own heading is
+  // an h2. Emitting h1/h2 from markdown there would break the page's heading
+  // order, so the three markdown levels are demoted to h3/h4/h5. Deeper markdown
+  // headings still collapse into the third slot.
+  it('demotes markdown headings to h3/h4/h5 so the page outline stays valid', () => {
     const { container } = render(<MarkdownLite content={'# Title\n## Sub\n#### Deep'} />);
-    expect(container.querySelector('h1')?.textContent).toBe('Title');
-    expect(container.querySelector('h2')?.textContent).toBe('Sub');
-    expect(container.querySelectorAll('h3')).toHaveLength(1);
+    expect(container.querySelector('h1')).toBeNull();
+    expect(container.querySelector('h2')).toBeNull();
+    expect(container.querySelector('h3')?.textContent).toBe('Title');
+    expect(container.querySelector('h4')?.textContent).toBe('Sub');
+    expect(container.querySelectorAll('h5')).toHaveLength(1);
+    expect(container.querySelector('h5')?.textContent).toBe('Deep');
   });
 
   it('renders fenced code blocks, including unclosed fences mid-stream', () => {

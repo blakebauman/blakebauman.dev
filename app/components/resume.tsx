@@ -1,5 +1,6 @@
 import { lazy, Suspense, useMemo } from 'react';
 import resumeData from '../chat/resume.json';
+import { LEAD_SLUGS, leadCopyFor } from '../content/case-studies';
 import { orderProjects, type Persona } from '../lib/persona';
 import { useCurrentSection } from './section-index';
 
@@ -59,83 +60,65 @@ export function Resume({ chatEnabled, persona, chatGreeting, suggestedPrompts }:
   // Two independent reasons a project is not rendered: the repository is private,
   // or the entry is deliberately unlisted. Both stay in the JSON and stay indexed,
   // so the chatbot can still answer about them.
-  // Reorder by the visitor's persona (signal-aware, deterministic) — falls back to canonical order.
-  const projects = orderProjects(
-    (resumeData.projects as ProjectEntry[]).filter(
-      p => p.visibility !== 'private' && p.listed !== false
-    ),
+  const visible = (resumeData.projects as ProjectEntry[]).filter(
+    p => p.visibility !== 'private' && p.listed !== false
+  );
+
+  // Scale is ranking. Three projects carry the page at display weight and link
+  // to their own case study; everything else is a compact index line. The split
+  // is deliberate rather than persona-ordered, so the claim the page makes does
+  // not change depending on who is reading it.
+  const lead = LEAD_SLUGS.map(slug => visible.find(p => p.name === slug)).filter(
+    (p): p is ProjectEntry => Boolean(p)
+  );
+  const tail = orderProjects(
+    visible.filter(p => !LEAD_SLUGS.includes(p.name)),
     persona
   );
-  const todayYear = new Date().getFullYear();
-  const recStamp = (() => {
-    const d = new Date();
-    return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
-  })();
-  const filedMonth = recStamp.slice(0, 7);
 
-  // The document index. Numbers live here and only here — they do navigational
-  // work in the rail rather than sitting as an eyebrow above every heading.
+  const todayYear = new Date().getFullYear();
   const sections = useMemo(
     () => [
-      { id: 'top', num: '01', label: 'Masthead' },
-      { id: 'position', num: '02', label: 'Position' },
-      { id: 'record', num: '03', label: 'Record' },
-      ...(chatEnabled ? [{ id: 'artifact', num: '04', label: 'Artifact' }] : []),
-      { id: 'colophon', num: chatEnabled ? '05' : '04', label: 'Colophon' },
+      { id: 'top', label: 'Top' },
+      { id: 'work', label: 'Work' },
+      { id: 'position', label: 'Position' },
+      { id: 'record', label: 'Record' },
+      ...(chatEnabled ? [{ id: 'ask', label: 'Ask' }] : []),
+      { id: 'colophon', label: 'Colophon' },
     ],
     [chatEnabled]
   );
   const sectionIds = useMemo(() => sections.map(s => s.id), [sections]);
   const current = useCurrentSection(sectionIds, 'top');
 
-  const entryCount = resumeData.experience.length + projects.length;
-
   return (
     <div className="bb-shell">
-      <aside className="bb-rail print:hidden">
-        <a className="bb-rail-mark" href="#top">
-          <span className="dot" aria-hidden="true" /> Blake Bauman
-        </a>
-
-        <nav className="bb-rail-index" aria-label="Document sections">
-          <ol>
+      <header className="bb-top print:hidden">
+        <div className="bb-wrap bb-top-in">
+          <a className="bb-top-name" href="#top">
+            {resumeData.name}
+          </a>
+          <nav className="bb-top-nav" aria-label="Sections">
             {sections.map(section => (
-              <li key={section.id}>
-                <a
-                  href={`#${section.id}`}
-                  className={current === section.id ? 'current' : undefined}
-                  aria-current={current === section.id ? 'location' : undefined}
-                >
-                  <span className="num" aria-hidden="true">
-                    {section.num}
-                  </span>
-                  <span className="mark" aria-hidden="true" />
-                  <span className="label">{section.label}</span>
-                </a>
-              </li>
+              <a
+                key={section.id}
+                href={`#${section.id}`}
+                className={current === section.id ? 'current' : undefined}
+                aria-current={current === section.id ? 'location' : undefined}
+              >
+                {section.label}
+              </a>
             ))}
-          </ol>
-        </nav>
-
-        <div className="bb-rail-foot">
-          <span>Rec. {recStamp}</span>
-          <span>Lot 0042</span>
+          </nav>
         </div>
-      </aside>
+      </header>
 
-      <main className="bb-doc">
-        <header className="bb-masthead" id="top">
-          <div className="strip">
-            <span className="mark" aria-hidden="true" />
-            <span>{resumeData.name}</span>
-            <span aria-hidden="true">·</span>
-            <span>Filed {filedMonth}</span>
-            <span aria-hidden="true">·</span>
-            <span>v0.1</span>
-          </div>
-
-          <div className="name-block">
-            <h1 className="name">{resumeData.name}</h1>
+      <main>
+        <section className="bb-wrap bb-masthead" id="top">
+          <div>
+            {/* No eyebrow here: the subhead opens with the job title verbatim,
+                so a label above the name was pure repetition. */}
+            <h1>{resumeData.name}</h1>
             <p className="subhead">{linkifyProjectMentions(resumeData.copy.subhead)}</p>
           </div>
 
@@ -157,11 +140,50 @@ export function Resume({ chatEnabled, persona, chatGreeting, suggestedPrompts }:
               )}
             </dd>
           </dl>
-        </header>
+        </section>
 
-        <section className="bb-position" id="position" aria-labelledby="position-label">
+        <section className="bb-wrap bb-sec" id="work" aria-labelledby="work-label">
+          <div className="bb-sec-head">
+            <h2 id="work-label">The work</h2>
+            <span className="rule" aria-hidden="true" />
+            <span className="stamp">{lead.length} in depth</span>
+          </div>
+
+          <div className="bb-lead-list">
+            {lead.map(project => (
+              <a className="bb-lead" key={project.name} href={`/work/${project.name}`}>
+                <span className="nm">{project.name}</span>
+                <span className="go">Case study →</span>
+                <span className="kind">{leadCopyFor(project.name)}</span>
+              </a>
+            ))}
+          </div>
+
+          <p className="bb-index-note">
+            The rest of the record, in brief. Each links to its repository.
+          </p>
+          <div className="bb-index">
+            {tail.map((project, i) => (
+              <span key={project.name} style={{ display: 'contents' }}>
+                {i > 0 && (
+                  <span className="sep" aria-hidden="true">
+                    ·
+                  </span>
+                )}
+                <a href={project.github ?? project.website ?? '#'}>{project.name}</a>
+              </span>
+            ))}
+          </div>
+        </section>
+
+        <section
+          className="bb-wrap bb-sec bb-position"
+          id="position"
+          aria-labelledby="position-label"
+        >
           <div className="bb-sec-head">
             <h2 id="position-label">Position</h2>
+            <span className="rule" aria-hidden="true" />
           </div>
           <div className="body-grid">
             <div className="lede-set">
@@ -175,101 +197,40 @@ export function Resume({ chatEnabled, persona, chatGreeting, suggestedPrompts }:
           </div>
         </section>
 
-        <section className="bb-record" id="record" aria-labelledby="record-label">
+        <section className="bb-wrap bb-sec bb-record" id="record" aria-labelledby="record-label">
           <div className="bb-sec-head">
             <h2 id="record-label">Record</h2>
-            <span className="stamp">{entryCount} entries</span>
+            <span className="rule" aria-hidden="true" />
+            <span className="stamp">{resumeData.experience.length} roles</span>
           </div>
 
-          <div className="bb-group">
-            <div className="bb-group-label">
-              <span className="mark" aria-hidden="true" /> Roles
-            </div>
-            <div className="bb-ledger-head" aria-hidden="true">
-              <span>Term</span>
-              <span>Role</span>
-              <span>Party</span>
-              <span>Status</span>
-            </div>
+          <div className="bb-roles">
             {resumeData.experience.map((exp, idx) => (
-              <article key={`${exp.company}-${exp.role}-${exp.years}`} className="bb-listing">
-                <div className="year">{exp.years.replace(/-/g, '–')}</div>
-                <div className="title">
-                  <span className="role">{exp.role}</span>
-                </div>
-                <div className="meta">
+              <article key={`${exp.company}-${exp.role}-${exp.years}`} className="bb-role">
+                <div className="term">{exp.years.replace(/-/g, '–')}</div>
+                <div>
+                  <h3 className="role">{exp.role}</h3>
                   <span className="company">{exp.company}</span>
+                  <p className="desc">{exp.description}</p>
                 </div>
                 <div className="status-cell">
                   <span className={`status${idx === 0 ? ' active' : ''}`}>
-                    {idx === 0 ? 'Active' : 'Filed'}
+                    {idx === 0 ? 'Current' : 'Filed'}
                   </span>
-                </div>
-                <div className="detail">
-                  <p className="desc">{exp.description}</p>
                 </div>
               </article>
             ))}
           </div>
 
-          <div className="bb-group">
-            <div className="bb-group-label">
-              <span className="mark dim" aria-hidden="true" /> Working artifacts · personal
-            </div>
-            <div className="bb-ledger-head" aria-hidden="true">
-              <span>Term</span>
-              <span>Entry</span>
-              <span>Stack</span>
-              <span>Status</span>
-            </div>
-            {projects.map(project => {
-              const isActive = (project.status ?? '').toLowerCase() === 'active';
-              return (
-                <article key={project.name} className="bb-listing">
-                  <div className="year">{project.year ?? '—'}</div>
-                  <div className="title">
-                    <span className="role">{project.name}</span>
-                  </div>
-                  <div className="meta">
-                    {project.tech && project.tech.length > 0 && (
-                      <span className="stack">
-                        {project.tech.map(t => t.toUpperCase()).join(' · ')}
-                      </span>
-                    )}
-                  </div>
-                  <div className="status-cell">
-                    <span className={`status${isActive ? ' active' : ''}`}>
-                      {project.status ?? 'Filed'}
-                    </span>
-                  </div>
-                  <div className="detail">
-                    <p className="desc">
-                      {project.description}
-                      {project.context ? ` ${project.context}` : ''}
-                    </p>
-                    {project.github && (
-                      <div className="repo">
-                        <a href={project.github} rel="noopener noreferrer">
-                          {project.github.replace(/^https?:\/\//, '')}
-                        </a>
-                      </div>
-                    )}
-                  </div>
-                </article>
-              );
-            })}
-          </div>
-
           {resumeData.recognition && resumeData.recognition.length > 0 && (
-            <div className="bb-group">
-              <div className="bb-group-label">
-                <span className="mark dim" aria-hidden="true" /> Recognition
-              </div>
+            <div className="bb-rec">
               {resumeData.recognition.map(item => (
                 <div key={item.title} className="bb-rec-block">
-                  <div className="stamp">Rec. {item.year}</div>
-                  <p className="title">{item.title}</p>
-                  <p className="desc">{item.description}</p>
+                  <div className="term">{item.year}</div>
+                  <div>
+                    <p className="title">{item.title}</p>
+                    <p className="desc">{item.description}</p>
+                  </div>
                 </div>
               ))}
             </div>
@@ -277,28 +238,20 @@ export function Resume({ chatEnabled, persona, chatGreeting, suggestedPrompts }:
         </section>
 
         {chatEnabled && (
-          <section className="bb-artifact" id="artifact" aria-labelledby="artifact-label">
+          <section className="bb-wrap bb-sec" id="ask" aria-labelledby="ask-label">
             <div className="bb-sec-head">
-              <h2 id="artifact-label">{resumeData.copy.artifactHeading}</h2>
+              <h2 id="ask-label">{resumeData.copy.artifactHeading}</h2>
+              <span className="rule" aria-hidden="true" />
               <span className="stamp">Live</span>
             </div>
 
-            <div className="bb-artifact-grid">
-              <div className="bb-artifact-aside">
+            <div className="bb-ask-grid">
+              <div className="bb-ask-aside">
                 <p className="frame-text">{resumeData.copy.artifactSubhead}</p>
                 <ul className="notes">
-                  <li>
-                    <span className="mark" aria-hidden="true" />
-                    Retrieval over the same record you are reading
-                  </li>
-                  <li>
-                    <span className="mark" aria-hidden="true" />
-                    Workers AI · Vectorize · streamed from the edge
-                  </li>
-                  <li>
-                    <span className="mark" aria-hidden="true" />
-                    Off-topic questions are declined, not improvised
-                  </li>
+                  <li>Retrieval over the same record you are reading</li>
+                  <li>Workers AI and Vectorize, streamed from the edge</li>
+                  <li>Off-topic questions are declined, not improvised</li>
                 </ul>
               </div>
 
@@ -311,13 +264,14 @@ export function Resume({ chatEnabled, persona, chatGreeting, suggestedPrompts }:
                         display: 'flex',
                         alignItems: 'center',
                         justifyContent: 'center',
-                        font: '500 11px/1 var(--font-mono)',
-                        letterSpacing: '0.18em',
+                        font: '600 11px/1 var(--font-display)',
+                        fontStretch: 'var(--w-meta)',
+                        letterSpacing: '0.16em',
                         textTransform: 'uppercase',
-                        color: 'var(--ink-soft)',
+                        color: 'var(--muted)',
                       }}
                     >
-                      Loading the index…
+                      Loading the index
                     </div>
                   }
                 >
@@ -328,15 +282,13 @@ export function Resume({ chatEnabled, persona, chatGreeting, suggestedPrompts }:
           </section>
         )}
 
-        <section className="bb-colophon" id="colophon" aria-labelledby="colophon-label">
+        <section className="bb-wrap bb-sec" id="colophon" aria-labelledby="colophon-label">
           <div className="bb-sec-head">
             <h2 id="colophon-label">Colophon</h2>
-            <span className="stamp">v0.1</span>
+            <span className="rule" aria-hidden="true" />
           </div>
           <div className="bb-colophon-grid">
-            <div>
-              <p>{resumeData.copy.colophon}</p>
-            </div>
+            <p>{resumeData.copy.colophon}</p>
             <div className="cta">
               <a className="btn" href={`mailto:${resumeData.email}`}>
                 Talk to me
@@ -351,24 +303,23 @@ export function Resume({ chatEnabled, persona, chatGreeting, suggestedPrompts }:
                 )}
                 .
               </p>
-              <button type="button" className="bb-print-btn print:hidden" onClick={handlePrint}>
+              <button type="button" className="btn-ghost print:hidden" onClick={handlePrint}>
                 Print this record
               </button>
             </div>
           </div>
         </section>
-
-        <footer className="bb-stamps print:hidden">
-          <div className="bb-stamps-row">
-            <span>Rec. {recStamp} · v0.1</span>
-            <span>Lot 0042</span>
-            <span>Set in IBM Plex</span>
-            <span>
-              © {todayYear} {resumeData.name}
-            </span>
-          </div>
-        </footer>
       </main>
+
+      <footer className="bb-wrap bb-stamps">
+        <div className="bb-stamps-row">
+          <span>Set in Archivo and Literata</span>
+          <span>Built on Cloudflare Workers</span>
+          <span>
+            © {todayYear} {resumeData.name}
+          </span>
+        </div>
+      </footer>
     </div>
   );
 }
