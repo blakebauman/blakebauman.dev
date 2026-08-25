@@ -78,7 +78,7 @@ function Box({
         {label}
       </text>
       {sub && (
-        <text x={x + 14} y={y + h / 2 + 14} fill="var(--muted)" fontFamily={F_MONO} fontSize="11">
+        <text x={x + 14} y={y + h / 2 + 14} fill="var(--muted)" fontFamily={F_MONO} fontSize="12">
           {sub}
         </text>
       )}
@@ -116,7 +116,7 @@ function Arrow({
           y={y1 === y2 ? y1 - 8 : (y1 + y2) / 2 - 5}
           fill="var(--muted)"
           fontFamily={F_MONO}
-          fontSize="10.5"
+          fontSize="12.5"
           textAnchor="middle"
         >
           {label}
@@ -159,7 +159,7 @@ const felixDiagram = (
     </desc>
     <Defs />
 
-    <text x="0" y="14" fill="var(--muted)" fontFamily={F_MONO} fontSize="11">
+    <text x="0" y="14" fill="var(--muted)" fontFamily={F_MONO} fontSize="12">
       client
     </text>
     {['REST / SSE', 'OpenAI-compatible /v1', 'A2A JSON-RPC', 'MCP'].map((s, i) => (
@@ -178,7 +178,7 @@ const felixDiagram = (
           y={48}
           fill="var(--gold)"
           fontFamily={F_MONO}
-          fontSize="11.5"
+          fontSize="12.5"
           textAnchor="middle"
         >
           {s}
@@ -224,10 +224,10 @@ const felixDiagram = (
       strokeWidth="1"
       strokeDasharray="3 4"
     />
-    <text x="0" y="382" fill="var(--muted)" fontFamily={F_MONO} fontSize="11">
+    <text x="0" y="382" fill="var(--muted)" fontFamily={F_MONO} fontSize="12">
       every dependency reached through a Protocol, not a vendor SDK
     </text>
-    <text x="0" y="402" fill="var(--muted)" fontFamily={F_MONO} fontSize="11">
+    <text x="0" y="402" fill="var(--muted)" fontFamily={F_MONO} fontSize="12">
       so the same code runs on a filesystem-only VM, on AWS, or on GCP
     </text>
   </svg>
@@ -258,7 +258,7 @@ const memoturnDiagram = (
       sub="TypeScript · Python · Go"
     />
     <Arrow x1={230} y1={52} x2={230} y2={92} />
-    <text x={242} y={78} fill="var(--muted)" fontFamily={F_MONO} fontSize="10.5">
+    <text x={242} y={78} fill="var(--muted)" fontFamily={F_MONO} fontSize="12.5">
       POST /v1/ingest
     </text>
 
@@ -276,10 +276,10 @@ const memoturnDiagram = (
     {/* The early acknowledgement. This is the whole argument of the design. */}
     <Arrow x1={400} y1={120} x2={498} y2={120} />
     <rect x={500} y={98} width={380} height={44} fill="none" stroke="var(--gold)" strokeWidth="1" />
-    <text x={514} y={116} fill="var(--gold)" fontFamily={F_MONO} fontSize="11.5">
+    <text x={514} y={116} fill="var(--gold)" fontFamily={F_MONO} fontSize="12.5">
       207 ack, returned here
     </text>
-    <text x={514} y={132} fill="var(--muted)" fontFamily={F_MONO} fontSize="10.5">
+    <text x={514} y={132} fill="var(--muted)" fontFamily={F_MONO} fontSize="12.5">
       before the analytical write, not after
     </text>
 
@@ -370,7 +370,7 @@ const foldDiagram = (
           >
             {name}
           </text>
-          <text x="46" y={y + 36} fill="var(--muted)" fontFamily={F_MONO} fontSize="11.5">
+          <text x="46" y={y + 36} fill="var(--muted)" fontFamily={F_MONO} fontSize="12.5">
             {detail}
           </text>
         </g>
@@ -398,7 +398,7 @@ const foldDiagram = (
     >
       audit
     </text>
-    <text x="110" y={576} fill="var(--muted)" fontFamily={F_MONO} fontSize="11.5">
+    <text x="110" y={576} fill="var(--muted)" fontFamily={F_MONO} fontSize="12.5">
       one event per request, including denials: a single exit door
     </text>
   </svg>
