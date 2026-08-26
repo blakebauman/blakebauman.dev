@@ -69,9 +69,16 @@
         "mcp",
         "approvals",
         "durable execution",
-        "self-hosted"
+        "self-hosted",
+        "orchestration patterns",
+        "react",
+        "router",
+        "parallel",
+        "groupchat",
+        "reflect",
+        "multi-agent"
       ],
-      "text": "Felix is Blake's self-hostable agents harness, written in Python. Agents are authored as felix/v1 YAML manifests and compiled into governed runtimes with durable fibers, memory, skills, eval, approvals and sandboxes. One agent is served over four surfaces at once: REST/SSE, an OpenAI-compatible /v1 where the manifest name is the model id, A2A JSON-RPC, and MCP. Live runs can be forked, rewound and steered. The stack is FastAPI on Granian with a Taskiq worker and a separate cron scheduler, Postgres with pgvector as the system of record, Valkey, and a pluggable object store. Storage, secrets and the analytics warehouse are Protocols rather than vendor SDKs, so it runs on a filesystem-only VM with no cloud dependencies, or on AWS and GCP. Deploys with Docker, Helm, AWS or GCP. Apache-2.0, released at v0.2.0 in August 2026. It is a complete rewrite of an earlier TypeScript harness that ran on Cloudflare Workers and carried an agentic commerce layer; neither the Workers dependency nor the commerce layer carried over. Docs at docs.felix.run."
+      "text": "Felix is Blake's self-hostable agents harness, written in Python. Agents are authored as felix/v1 YAML manifests and compiled into governed runtimes with durable fibers, memory, skills, eval, approvals and sandboxes. One agent is served over four surfaces at once: REST/SSE, an OpenAI-compatible /v1 where the manifest name is the model id, A2A JSON-RPC, and MCP. Live runs can be forked, rewound and steered. Orchestration patterns are registered rather than hard-coded, in an open registry builders join at import time: react, deep and reflect are single-agent, router, parallel and groupchat are multi-agent. The stack is FastAPI on Granian with a Taskiq worker and a separate cron scheduler, Postgres with pgvector as the system of record, Valkey, and a pluggable object store. Storage, secrets and the analytics warehouse are Protocols rather than vendor SDKs, so it runs on a filesystem-only VM with no cloud dependencies, or on AWS and GCP. Deploys with Docker, Helm, AWS or GCP. Apache-2.0, released at v0.2.0 in August 2026. It is a complete rewrite of an earlier TypeScript harness that ran on Cloudflare Workers and carried an agentic commerce layer; neither the Workers dependency nor the commerce layer carried over. Docs at docs.felix.run."
     },
     {
       "id": "memoturn-platform",

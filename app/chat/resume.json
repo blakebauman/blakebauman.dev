@@ -185,7 +185,7 @@
       "status": "Active",
       "visibility": "public",
       "description": "Self-hostable agents harness in Python. Agents are authored as felix/v1 YAML manifests and compiled into governed runtimes with durable fibers, memory, skills, eval, approvals, and sandboxes. One agent is served over four surfaces at once: REST/SSE, an OpenAI-compatible /v1, A2A JSON-RPC, and MCP. Live runs can be forked, rewound, and steered.",
-      "context": "Runs on infrastructure you operate: FastAPI on Granian, a Taskiq worker and a separate cron scheduler, Postgres with pgvector as the system of record, Valkey, and a pluggable object store (filesystem, S3, or GCS). Storage, secrets, and the analytics warehouse are Protocols rather than vendor SDKs, so a small VM needs no cloud dependencies at all. Deploys via Docker, Helm, AWS, or GCP. Apache-2.0, released at v0.2.0 in August 2026. A complete rewrite of an earlier TypeScript harness, which itself replaced an AWS Bedrock and LangGraph implementation. Docs at docs.felix.run.",
+      "context": "Runs on infrastructure you operate: FastAPI on Granian, a Taskiq worker and a separate cron scheduler, Postgres with pgvector as the system of record, Valkey, and a pluggable object store (filesystem, S3, or GCS). Storage, secrets, and the analytics warehouse are Protocols rather than vendor SDKs, so a small VM needs no cloud dependencies at all. Orchestration patterns live in an open registry that builders join at import time: react, deep and reflect are single-agent, router, parallel and groupchat are multi-agent. Deploys via Docker, Helm, AWS, or GCP. Apache-2.0, released at v0.2.0 in August 2026. A complete rewrite of an earlier TypeScript harness, which itself replaced an AWS Bedrock and LangGraph implementation. Docs at docs.felix.run.",
       "tech": [
         "Python",
         "FastAPI",
@@ -209,6 +209,7 @@
         "Manifest-driven: an apiVersion: felix/v1 YAML document compiles into a runnable governed agent, so changing behaviour is a config change rather than a code change.",
         "One agent is exposed over four surfaces simultaneously: REST/SSE, an OpenAI-compatible /v1 where the manifest name is the model id, A2A JSON-RPC, and MCP.",
         "Durable execution: spec.execution.mode durable enqueues a fiber and returns 202 with a resume token, with Temporal optional rather than required.",
+        "Six orchestration patterns are registered rather than hard-coded: react, deep and reflect run a single agent, while router, parallel and groupchat coordinate several. The registry is open, so a pattern is added by registering a builder rather than by editing the runtime.",
         "Sessions can be forked, rewound, and steered mid-run, with compacting, windowed, semantic, and full-replay strategies chosen per agent.",
         "A dropped stream is recoverable: structural SSE frames carry an id cursor and the thread can be replayed and tailed, though the abandoned turn itself is torn down.",
         "Tools declare whether they are safe to re-run after a crash; the default is that they are not, because re-running a search costs latency while re-running a payment charges twice.",
