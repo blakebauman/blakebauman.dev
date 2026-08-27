@@ -1,3 +1,4 @@
+import type { AgentStep } from '../agent/loop';
 import type { ContextSource } from './context';
 
 const SSE_HEADERS = {
@@ -47,7 +48,12 @@ export function sseMessageResponse(message: string): Response {
 export function sseTransformResponse(
   stream: ReadableStream,
   onComplete: (accumulatedResponse: string) => void,
-  resolveSources?: (accumulatedResponse: string) => ContextSource[]
+  resolveSources?: (accumulatedResponse: string) => ContextSource[],
+  // Tool steps, when the answer came from the agent loop. Unlike sources these
+  // lead, because they are already known — the loop has finished by the time
+  // the answer starts streaming — and because they read as "here is what I did
+  // to answer this", which is only true ahead of the answer.
+  steps?: AgentStep[]
 ): Response {
   const encoder = new TextEncoder();
   const decoder = new TextDecoder();
@@ -56,6 +62,10 @@ export function sseTransformResponse(
   const transformedStream = new ReadableStream({
     async start(controller) {
       const reader = stream.getReader();
+
+      if (steps?.length) {
+        controller.enqueue(encoder.encode(frame({ type: 'steps', steps })));
+      }
 
       // Workers AI streams in SSE format: data: {"response":"text"}
       const processLine = (line: string) => {

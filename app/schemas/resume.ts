@@ -111,6 +111,9 @@ export const CopySchema = z.object({
   artifactHeading: z.string(),
   artifactSubhead: z.string(),
   colophon: z.string(),
+  // The colophon's note that the page is also an MCP server. Optional so the
+  // schema keeps validating a record that predates the endpoint.
+  mcp: z.string().optional(),
 });
 
 export const ResumeDataSchema = z.object({

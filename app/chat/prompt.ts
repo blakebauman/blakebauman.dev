@@ -1,21 +1,10 @@
+import { stripFenceMarkers } from '../lib/text';
 import { CHAT_LIMITS } from '../schemas';
 import type { ResumeData } from '../types';
 import type { ResumeContext } from './context';
 import { REDIRECT_MESSAGE } from './guardrails';
 
 export type ChatMessage = { role: 'system' | 'user' | 'assistant'; content: string };
-
-/**
- * Removes fence markers from text that will be placed *inside* a fence.
- *
- * Retrieved chunks come from a trusted file today, but the fence is only a
- * boundary if nothing inside it can close the boundary early. Stripping this at
- * the point of interpolation means the guarantee holds regardless of what the
- * content becomes later.
- */
-function stripFenceMarkers(text: string): string {
-  return text.replace(/<\/?\s*(context|conversation|system|instructions)\s*>/gi, '');
-}
 
 /**
  * Builds the message array sent to the model.

@@ -6,6 +6,13 @@ export interface ContextSource {
   title: string;
 }
 
+/** One tool call the assistant made on its way to an answer. */
+export interface AgentStep {
+  tool: string;
+  args: Record<string, unknown>;
+  ok: boolean;
+}
+
 interface Message {
   role: 'assistant' | 'user';
   content: string;
@@ -13,6 +20,8 @@ interface Message {
   timestamp: number;
   /** Which sections of the record grounded this answer. */
   sources?: ContextSource[];
+  /** What the assistant did to find it, when the agent loop answered. */
+  steps?: AgentStep[];
 }
 
 interface ChatResponse {
@@ -22,15 +31,18 @@ interface ChatResponse {
     };
   }>;
   sources?: ContextSource[];
+  steps?: AgentStep[];
   error?: string;
 }
 
-// The stream carries three frame shapes: a leading sources frame, the content
-// frames, and an error frame if generation breaks mid-response.
+// The stream carries four frame shapes: a leading steps frame when the agent
+// loop answered, the content frames, a trailing sources frame, and an error
+// frame if generation breaks mid-response.
 interface StreamChunk {
-  type?: 'sources' | 'error';
+  type?: 'steps' | 'sources' | 'error';
   content?: string;
   sources?: ContextSource[];
+  steps?: AgentStep[];
   error?: string;
 }
 
@@ -263,8 +275,18 @@ export default function Chatbot({ greeting, suggestedPrompts }: ChatbotProps = {
           try {
             const parsed = JSON.parse(data) as StreamChunk;
 
-            // Sources arrive before the first token, so the citation is on
-            // screen while the answer is still being written.
+            // Steps lead: the loop has already finished by the time the answer
+            // starts, so what the assistant did is on screen while it writes.
+            if (parsed.type === 'steps' && parsed.steps) {
+              const steps = parsed.steps;
+              setMessages(prev =>
+                prev.map(msg => (msg.id === assistantMessageId ? { ...msg, steps } : msg))
+              );
+              return;
+            }
+
+            // Sources trail: attribution is computed from the finished answer,
+            // so the citation cannot exist until the last token has arrived.
             if (parsed.type === 'sources' && parsed.sources) {
               const sources = parsed.sources;
               setMessages(prev =>
@@ -334,6 +356,7 @@ export default function Chatbot({ greeting, suggestedPrompts }: ChatbotProps = {
             id: assistantMessageId,
             timestamp: assistantTimestamp,
             sources: data.sources,
+            steps: data.steps,
           };
           setMessages(prev => [...prev, assistantMessage]);
         } else {

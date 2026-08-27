@@ -1,4 +1,5 @@
 import { createRequestHandler } from 'react-router';
+import { handleMcpRequest, MCP_CORS_HEADERS } from '../app/agent/mcp';
 import aiContextData from '../app/chat/ai-context.json';
 import { RETRIEVAL_CONFIG } from '../app/chat/context';
 import resumeData from '../app/chat/resume.json';
@@ -117,9 +118,46 @@ export default {
     const url = new URL(request.url);
     const corsHeaders = getCorsHeaders(request);
 
-    // Handle OPTIONS request for CORS
+    // Handle OPTIONS request for CORS. /mcp is the exception: it is a public
+    // read-only endpoint reached by clients from every origin there is, so it
+    // preflights against its own wildcard headers rather than the site's
+    // origin allowlist.
     if (request.method === 'OPTIONS') {
-      return new Response(null, { status: 204, headers: corsHeaders });
+      return new Response(null, {
+        status: 204,
+        headers: url.pathname === '/mcp' ? MCP_CORS_HEADERS : corsHeaders,
+      });
+    }
+
+    // Model Context Protocol endpoint. Exposes the same tool layer the site's
+    // own assistant uses, so an external agent and the on-site chat answer from
+    // one implementation rather than two that drift.
+    //
+    // Rate limited on the same bucket as chat: unauthenticated is fine for data
+    // already on the page, but search_record spends an embedding per call, so
+    // the caller still has to be bounded.
+    if (url.pathname === '/mcp') {
+      if (env.MCP_ENABLED !== 'true') {
+        return jsonResponse(
+          { jsonrpc: '2.0', id: null, error: { code: -32000, message: 'MCP is unavailable.' } },
+          503,
+          MCP_CORS_HEADERS
+        );
+      }
+
+      if (await checkRateLimit(request, env, MCP_CORS_HEADERS)) {
+        return jsonResponse(
+          {
+            jsonrpc: '2.0',
+            id: null,
+            error: { code: -32000, message: 'Too many requests. Please try again later.' },
+          },
+          429,
+          { 'Retry-After': '60', ...MCP_CORS_HEADERS }
+        );
+      }
+
+      return handleMcpRequest(request, env);
     }
 
     // Rebuild the Vectorize index. This is the only populate path — the

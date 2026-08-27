@@ -86,3 +86,20 @@ export function escapeRegExp(input: string): string {
 export function wordBoundaryPattern(phrase: string): RegExp {
   return new RegExp(`(?<![\\p{L}\\p{N}])${escapeRegExp(phrase)}(?![\\p{L}\\p{N}])`, 'iu');
 }
+
+/**
+ * Removes fence markers from text that will be placed *inside* a fence.
+ *
+ * The `<context>` fence in the chat prompt is only a boundary if nothing inside
+ * it can close the boundary early. This lives here rather than beside the
+ * prompt builder because it is now applied at two boundaries: retrieved chunks
+ * on their way into the system prompt, and agent tool results on their way back
+ * into the conversation. A tool result is the more dangerous of the two — it
+ * re-enters the transcript on every hop of a loop.
+ */
+export function stripFenceMarkers(text: string): string {
+  return text.replace(
+    /<\/?\s*(context|conversation|system|instructions|tool_result)\s*(\s[^>]*)?>/gi,
+    ''
+  );
+}

@@ -1,3 +1,4 @@
+import { type AgentRun, type AgentStep, attributeAgentSources, runAgentLoop } from '../agent/loop';
 import { serverErrorResponse } from '../lib/http';
 import {
   ChatQueryParamsSchema,
@@ -63,8 +64,12 @@ async function logChatConversation(
   );
 }
 
-function jsonChatResponse(content: string, sources: ContextSource[] = []): Response {
-  return new Response(JSON.stringify({ choices: [{ message: { content } }], sources }), {
+function jsonChatResponse(
+  content: string,
+  sources: ContextSource[] = [],
+  steps: AgentStep[] = []
+): Response {
+  return new Response(JSON.stringify({ choices: [{ message: { content } }], sources, steps }), {
     headers: { 'Content-Type': 'application/json' },
   });
 }
@@ -75,6 +80,28 @@ function wantsStream(request: Request): boolean {
     stream: url.searchParams.get('stream') ?? undefined,
   });
   return result.success ? result.data.stream : false;
+}
+
+/**
+ * Runs the agent loop, returning null rather than throwing if it breaks.
+ *
+ * The loop is the newer of the two paths and the one with more moving parts: a
+ * model that has to emit well-formed tool calls, in a shape that can change
+ * under us when the model does. Retrieval-then-answer has none of that and
+ * still works. So a broken loop degrades to it silently rather than becoming a
+ * 500 — the visitor gets an answer either way, and the cause is in the log.
+ */
+async function tryAgentLoop(
+  env: Env,
+  conversationHistory: Array<{ role: string; content: string }>,
+  prompt: string
+): Promise<AgentRun | null> {
+  try {
+    return await runAgentLoop(env, resumeData, conversationHistory, prompt);
+  } catch (error) {
+    console.error('[chat] agent loop failed, falling back to retrieval', error);
+    return null;
+  }
 }
 
 export async function requestAI({
@@ -137,12 +164,47 @@ export async function requestAI({
     }
 
     const useVectorSearch = !isDev && Boolean(env.VECTORIZE);
-    const resumeContext: ResumeContext = useVectorSearch
-      ? await searchResumeContext(env, prompt, resumeData, AI_CONTEXT_TEXT)
-      : buildFullResumeContext(resumeData, AI_CONTEXT_TEXT);
 
-    const messages = buildChatMessages(resumeData, resumeContext, conversationHistory, prompt);
-    const vectorMatchesCount = resumeContext.matches.length;
+    // The agent loop is the primary path when enabled; single-shot retrieval is
+    // the fallback, not the other way round. It needs Vectorize for the same
+    // reason retrieval does — without it search_record is dead and the loop is
+    // a slower way to reach the same enumeration tools.
+    const useAgent = env.CHAT_AGENT_ENABLED === 'true' && useVectorSearch;
+    const run = useAgent ? await tryAgentLoop(env, conversationHistory, prompt) : null;
+
+    // Retrieval still runs when the loop is off *or* when it failed. A loop
+    // that broke must not cost the visitor their answer — the proven path is
+    // still there and still answers, one model call later.
+    const resumeContext: ResumeContext | null = run
+      ? null
+      : useVectorSearch
+        ? await searchResumeContext(env, prompt, resumeData, AI_CONTEXT_TEXT)
+        : buildFullResumeContext(resumeData, AI_CONTEXT_TEXT);
+
+    const messages = run
+      ? run.messages
+      : buildChatMessages(resumeData, resumeContext as ResumeContext, conversationHistory, prompt);
+
+    const vectorMatchesCount = run ? run.matches.length : (resumeContext?.matches.length ?? 0);
+    const steps = run?.steps ?? [];
+
+    // Which tools ran is the single most useful thing to know when an agent
+    // answer is wrong, and it is invisible from the response. It goes to the
+    // Workers log rather than to D1: the chat_messages schema has no column for
+    // it, and adding one to record a diagnostic is more migration than the
+    // question is worth.
+    if (run) {
+      console.log('[chat] agent run', {
+        sessionId,
+        steps: steps.map(step => `${step.tool}${step.ok ? '' : '!'}`).join(' > ') || '(none)',
+        matches: run.matches.length,
+      });
+    }
+
+    const resolveSources = (answer: string) =>
+      run
+        ? attributeAgentSources(run, answer)
+        : attributeSources(resumeContext?.matches ?? [], answer);
 
     const logCompletion = (assistantResponse: string) => {
       if (!canLog || !env || !ctx || !sessionId) return;
@@ -157,6 +219,9 @@ export async function requestAI({
     };
 
     if (wantsStream(request)) {
+      // No `tools` on the answering call, deliberately. The loop is over; if the
+      // model could still emit a tool call here it would stream a JSON blob at
+      // the reader instead of prose, and there would be nothing left to run it.
       const stream = (await env.AI.run(CHAT_MODEL, {
         messages,
         stream: true,
@@ -165,20 +230,15 @@ export async function requestAI({
 
       // Sources are resolved from the finished answer rather than from
       // retrieval scores, so the chips name what the response was actually
-      // built from. See attributeSources.
-      return sseTransformResponse(stream, logCompletion, answer =>
-        attributeSources(resumeContext.matches, answer)
-      );
+      // built from. See attributeSources and attributeAgentSources.
+      return sseTransformResponse(stream, logCompletion, resolveSources, steps);
     }
 
     const response = await env.AI.run(CHAT_MODEL, { messages, ...INFERENCE_OPTIONS });
     const assistantContent = response.response || "Sorry, I couldn't generate a response.";
     logCompletion(assistantContent);
 
-    return jsonChatResponse(
-      assistantContent,
-      attributeSources(resumeContext.matches, assistantContent)
-    );
+    return jsonChatResponse(assistantContent, resolveSources(assistantContent), steps);
   } catch (error) {
     // The caller gets a fixed message and a request id; the id is the only
     // thing that connects their report to the log line holding the real cause.

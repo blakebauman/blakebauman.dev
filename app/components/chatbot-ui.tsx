@@ -11,17 +11,66 @@ interface ContextSource {
   title: string;
 }
 
+export interface AgentStep {
+  tool: string;
+  args: Record<string, unknown>;
+  ok: boolean;
+}
+
 interface Message {
   role: 'assistant' | 'user';
   content: string;
   id: string;
   timestamp: number;
   sources?: ContextSource[];
+  steps?: AgentStep[];
 }
 
 // How many suggestions to show once the conversation is under way. Fewer than
 // the opening set: at that point they are a nudge, not the main affordance.
 const FOLLOW_UP_PROMPT_COUNT = 2;
+
+/**
+ * The tool calls, as a sentence.
+ *
+ * Deliberately not chips. The source chips below the answer say what grounded
+ * it; this says what the assistant did to get there, and rendering both as rows
+ * of chips would read as one list split in two. A sentence in the metadata
+ * treatment stays quiet and does not compete with the citation it sits above.
+ *
+ * Failed calls are named too. An assistant that looked and found nothing is
+ * telling the truth about the record, and hiding that half would make an
+ * "I don't have that" look like it never checked.
+ */
+export function describeSteps(steps: AgentStep[]): string {
+  const phrases = steps.map(step => {
+    const name = typeof step.args.name === 'string' ? step.args.name : null;
+    const slug = typeof step.args.slug === 'string' ? step.args.slug : null;
+    const company = typeof step.args.company === 'string' ? step.args.company : null;
+
+    switch (step.tool) {
+      case 'search_record':
+        return step.ok ? 'searched the record' : 'tried to search the record';
+      case 'list_projects':
+        return 'listed the projects';
+      case 'get_project':
+        return name ? `looked up ${name}` : 'looked up a project';
+      case 'list_experience':
+        return company ? `read the ${company} role` : 'read the role history';
+      case 'read_case_study':
+        return slug ? `read the ${slug} case study` : 'read a case study';
+      case 'get_profile':
+        return 'read the profile';
+      default:
+        return step.tool;
+    }
+  });
+
+  const last = phrases.at(-1);
+  if (!last) return '';
+  const sentence = phrases.length === 1 ? last : `${phrases.slice(0, -1).join(', ')}, then ${last}`;
+  return `${sentence.charAt(0).toUpperCase()}${sentence.slice(1)}`;
+}
 
 function formatTimestamp(timestamp: number): string {
   const date = new Date(timestamp);
@@ -123,6 +172,12 @@ export default function ChatbotUI({
               <div className="who">
                 <span className="mark" aria-hidden="true" /> {isYou ? 'You' : 'Blake (the index)'}
               </div>
+              {/* What the assistant did to answer. Sits above the answer
+                  because it happened before it, and because it is the one thing
+                  on screen while the first tokens are still arriving. */}
+              {msg.role === 'assistant' && msg.steps && msg.steps.length > 0 && (
+                <div className="bb-chat-steps">{describeSteps(msg.steps)}</div>
+              )}
               <div className="text">
                 {msg.role === 'assistant' ? (
                   <AssistantMessage content={msg.content} isStreaming={isStreaming} />

@@ -23,7 +23,13 @@
     // server. request.ts gates Vectorize search on process.env.NODE_ENV (baked at
     // build time), so this must not read "development" in production.
     "NODE_ENV": "production",
-    "CHAT_ENABLED": "true"
+    "CHAT_ENABLED": "true",
+    // Public read-only MCP server at /mcp (app/agent/mcp.ts).
+    "MCP_ENABLED": "true",
+    // Routes /api/chat through the tool-calling loop (app/agent/loop.ts).
+    // Turning this off reverts to single-shot retrieval, which is also where
+    // the loop falls back to on its own if it fails.
+    "CHAT_AGENT_ENABLED": "true"
   },
   "observability": {
     "enabled": true
