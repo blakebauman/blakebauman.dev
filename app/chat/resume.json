@@ -26,7 +26,8 @@
     "positionFootnote": "8+ YEARS · ENTERPRISE COMMERCE · EDGE PLATFORMS · MULTI-AGENT AI WORKFLOWS · ZERO-DOWNTIME MIGRATIONS · COMMERCE FAILURE MODES & HOW TO FIX THEM.",
     "artifactHeading": "Ask the resume",
     "artifactSubhead": "It will tell you what I've worked on and what I haven't.",
-    "colophon": "The record is maintained as a record, not a marketing document. What's listed is what happened."
+    "colophon": "The record is maintained as a record, not a marketing document. What's listed is what happened.",
+    "mcp": "This page is also an MCP server. A client pointed at it gets the same six read-only tools the assistant here uses \u2014 search the record, list the projects and roles, open any of them in full."
   },
   "blockquote": {
     "text": "I know how large systems fail, and how to fix them.",

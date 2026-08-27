@@ -12,6 +12,29 @@ export type {
   VectorQueryResult,
 } from './schemas';
 
+/** A tool as Workers AI advertises it to the model. */
+export interface AIToolDefinition {
+  name: string;
+  description: string;
+  parameters: Record<string, unknown>;
+}
+
+/**
+ * A tool call as it comes back from the model.
+ *
+ * Two shapes are in circulation: Workers AI's native one (`name` plus an
+ * already-parsed `arguments` object) and the OpenAI-compatible one (`function`
+ * nested, `arguments` as a JSON string). Which one arrives depends on the model
+ * and can change under us, so both are typed here and normalized in one place —
+ * see `normalizeToolCalls` in app/agent/loop.ts.
+ */
+export interface AIToolCall {
+  id?: string;
+  name?: string;
+  arguments?: Record<string, unknown> | string;
+  function?: { name?: string; arguments?: Record<string, unknown> | string };
+}
+
 interface AIRunInput {
   prompt?: string;
   messages?: Array<{ role: string; content: string }>;
@@ -19,11 +42,13 @@ interface AIRunInput {
   stream?: boolean;
   temperature?: number;
   max_tokens?: number;
+  tools?: AIToolDefinition[];
 }
 
 interface AIRunResult {
   data?: number[][];
   response?: string;
+  tool_calls?: AIToolCall[];
   shape?: number[];
   pooling?: string;
   usage?: Record<string, unknown>;
@@ -69,6 +94,13 @@ export interface Env {
   EVAL_API_KEY?: string;
   ADMIN_API_KEY?: string;
   CHAT_ENABLED?: string;
+  // Kill switch for the MCP endpoint, mirroring CHAT_ENABLED. Absent means
+  // off, so a deploy that forgets it fails closed.
+  MCP_ENABLED?: string;
+  // Routes /api/chat through the agent loop instead of single-shot retrieval.
+  // Absent means off, and the loop falls back to the retrieval path on any
+  // failure — so this turns the loop off deliberately, not as a safety net.
+  CHAT_AGENT_ENABLED?: string;
   // Salt for hashing client IPs before they are written to D1. Absent in local
   // dev; see logger.ts for the degraded behaviour when it is missing.
   IP_HASH_SALT?: string;

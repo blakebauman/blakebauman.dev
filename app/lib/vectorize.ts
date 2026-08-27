@@ -25,7 +25,7 @@ const MAX_VECTOR_ID_BYTES = 64;
 // Per-component slug caps, chosen so the longest id each one can produce stays
 // well inside MAX_VECTOR_ID_BYTES once its prefix and `_highlights_N` suffix
 // are added.
-const SLUG_MAX = {
+export const SLUG_MAX = {
   project: 32,
   company: 20,
   years: 12,
@@ -77,7 +77,7 @@ export interface PopulateResult {
   ids: string[];
 }
 
-function slugify(value: string, maxLength = 48): string {
+export function slugify(value: string, maxLength = 48): string {
   return (
     value
       .normalize('NFKD')

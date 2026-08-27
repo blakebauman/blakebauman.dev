@@ -25,6 +25,25 @@ bindings, but currently fails: Cloudflare rejects the preview session with error
 preview subdomain. Until that is fixed, the chatbot can only be exercised end to
 end against a deployment.
 
+**`pnpm run dev` does not run `workers/app.ts` at all.** The dev server uses
+`cloudflareDevProxy`, which supplies bindings to the React Router dev server;
+the worker entry is only the SSR build input. So everything that lives in its
+`fetch` — CORS, rate limiting, `/mcp`, `/api/populate-vectorize`,
+`/api/debug/retrieval`, `/api/admin/chat-logs`, and the 405 gate on `/api/chat` —
+is bypassed in dev, and those paths fall through to a React Router 404. To
+exercise any of it locally, `pnpm run build && pnpm exec wrangler dev --local`.
+Pass `--port` explicitly: other Workers projects on this machine hold 8787.
+
+To exercise anything that needs AI or Vectorize locally, add `"remote": true` to
+those two bindings and run `wrangler dev` **without** `--local` (`--local`
+refuses remote bindings outright). That works — the 1031 preview-session failure
+above is specific to the Vite dev proxy's `getPlatformProxy` session, not to
+per-binding remote mode. Two caveats: every request then bills real Workers AI
+usage and queries the live index, and `/api/chat` still takes the dev path
+regardless, because wrangler sets `NODE_ENV=development` and `request.ts` gates
+both the vector and agent paths on it. Testing the chat loop end to end means
+also stubbing `isDev` to false for the run. Do not commit either change.
+
 ### Testing
 ```bash
 pnpm test             # Run tests with Vitest
@@ -125,6 +144,126 @@ scrolls on a phone rather than scaling into illegibility. **A diagram is a claim
 verify arrow direction and component names against the source before shipping
 one.**
 
+### Agent surface (`app/agent/`)
+
+`tools.ts` is one set of functions over the record, shared by every agentic
+surface. `mcp.ts` exposes them as a Model Context Protocol server at `POST /mcp`
+so an external agent can query the record directly; the on-site chat loop is
+meant to consume the same layer, which is the point — an external agent and the
+site's own assistant answer from one implementation rather than two that drift.
+
+Six tools: `search_record` (the only one with a live dependency), `list_projects`,
+`get_project`, `list_experience`, `read_case_study`, `get_profile`.
+
+- **Tools return text, and `callTool` is the only boundary that formats it.**
+  Every result is fence-stripped and capped there rather than per tool, because
+  per-tool is one new tool away from an exception. Tool output re-enters a
+  model's transcript on every hop of a loop, which makes it the more dangerous
+  of the two places untrusted-shaped text meets a prompt.
+- **The output cap is a backstop, not a content budget.** A tool whose ordinary
+  output reaches it is losing its own tail — and for `list_projects`, whose
+  entire job is completeness, that silently drops the oldest work. Both
+  enumeration tools were doing exactly that at a 4000-character cap. The
+  truncation test asserts that nothing truncates on the current record; when it
+  fails, shorten the tool, do not raise the cap.
+- **Slugs are `slugify(name)` from `vectorize.ts`, the same value `buildChunks`
+  writes as `sourceId`.** That agreement is what makes search → `get_project` a
+  working two-hop path: a hit names a source the next call can resolve. Breaking
+  it breaks the loop silently, since both halves still work alone.
+- **`search_record` degrades, it does not throw.** A dead binding comes back as
+  content pointing at the enumeration tools. An internal error ends an agent
+  loop; a redirect does not.
+- **Zod schemas are the single definition.** `z.toJSONSchema` derives what
+  `tools/list` advertises, so the contract and the validation cannot disagree.
+
+`loop.ts` is the tool-calling loop behind `/api/chat`, gated on
+`CHAT_AGENT_ENABLED`. It runs up to 3 hops, 3 tool calls per hop, 6 per turn and
+12000 characters of tool output, then answers from what it gathered. The
+answering call carries no `tools`: the loop is over, and a model that could
+still emit a tool call there would stream a JSON blob at the reader with nothing
+left to run it.
+
+- **Retrieval is the fallback, and it stays that way.** `tryAgentLoop` returns
+  null rather than throwing, and `/api/chat` falls through to
+  `searchResumeContext` + `buildChatMessages`. A loop that broke must not cost
+  the visitor their answer.
+- **Tool results are fenced in `<tool_result>` and labelled as data.** Not a
+  precaution — a bug. Unfenced, the felix case study's prose about tool calls
+  that die mid-run, signed thinking blocks and prompt-cache identity read to the
+  model as commentary on its own situation, and a plain "tell me about felix"
+  came back as the off-topic redirect, deterministically. The retrieval path
+  never had it because it has always fenced its context. `stripFenceMarkers`
+  covers the tag, so nothing inside can close it early.
+- **Never put an instruction to the model inside tool output.** A trailing
+  "call get_project for full detail" in `list_projects` came back to the visitor
+  verbatim, the assistant narrating its own plumbing. What a tool is for belongs
+  in its description, which the model reads and the visitor never sees.
+- **Rank-carrying facts lead.** Maturity sits immediately after the project
+  name, not after the description: trailing it, the model answered "what has he
+  shipped?" with felix — a prototype — among the production work. The prompt
+  also steers "what has he shipped" to `list_projects({maturity:'production'})`
+  rather than asking the model to filter twenty-one rows by eye.
+- **Identical repeat calls are refused with a message saying so.** Reading its
+  own unchanged result and asking again is the classic way a loop fails to
+  terminate.
+- **Both tool-call shapes are normalized.** Workers AI returns its native
+  `{name, arguments}` for some models and OpenAI's `{function:{...}}` for
+  others. A loop that parses neither does not crash — it answers with no tools,
+  which reads as a bad model rather than a bug.
+
+Citations come from two kinds of provenance and they are not equivalent. A
+targeted lookup is a fact — the model named that entity itself — so
+`get_project`, `read_case_study` and a filtered `list_experience` are cited
+directly. A search hit is an inference, so it still goes through
+`attributeSources` term overlap against the finished answer. Broad enumerations
+are never cited, because citing them reproduces exactly the failure that
+function exists to fix.
+
+The MCP server is stateless and hand-written: every tool is read-only and every
+call independent, so there is no session to keep and no Durable Object to hold
+it. `MCP_ENABLED` gates it, mirroring `CHAT_ENABLED`, and absent means off. It
+is unauthenticated — everything it returns is already on the page — but shares
+the chat rate limiter, because `search_record` spends an embedding per call.
+It is also the one endpoint here deliberately not origin-locked: MCP clients
+arrive from every origin, so `/mcp` answers `Access-Control-Allow-Origin: *`.
+
+### Discovery
+
+Nothing finds `/mcp` on its own. There is **no `.well-known` discovery standard
+for MCP servers** — the `.well-known/oauth-protected-resource` endpoints in the
+spec are auth metadata for authenticated servers, and this one is deliberately
+unauthenticated. So discovery is three deliberate pointers:
+
+- **The colophon** (`copy.mcp` in resume.json) — the human path, and the only
+  one that actually gets a URL in front of the person who configures a client.
+  The endpoint renders as mono text, not a link: `/mcp` answers JSON-RPC over
+  POST and returns 405 to a browser, so linking it would send a curious reader
+  to an error.
+- **`/llms.txt`** — the llmstxt.org convention, the closest thing to a
+  machine-readable pointer that exists. Generated from resume.json,
+  CASE_STUDIES and the tool registry, so it cannot advertise a tool the server
+  does not have. Honours `listed: false` the way the page does.
+- **`get_profile`** — so the on-site assistant can answer "can I query this
+  programmatically?", which is the question the other two are really for, asked
+  by someone already talking to the thing that can answer it.
+
+**The topic guardrail is part of this and is easy to forget.** It runs before
+any model call, so a question it refuses is one the assistant can never answer
+however good its tools are. When `/mcp` shipped, five of six natural phrasings
+of "can I query this?" were refused outright — "do you have an API?", "how do I
+connect this to Claude?", "can my agent read this?" — because none of that
+vocabulary was in the record. The fix was topic tags on the
+`this-site-architecture` ai-context entry, not a change to guardrails.ts. Adding
+any capability the assistant should be able to discuss means checking the
+guardrail lets the question through first.
+
+A bare `api` in those tags does make "what is the best API for weather data?"
+on-topic. That is the existing calibration, not a regression: `database`,
+`python`, `email` and `music` were already there and already did the same. The
+cost is one inference on a question the model answers with "the record doesn't
+cover that". Off-topic patterns are checked first, so no amount of on-topic
+vocabulary weakens the injection screen.
+
 ### Content (the whole knowledge base)
 - `app/chat/resume.json` - Single source for both the rendered page and the chat.
   Projects and experience entries carry optional `highlights`, `aliases`, and
@@ -206,11 +345,20 @@ and measured: it lowers every score and does not improve ranking on this corpus.
 - `CHAT_LOGS_DB` - D1: chat logs plus the vector manifest. A nightly cron prunes
   logs older than 90 days.
 
+Vars: `CHAT_ENABLED`, `MCP_ENABLED`, `CHAT_AGENT_ENABLED` — each must read
+`"true"` to take effect. Turning `CHAT_AGENT_ENABLED` off reverts `/api/chat` to
+single-shot retrieval, which is also where the loop falls back to on its own.
+
 Secrets: `VECTORIZE_ADMIN_KEY` (populate + retrieval debug), `ADMIN_API_KEY`
 (chat logs), `IP_HASH_SALT` (without it, IP hashes are brute-forceable and rows
 are written with an `unsalted:` prefix).
 
 ### AI Chat Flow
+
+With `CHAT_AGENT_ENABLED`, steps 3-5 are replaced by the tool-calling loop in
+`app/agent/loop.ts`; steps 1, 2, 6 and 7 are common to both paths, and the loop
+falls back to this one on any failure.
+
 1. `POST /api/chat` only — non-POST returns 405, so nothing bypasses the rate limiter
 2. `app/chat/guardrails.ts` checks topic relevance against a NFKC-normalized,
    invisible-character-stripped prompt, before any model call. It also screens

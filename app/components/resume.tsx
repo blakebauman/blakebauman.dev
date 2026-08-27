@@ -77,6 +77,8 @@ export function Resume({ chatEnabled, persona, chatGreeting, suggestedPrompts }:
   );
 
   const todayYear = new Date().getFullYear();
+  const mcpEndpoint = `${resumeData.website.replace(/\/$/, '')}/mcp`;
+
   const sections = useMemo(
     () => [
       { id: 'top', label: 'Top' },
@@ -288,7 +290,18 @@ export function Resume({ chatEnabled, persona, chatGreeting, suggestedPrompts }:
             <span className="rule" aria-hidden="true" />
           </div>
           <div className="bb-colophon-grid">
-            <p>{resumeData.copy.colophon}</p>
+            <div>
+              <p>{resumeData.copy.colophon}</p>
+              {resumeData.copy.mcp && (
+                <p className="secondary" style={{ marginTop: 18 }}>
+                  {resumeData.copy.mcp}{' '}
+                  {/* Not a link. A browser sent to /mcp gets a 405 — the endpoint
+                      answers JSON-RPC over POST and nothing else. This is a value
+                      to paste into a client config, so it is set as one. */}
+                  <span className="bb-endpoint">{mcpEndpoint}</span>
+                </p>
+              )}
+            </div>
             <div className="cta">
               <a className="btn" href={`mailto:${resumeData.email}`}>
                 Talk to me
