@@ -203,13 +203,28 @@
   --lh-title: 1.2;
   --lh-head: 1;
 
-  /* The grid. Twelve columns is the system the page is set on, the thing the
-     toggle reveals, and the thing the section heads, lead rows and record rows
-     are composed on. Six below 720px. */
+  /* The grid. Twelve columns inside a box capped at --row-max and held to the
+     left gutter: one structure that the masthead, every composed row, both
+     two-up sections and the overlay all sit on, so the toggle draws the grid
+     the page is set on rather than a second one beside it. Below 900px the
+     page composes on a single column and the overlay says so. */
   --cols: 12;
   --col-gap: clamp(12px, 1.6vw, 24px);
 
   --measure: 65ch;
+  /* Seven columns wide, for body copy that is not itself a grid child — the
+     case-study prose, which sits in a plain capped block rather than on the
+     twelve. Expressed as a share rather than a pixel figure so it tracks the
+     columns at every width: seven columns and the six gaps between them is
+     7/12 of the box less five twelfths of a gap. At the cap that is 714px,
+     62 characters at 20px and so inside the measure; below the cap it shrinks
+     with the columns, which a ch value does not. Only above 900px — below it
+     there is one column and seven twelfths of it is nothing. */
+  --measure-cols: calc(58.3333% - var(--col-gap) * 5 / 12);
+  /* Six columns, for the 17px band. Half the box less half a gap, which lands
+     at 608px — 65 characters at 17px, so it is the measure and a column line at
+     the same time rather than a choice between them. */
+  --measure-cols-s: calc(50% - var(--col-gap) / 2);
   /* Fluid. The page is the viewport, not a 1120px card centred on it; the
      gutter is the margin and grows with the width so the edge stays an edge.
      `--measure` is what keeps prose readable, not the shell. */
@@ -221,8 +236,16 @@
      other with 1700px of nothing between, which no eye tracks. So the page is
      fluid and the rows on it are not. 1240px is the content width at 1440,
      where the composition was measured, so nothing at or below that width
-     moves. The masthead is exempt on purpose: its display type is the thing
-     the full width is for. */
+     moves.
+
+     The masthead used to be exempt, on the grounds that its display type is
+     what the full width is for. Measured, that stopped being true above about
+     1540px: --fs-display clamps at 200px, the name sets 1692px on one line and
+     wraps to two at every width below that, so the exemption bought empty
+     space rather than larger type — and it put the one red rule on the page
+     350px past every edge under it. Capping the masthead makes the 1440
+     composition the composition at every width, which is what this token was
+     for. */
   --row-max: 1240px;
 
   /* Semantic z-index scale. No arbitrary 999. */
@@ -394,6 +417,50 @@ svg {
 }
 
 /* ---------------------------------------------------------------------------
+   The twelve columns
+
+   One definition, every consumer. Each of these used to declare its own split —
+   1.5fr/1fr in the masthead, 0.75fr/1.6fr in the chat section, a bare 132px
+   column in recognition — on its own breakpoint, and half of them were not
+   capped at all. Measured at 1742px that put three right edges on one page
+   (1310, 1659 and the prose measure) and left the lead rows as the only thing
+   the overlay's columns described, which inverts the point of a control whose
+   whole claim is that the structure is checkable.
+
+   The box is capped at --row-max and anchored to the left gutter. What differs
+   between consumers is which columns a child takes; the columns themselves
+   never differ. Full-width hairlines — the section rules, the top bar, the
+   footer — are page rules and stay full-bleed; anything set in type sits here.
+
+   Every span rule belongs inside a min-width: 900px query. --cols is 1 below
+   that, and a span of seven on a one-column grid generates six implicit ones.
+--------------------------------------------------------------------------- */
+.bb-cols,
+.bb-masthead,
+.bb-lead,
+.bb-role,
+.bb-rec-block,
+.bb-position .body-grid,
+.bb-ask-grid,
+.bb-colophon-grid {
+  display: grid;
+  grid-template-columns: repeat(var(--cols), minmax(0, 1fr));
+  column-gap: var(--col-gap);
+  max-width: var(--row-max);
+}
+
+/* Two elements are the wrap as well as the grid, and a cap of --row-max on one
+   of those is wrong twice over: the gutter sits inside its own box, so the
+   columns come out short by two gutters, and .bb-wrap's `margin: 0 auto` then
+   centres the whole grid against a page that is anchored left. The cap carries
+   the gutter and the auto margin is released on the start side. */
+.bb-wrap.bb-masthead,
+.bb-top-in {
+  max-width: calc(var(--row-max) + var(--gutter) * 2);
+  margin-inline: 0 auto;
+}
+
+/* ---------------------------------------------------------------------------
    The grid overlay
 
    The signature. It draws the twelve columns the page is actually set on, as
@@ -414,11 +481,9 @@ svg {
   display: block;
 }
 
-.bb-grid-overlay .bb-wrap {
+.bb-grid-overlay .bb-wrap,
+.bb-grid-overlay .bb-cols {
   height: 100%;
-  display: grid;
-  grid-template-columns: repeat(var(--cols), minmax(0, 1fr));
-  gap: 0 var(--col-gap);
 }
 
 .bb-grid-overlay i {
@@ -445,14 +510,21 @@ svg {
   }
 }
 
-/* Six columns below 720px, so the overlay describes the layout it sits on
-   rather than a grid nothing uses. */
-@media (max-width: 720px) {
+/* Below 900px every composed row on the page collapses to a single column, so
+   that is what the overlay draws: one column, as its two edges rather than as a
+   fill, because 14% red washed over a whole phone screen is a tint and not a
+   ruler. Six columns used to be drawn here, which was the same lie the full
+   width version told above 1240 — a grid nothing on the page composes on. */
+@media (max-width: 899px) {
   :root {
-    --cols: 6;
+    --cols: 1;
   }
 
-  .bb-grid-overlay i:nth-child(n + 7) {
+  .bb-grid-overlay i {
+    background: transparent;
+  }
+
+  .bb-grid-overlay i:nth-child(n + 2) {
     display: none;
   }
 }
@@ -495,6 +567,14 @@ svg {
   color: var(--night);
 }
 
+/* Pressed, this control is a red fill, and the focus ring is red: offset it
+   sits on night and is legible, but it reads as a soft second border around
+   the chip. Ink separates from the fill and from the ground, which is the same
+   fix `.btn` already carries for the same reason. */
+.bb-grid-toggle[aria-pressed="true"]:focus-visible {
+  outline-color: var(--ink);
+}
+
 /* Four bars, the mark of the thing it turns on. */
 .bb-grid-toggle .mark {
   display: grid;
@@ -524,6 +604,10 @@ svg {
   justify-content: space-between;
   gap: 24px;
   height: 54px;
+  /* The bar's rule runs the full width because it is a page rule; its contents
+     belong to the grid, so the toggle lands on the same right edge as the
+     section stamps and the row actions under it. The cap itself is declared
+     with the masthead's, beside the grid box both are an exception to. */
 }
 
 .bb-top-name {
@@ -682,16 +766,28 @@ svg {
      the name and its rule, which detached the rule from the name and pushed the
      email — the primary action — under the fold at 1440x900. */
   padding-block: clamp(36px, 8vh, 84px) clamp(32px, 5vh, 56px);
-  display: grid;
-  grid-template-columns: minmax(0, 1fr);
-  gap: clamp(14px, 1.8vw, 22px) clamp(28px, 4vw, 56px);
+  row-gap: clamp(14px, 1.8vw, 22px);
   align-items: end;
   position: relative;
 }
 
-@media (min-width: 1000px) {
-  .bb-masthead {
-    grid-template-columns: minmax(0, 1.5fr) minmax(0, 1fr);
+@media (min-width: 900px) {
+  /* Six columns of subhead, a whole empty column, five of metadata. The column
+     is the separation — wider than the 56px gap it replaces, and unlike that
+     gap it lands on a line the overlay draws.
+
+     Five for the metadata rather than four because of one string: the contact
+     address sets 176px and cannot break, and four columns at the 900px
+     threshold leave it 178px to sit in. It fit by two pixels, which is not a
+     column count, it is a coincidence. The subhead gives up the column and
+     reads better for it — six columns is 47 characters at the lede stop, where
+     the 56ch cap it used to run to was past the top of the range. */
+  .bb-masthead .subhead {
+    grid-column: 1 / span 6;
+  }
+
+  .bb-masthead-meta {
+    grid-column: 8 / span 5;
   }
 }
 
@@ -832,16 +928,23 @@ svg {
 }
 
 .bb-lead {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) auto;
-  gap: 6px 24px;
+  row-gap: 6px;
   position: relative;
   padding-block: clamp(16px, 2.4vh, 24px);
   border-bottom: 1px solid var(--hair);
   text-decoration: none;
   color: var(--ink);
   transition: border-color var(--t-mid) var(--ease);
-  max-width: var(--row-max);
+}
+
+/* Between the grid's threshold and the phone the row is two cells rather than
+   twelve: the name and its descriptor on the left, the action held to the
+   right edge of the same box the twelve columns cap. */
+@media (max-width: 899px) {
+  .bb-lead {
+    grid-template-columns: minmax(0, 1fr) auto;
+    column-gap: 24px;
+  }
 }
 
 .bb-lead:hover,
@@ -944,8 +1047,7 @@ svg {
 
 @media (min-width: 900px) {
   .bb-lead {
-    grid-template-columns: repeat(12, minmax(0, 1fr));
-    gap: 4px var(--col-gap);
+    row-gap: 4px;
     align-items: start;
   }
 
@@ -990,6 +1092,10 @@ svg {
   flex-wrap: wrap;
   align-items: baseline;
   gap: 2px 0;
+  /* Wraps at the grid's right edge, the same place the lead rows above it
+     stop. Uncapped it ran on to the page edge and gave the section a second
+     right margin 350px past the first. */
+  max-width: var(--row-max);
 }
 
 .bb-index a {
@@ -1025,9 +1131,7 @@ svg {
    Position
 --------------------------------------------------------------------------- */
 .bb-position .body-grid {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr);
-  gap: clamp(24px, 4vw, 52px);
+  row-gap: clamp(24px, 4vw, 52px);
   /* Anchor the short column to the bottom of the prose, the same way the
      masthead meta anchors. A short block floating at the top of a tall empty
      column reads as unfinished rather than composed. */
@@ -1035,13 +1139,16 @@ svg {
 }
 
 @media (min-width: 900px) {
-  /* The prose column is sized by the measure, not by a ratio, and the footnote
-     takes what is left. A ratio was fine when body set at 17px; at 20px it left
-     the only long-form block on this page running 51ch while every other prose
-     block held 65. The note becomes genuine marginalia, which is the right
-     shape for what it says. */
-  .bb-position .body-grid {
-    grid-template-columns: minmax(0, var(--measure)) minmax(190px, 1fr);
+  /* Seven columns of prose, four of marginalia — the same split the masthead
+     takes, so the two long blocks on the page share one shape. Seven columns
+     is 62ch at the cap, just inside the measure, which is what puts the prose
+     on a line the overlay draws instead of ending wherever 65 characters do. */
+  .bb-position .lede-set {
+    grid-column: 1 / span 7;
+  }
+
+  .bb-position .footnote {
+    grid-column: 9 / span 4;
   }
 }
 
@@ -1086,12 +1193,9 @@ svg {
 }
 
 .bb-role {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr);
-  gap: 6px 28px;
+  row-gap: 6px;
   padding-block: clamp(20px, 3vh, 30px);
   border-top: 1px solid var(--hair);
-  max-width: var(--row-max);
 }
 
 .bb-role:first-child {
@@ -1101,8 +1205,6 @@ svg {
 
 @media (min-width: 900px) {
   .bb-role {
-    grid-template-columns: repeat(12, minmax(0, 1fr));
-    gap: 6px var(--col-gap);
     align-items: start;
   }
 
@@ -1179,17 +1281,23 @@ svg {
   margin-top: clamp(28px, 4vh, 42px);
   padding-top: clamp(22px, 3vh, 30px);
   border-top: 1px solid var(--hair);
+  max-width: var(--row-max);
 }
 
 .bb-rec-block {
-  display: grid;
-  gap: 4px 28px;
-  grid-template-columns: minmax(0, 1fr);
+  row-gap: 4px;
 }
 
-@media (min-width: 800px) {
-  .bb-rec-block {
-    grid-template-columns: 132px minmax(0, 1fr);
+@media (min-width: 900px) {
+  /* The same two columns of date and seven of content the roles above it take.
+     It was a 132px column on a breakpoint of its own, which is a measurement
+     nothing else on the page shares. */
+  .bb-rec-block .term {
+    grid-column: 1 / span 2;
+  }
+
+  .bb-rec-block .rec-body {
+    grid-column: 3 / span 7;
   }
 }
 
@@ -1304,15 +1412,26 @@ svg {
    Colophon + stamps
 --------------------------------------------------------------------------- */
 .bb-colophon-grid {
-  display: grid;
-  gap: clamp(28px, 4vw, 56px);
-  grid-template-columns: minmax(0, 1fr);
+  row-gap: clamp(28px, 4vw, 56px);
   align-items: start;
 }
 
-@media (min-width: 860px) {
-  .bb-colophon-grid {
-    grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr);
+@media (min-width: 900px) {
+  /* Five columns, and the column is the measure: the 34ch and 40ch caps below
+     hold the stacked phone layout, and holding them here as well would stop
+     both paragraphs 60px short of the line the grid draws for no reason a
+     reader could name. Five columns sets the lede at 39 characters and the
+     note at 53, both inside their caps. */
+  .bb-colophon-grid > :first-child {
+    grid-column: 1 / span 5;
+  }
+
+  .bb-colophon-grid > :first-child p {
+    max-width: none;
+  }
+
+  .bb-colophon-grid .cta {
+    grid-column: 9 / span 4;
   }
 }
 
@@ -1487,8 +1606,44 @@ svg {
   overflow-wrap: break-word;
 }
 
+/* The measure stops the line 31px short of the column it sits in, which is
+   invisible until the reader turns the grid on and finds the one long block on
+   the page ending nowhere. Seven columns is the narrower of the two anywhere
+   the cap applies, so this tightens the measure rather than loosening it. */
+@media (min-width: 900px) {
+  .bb-cs-sec p {
+    max-width: var(--measure-cols);
+  }
+
+  /* The list sets 17px, so it takes the six-column stop rather than the seven
+     the prose takes: at seven it would run 76 characters, past the measure, in
+     smaller type than the prose above it. Its hairlines are the visible edge
+     here, which is why a list that stops short of any line reads worse than a
+     paragraph that does. */
+  .bb-cs-list {
+    max-width: var(--measure-cols-s);
+  }
+}
+
 .bb-cs-sec p + p {
   margin-top: 1.1em;
+}
+
+/* Five facts, two columns each, ending on the line that closes column 10. It
+   stays flex below the grid's threshold: five stacked key/value rows is a
+   worse phone than a wrapping strip, and one column cannot hold them side by
+   side. */
+@media (min-width: 900px) {
+  .bb-cs-meta {
+    display: grid;
+    grid-template-columns: repeat(var(--cols), minmax(0, 1fr));
+    column-gap: var(--col-gap);
+    row-gap: 18px;
+  }
+
+  .bb-cs-meta > div {
+    grid-column: span 2;
+  }
 }
 
 /* `--measure` is 65ch, and `ch` resolves against the element's own font size.
@@ -1647,15 +1802,21 @@ svg {
    Chat — "Ask the record"
 --------------------------------------------------------------------------- */
 .bb-ask-grid {
-  display: grid;
-  gap: clamp(24px, 4vw, 48px);
-  grid-template-columns: minmax(0, 1fr);
+  row-gap: clamp(24px, 4vw, 48px);
   align-items: start;
 }
 
-@media (min-width: 940px) {
-  .bb-ask-grid {
-    grid-template-columns: minmax(0, 0.75fr) minmax(0, 1.6fr);
+@media (min-width: 900px) {
+  /* Four columns of framing, eight of conversation. The frame is the surface
+     you work in, so it takes the larger share; the ratio it replaces
+     (0.75fr to 1.6fr) resolved to almost exactly the same split and landed on
+     nothing. */
+  .bb-ask-aside {
+    grid-column: 1 / span 4;
+  }
+
+  .bb-ask-grid .bb-chat-frame {
+    grid-column: 5 / span 8;
   }
 }
 
@@ -2298,6 +2459,10 @@ svg {
   *::before,
   *::after {
     animation-duration: 0.01ms !important;
+    /* The delay has to go with the duration. The overlay's columns carry a
+       12ms per-column stagger, so without this the grid still took 132ms to
+       finish arriving for a reader who asked for no motion at all. */
+    animation-delay: 0s !important;
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
   }
@@ -2340,6 +2505,10 @@ svg {
     letter-spacing: normal;
   }
 
+  /* The overlay is a reading aid for a screen, and it persists across visits:
+     a reader who left it on and hit Print would otherwise get twelve grey
+     columns ruled over every page of the record. */
+  .bb-grid-overlay,
   .bb-top,
   .bb-ask-grid,
   .bb-chat-frame,

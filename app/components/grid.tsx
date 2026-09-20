@@ -1,17 +1,21 @@
 import { useCallback, useEffect, useState } from 'react';
 
 /**
- * The grid overlay draws the twelve columns the page is actually set on, as red
+ * The grid overlay draws the columns the page is actually set on, as red
  * hairlines over the content. It is the site's signature and it is functional
  * rather than decorative: the claim this record makes is that the
  * implementation is part of the work, so a reader gets to check the structure
  * instead of taking it on faith.
  *
+ * Which means it has to be the same grid. The overlay sits in `.bb-cols`, the
+ * one box the masthead, the composed rows and both two-up sections share, so
+ * the columns it draws and the columns they compose on cannot drift apart.
+ * Twelve above 900px; below that every row on the page collapses to a single
+ * column and the overlay draws that column's two edges instead.
+ *
  * The state lives on `<html data-grid>` so CSS alone draws it, persists in
  * localStorage, and is restored by an inline script in root.tsx before first
- * paint. Twelve columns above 720px, six below; the overlay hides the last six
- * at that breakpoint so it always describes the layout it sits on rather than a
- * grid nothing uses.
+ * paint.
  */
 
 const KEY = 'bb-grid';
@@ -21,10 +25,12 @@ export function GridOverlay() {
   return (
     <div className="bb-grid-overlay" aria-hidden="true">
       <div className="bb-wrap">
-        {Array.from({ length: COLUMNS }, (_, i) => (
-          // biome-ignore lint/suspicious/noArrayIndexKey: fixed-length static column ruler
-          <i key={i} style={{ '--i': i } as React.CSSProperties} />
-        ))}
+        <div className="bb-cols">
+          {Array.from({ length: COLUMNS }, (_, i) => (
+            // biome-ignore lint/suspicious/noArrayIndexKey: fixed-length static column ruler
+            <i key={i} style={{ '--i': i } as React.CSSProperties} />
+          ))}
+        </div>
       </div>
     </div>
   );
@@ -64,7 +70,7 @@ export function GridToggle() {
       className="bb-grid-toggle print:hidden"
       aria-pressed={on}
       onClick={toggle}
-      title="Show the 12-column grid this page is set on"
+      title="Show the column grid this page is set on"
     >
       <span className="mark" aria-hidden="true">
         <i />
