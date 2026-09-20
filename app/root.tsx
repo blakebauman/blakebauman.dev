@@ -161,7 +161,7 @@ export function ErrorBoundary({ error }: Route.ErrorBoundaryProps) {
           </a>
           <a
             className="btn-ghost"
-            href={`mailto:${resumeData.email}?subject=Error%20on%20blakebauman.dev`}
+            href={`mailto:${resumeData.email}?subject=Error%20on%20blakebauman.com`}
           >
             Report this
           </a>

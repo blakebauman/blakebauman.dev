@@ -1,4 +1,4 @@
-# blakebauman.dev
+# blakebauman.com
 
 Personal portfolio and resume site built with React Router v7, deployed to Cloudflare Workers. Features an AI-powered chatbot that answers questions about the resume using Cloudflare Workers AI and Vectorize for semantic search.
 

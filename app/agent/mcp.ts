@@ -28,7 +28,7 @@ import { callTool, hasTool, listTools } from './tools';
 const PROTOCOL_VERSION = '2025-06-18';
 
 const SERVER_INFO = {
-  name: 'blakebauman.dev',
+  name: 'blakebauman.com',
   title: "Blake Bauman's professional record",
   version: '1.0.0',
 } as const;

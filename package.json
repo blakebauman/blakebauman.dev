@@ -24,7 +24,7 @@
     "check": "biome check .",
     "check:fix": "biome check --write .",
     "prepare": "lefthook install",
-    "vectorize:populate": "curl -sS -X POST -H \"Authorization: Bearer $VECTORIZE_ADMIN_KEY\" https://blakebauman.dev/api/populate-vectorize",
+    "vectorize:populate": "curl -sS -X POST -H \"Authorization: Bearer $VECTORIZE_ADMIN_KEY\" https://blakebauman.com/api/populate-vectorize",
     "vectorize:eval": "tsx scripts/eval-retrieval.ts",
     "sync:github": "tsx scripts/sync-github.ts"
   },

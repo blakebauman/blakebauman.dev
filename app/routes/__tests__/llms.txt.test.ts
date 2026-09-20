@@ -28,7 +28,7 @@ describe('llms.txt', () => {
    */
   it('names the MCP endpoint and how to speak to it', async () => {
     const text = await body();
-    expect(text).toContain('https://blakebauman.dev/mcp');
+    expect(text).toContain('https://blakebauman.com/mcp');
     expect(text).toContain('JSON-RPC');
     expect(text).toContain('read-only');
   });
@@ -47,7 +47,7 @@ describe('llms.txt', () => {
   it('links every case study', async () => {
     const text = await body();
     for (const study of CASE_STUDIES) {
-      expect(text).toContain(`https://blakebauman.dev/work/${study.slug}`);
+      expect(text).toContain(`https://blakebauman.com/work/${study.slug}`);
     }
   });
 

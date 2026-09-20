@@ -11,7 +11,7 @@ import {
 } from '../persona';
 
 function makeRequest(headers: Record<string, string>): Request {
-  return new Request('https://blakebauman.dev/', { headers });
+  return new Request('https://blakebauman.com/', { headers });
 }
 
 function personaWith(overrides: Partial<Persona>): Persona {

@@ -1,6 +1,6 @@
 import { LEAD_SLUGS } from '../content/case-studies';
 
-const ORIGIN = 'https://blakebauman.dev';
+const ORIGIN = 'https://blakebauman.com';
 
 export function loader() {
   // Case-study routes are generated from the same list the home page ranks by,

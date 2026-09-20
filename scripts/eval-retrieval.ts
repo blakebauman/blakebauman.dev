@@ -132,7 +132,7 @@ const GOLDEN_SET: GoldenCase[] = [
   { question: 'What is offpavement-shop?', expect: ['project_offpavement-shop'] },
   {
     question: 'How does this website chatbot work?',
-    expect: ['project_blakebauman-dev', 'ai_context_this-site-architecture'],
+    expect: ['project_blakebauman-com', 'ai_context_this-site-architecture'],
   },
 
   // Languages and stack
@@ -248,7 +248,7 @@ const GOLDEN_SET: GoldenCase[] = [
   { question: 'What is his education?', expect: ['ai_context_scope-boundaries'] },
 ];
 
-const BASE_URL = process.env.EVAL_BASE_URL ?? 'https://blakebauman.dev';
+const BASE_URL = process.env.EVAL_BASE_URL ?? 'https://blakebauman.com';
 // EVAL_API_KEY is the read-only credential and the one CI holds. Falls back to
 // the admin key so a local run works with whatever is already in .dev.vars.
 const ADMIN_KEY = process.env.EVAL_API_KEY ?? process.env.VECTORIZE_ADMIN_KEY;

@@ -1,5 +1,9 @@
 {
   "$schema": "./node_modules/wrangler/config-schema.json",
+  // Stays "blakebauman-dev" after the move to blakebauman.com. The script name
+  // is the deployment's identity: renaming it creates a second, empty Worker
+  // and leaves the secrets, custom domains and observability history on the
+  // old one. The name is not user-visible anywhere.
   "name": "blakebauman-dev",
   "compatibility_date": "2026-03-02",
   "compatibility_flags": ["nodejs_compat"],
@@ -7,8 +11,13 @@
   "assets": {
     "directory": "./build/client/"
   },
-  // Custom domain routing
+  // Custom domain routing. blakebauman.com is the primary; the two .dev domains
+  // stay bound to this Worker so the host check at the top of workers/app.ts
+  // fetch() can permanently redirect them. Unbinding them would strand every
+  // existing link to the old domain.
   "routes": [
+    { "pattern": "blakebauman.com", "custom_domain": true },
+    { "pattern": "www.blakebauman.com", "custom_domain": true },
     { "pattern": "blakebauman.dev", "custom_domain": true },
     { "pattern": "www.blakebauman.dev", "custom_domain": true }
   ],
