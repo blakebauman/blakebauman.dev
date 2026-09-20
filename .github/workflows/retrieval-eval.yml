@@ -23,7 +23,7 @@ on:
       base_url:
         description: 'Deployment to evaluate'
         required: false
-        default: 'https://blakebauman.dev'
+        default: 'https://blakebauman.com'
   schedule:
     # 04:30 UTC, half an hour after the chat-log retention cron, so the two do
     # not contend. Catches the drift case that has no other alarm: content
@@ -72,7 +72,7 @@ jobs:
       - name: Run retrieval eval
         env:
           EVAL_API_KEY: ${{ secrets.EVAL_API_KEY }}
-          EVAL_BASE_URL: ${{ inputs.base_url || 'https://blakebauman.dev' }}
+          EVAL_BASE_URL: ${{ inputs.base_url || 'https://blakebauman.com' }}
         # pipefail matters here: without it the pipeline's exit code is tee's,
         # which is always 0, so a failing eval would report a passing job — the
         # exact failure this workflow exists to catch.

@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-Personal portfolio website (blakebauman.dev) built with React Router v7 and deployed to Cloudflare Workers. Features an AI-powered chatbot that answers questions about the resume using Cloudflare AI and Vectorize for semantic search.
+Personal portfolio website (blakebauman.com) built with React Router v7 and deployed to Cloudflare Workers. Features an AI-powered chatbot that answers questions about the resume using Cloudflare AI and Vectorize for semantic search.
 
 ## Commands
 
@@ -71,9 +71,10 @@ VECTORIZE_ADMIN_KEY=... pnpm run vectorize:eval      # Golden-set retrieval eval
 There is one populate path: `POST /api/populate-vectorize` on the main worker.
 A separate `vectorize-worker` used to own a second, divergent copy of it that
 omitted `ai-context.json`, so rebuilding the index from the main worker silently
-dropped the entire chat-only knowledge layer. That worker has been deleted;
-retire the `vectorize.blakebauman.dev` custom domain in the dashboard if it is
-still bound.
+dropped the entire chat-only knowledge layer. It has been deleted *from this
+repo*, but as of 2026-09-19 the `vectorize-worker` script is still deployed on
+the account and `vectorize.blakebauman.dev` is still bound to it — so the
+divergent populate path is still reachable. Retire both.
 
 Populate is reconciling, not just additive. Vectorize has no API to list the ids
 it holds, so `migrations/003_vector_manifest.sql` records what the last populate
@@ -337,6 +338,33 @@ projects, and give each of those a home.
 
 Do not add a BGE query-instruction prefix to the embedding call. It was tried
 and measured: it lowers every score and does not improve ranking on this corpus.
+
+### Domains
+
+`blakebauman.com` is the primary domain. `blakebauman.dev` was, and both it and
+its `www` remain bound to the same Worker so that every old link still resolves:
+`canonicalHostRedirect` in `app/lib/canonical-host.ts` runs as the first thing
+in the worker `fetch`, before CORS and before the rate limiter, and sends them
+to the same path on the `.com` apex. Unbinding the `.dev` domains would turn
+every one of those links into a DNS failure, so they stay.
+
+The redirect is 301 for GET and HEAD and 308 for everything else. A 301 permits
+a client to re-issue a POST as a GET, which on `/mcp` produces a body-less GET
+and a 405 — a moved server that looks broken.
+
+Two things deliberately did **not** move with the domain:
+
+- **The Worker script name is still `blakebauman-dev`** (wrangler.jsonc). It is
+  the deployment's identity; renaming it creates a second, empty Worker and
+  strands the secrets, custom domains and observability history on the old one.
+- **The Bluesky handle is still `blakebauman.dev`.** It is a DNS-verified handle
+  backed by a TXT record on the `.dev` zone, so that zone cannot be torn down,
+  and changing the handle is a Bluesky-side migration rather than an edit here.
+
+`resume.json`'s `website` is the de facto site-URL constant — `root.tsx` takes
+canonical, `og:url` and JSON-LD `Person.url` from it, and `agent/tools.ts` and
+`components/resume.tsx` derive the `/mcp` URL from it. The three text surfaces
+(`sitemap.xml`, `llms.txt`, `robots.txt`) each hardcode the origin separately.
 
 ### Cloudflare Bindings (wrangler.jsonc)
 - `AI` - Workers AI for embeddings (@cf/baai/bge-base-en-v1.5) and LLM (@cf/meta/llama-3.3-70b-instruct-fp8-fast)

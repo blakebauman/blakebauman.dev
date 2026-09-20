@@ -6,10 +6,10 @@ export function loader() {
   const robots = `User-agent: *
 Allow: /
 
-Sitemap: https://blakebauman.dev/sitemap.xml
+Sitemap: https://blakebauman.com/sitemap.xml
 
-# LLM index: https://blakebauman.dev/llms.txt
-# MCP endpoint: https://blakebauman.dev/mcp (JSON-RPC over POST, read-only)
+# LLM index: https://blakebauman.com/llms.txt
+# MCP endpoint: https://blakebauman.com/mcp (JSON-RPC over POST, read-only)
 `;
 
   return new Response(robots, {

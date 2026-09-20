@@ -19,7 +19,7 @@ interface RpcEnvelope {
 }
 
 async function rpc(body: unknown, method = 'POST') {
-  const request = new Request('https://blakebauman.dev/mcp', {
+  const request = new Request('https://blakebauman.com/mcp', {
     method,
     headers: { 'Content-Type': 'application/json' },
     body: method === 'POST' ? JSON.stringify(body) : undefined,
@@ -38,7 +38,7 @@ describe('handshake', () => {
     const { body } = await rpc(call(1, 'initialize', { protocolVersion: '2025-06-18' }));
     expect(body?.result?.protocolVersion).toBe('2025-06-18');
     expect(body?.result?.capabilities?.tools).toBeDefined();
-    expect(body?.result?.serverInfo?.name).toBe('blakebauman.dev');
+    expect(body?.result?.serverInfo?.name).toBe('blakebauman.com');
     // An external agent gets no system prompt from us, so the instructions are
     // the only place the record's boundaries can be stated up front.
     expect(body?.result?.instructions).toContain('does not cover anything else');
@@ -114,7 +114,7 @@ describe('transport', () => {
   });
 
   it('rejects malformed JSON', async () => {
-    const request = new Request('https://blakebauman.dev/mcp', { method: 'POST', body: '{oops' });
+    const request = new Request('https://blakebauman.com/mcp', { method: 'POST', body: '{oops' });
     const response = await handleMcpRequest(request, env);
     expect(response.status).toBe(400);
     const parsed = (await response.json()) as RpcEnvelope;
@@ -163,7 +163,7 @@ describe('failure disclosure', () => {
       },
     } as unknown as Env;
 
-    const request = new Request('https://blakebauman.dev/mcp', {
+    const request = new Request('https://blakebauman.com/mcp', {
       method: 'POST',
       body: JSON.stringify(
         call(10, 'tools/call', { name: 'search_record', arguments: { query: 'anything' } })
@@ -191,7 +191,7 @@ describe('failure disclosure', () => {
       VECTORIZE: { query: async () => ({ matches: [], count: 0 }) },
     } as unknown as Env;
 
-    const request = new Request('https://blakebauman.dev/mcp', {
+    const request = new Request('https://blakebauman.com/mcp', {
       method: 'POST',
       body: JSON.stringify(
         call(11, 'tools/call', { name: 'search_record', arguments: { query: 'anything' } })

@@ -2,7 +2,7 @@ import { listTools } from '../agent/tools';
 import { resumeData } from '../chat/data';
 import { CASE_STUDIES } from '../content/case-studies';
 
-const ORIGIN = 'https://blakebauman.dev';
+const ORIGIN = 'https://blakebauman.com';
 
 /**
  * llms.txt — a markdown index of this site for language models.

@@ -9,7 +9,7 @@
   "email": "blake.bauman@gmail.com",
   "linkedin": "https://www.linkedin.com/in/blakebauman",
   "github": "https://github.com/blakebauman",
-  "website": "https://blakebauman.dev",
+  "website": "https://blakebauman.com",
   "bluesky": "https://bsky.app/profile/blakebauman.dev",
   "summary": [
     "I'm a Principal Technical Architect at Adobe. For Fortune 500 clients I architect and ship enterprise commerce on Adobe Commerce and AEM Edge Delivery Services, including one of the first production EDS plus Commerce B2B integrations.",
@@ -532,7 +532,7 @@
       "lastActivity": "2026-03-08"
     },
     {
-      "name": "blakebauman.dev",
+      "name": "blakebauman.com",
       "year": "2025–2026",
       "status": "Active",
       "visibility": "public",
@@ -549,8 +549,8 @@
         "Zod"
       ],
       "github": "https://github.com/blakebauman/blakebauman.dev",
-      "website": "https://blakebauman.dev/",
-      "aliases": ["this site", "this website", "the chatbot", "portfolio site"],
+      "website": "https://blakebauman.com/",
+      "aliases": ["this site", "this website", "the chatbot", "portfolio site", "blakebauman.dev"],
       "language": "TypeScript",
       "maturity": "production",
       "highlights": [

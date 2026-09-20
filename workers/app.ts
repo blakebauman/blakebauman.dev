@@ -3,6 +3,7 @@ import { handleMcpRequest, MCP_CORS_HEADERS } from '../app/agent/mcp';
 import aiContextData from '../app/chat/ai-context.json';
 import { RETRIEVAL_CONFIG } from '../app/chat/context';
 import resumeData from '../app/chat/resume.json';
+import { canonicalHostRedirect } from '../app/lib/canonical-host';
 import { isAuthorized, jsonResponse, serverErrorResponse } from '../app/lib/http';
 import { populateVectorizeIndex } from '../app/lib/vectorize';
 import { ChatLogsQuerySchema } from '../app/schemas/admin';
@@ -44,7 +45,7 @@ function getClientIP(request: Request): string {
 // with no environment gate, which reflected any origin containing that
 // substring anywhere — https://localhost.attacker.example among them — in
 // production.
-const ALLOWED_ORIGINS = ['https://blakebauman.dev', 'https://www.blakebauman.dev'];
+const ALLOWED_ORIGINS = ['https://blakebauman.com', 'https://www.blakebauman.com'];
 const DEV_ORIGINS = [
   'http://localhost:5173',
   'http://127.0.0.1:5173',
@@ -116,6 +117,13 @@ const requestHandler = createRequestHandler(
 export default {
   async fetch(request: Request, env: CloudflareEnvironment, ctx: ExecutionContext) {
     const url = new URL(request.url);
+
+    // Before anything else, including CORS and the rate limiter: a request on
+    // the old domain is not one this site needs to serve, and must not spend a
+    // rate-limit bucket to be told so.
+    const redirect = canonicalHostRedirect(url, request);
+    if (redirect) return redirect;
+
     const corsHeaders = getCorsHeaders(request);
 
     // Handle OPTIONS request for CORS. /mcp is the exception: it is a public

@@ -11,6 +11,6 @@ confirmed and fixed, it will be disclosed in the release notes.
 
 ## Scope
 
-This repository powers [blakebauman.dev](https://blakebauman.dev), a personal
+This repository powers [blakebauman.com](https://blakebauman.com), a personal
 portfolio site deployed to Cloudflare Workers. Reports about the deployed
 site's API endpoints (`/api/chat`, `/api/populate-vectorize`) are also welcome.
