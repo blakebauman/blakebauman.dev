@@ -1,3 +1,4 @@
+import archivoWoff2 from '@fontsource-variable/archivo/files/archivo-latin-wdth-normal.woff2?url';
 import {
   isRouteErrorResponse,
   Links,
@@ -6,17 +7,14 @@ import {
   Scripts,
   ScrollRestoration,
 } from 'react-router';
-
 import type { Route } from './+types/root';
 import resumeData from './chat/resume.json';
+import { GRID_INIT_SCRIPT } from './components/grid';
 import './app.css';
 
-// Above-the-fold font cuts, imported as URLs so preloads point at the same
-// hashed assets the app.css @font-face rules resolve to (Vite dedupes them).
-// Two variable files cover the whole type system above the fold: Archivo
-// carries every weight and width, Literata every optical size.
-import displayWoff2 from '@fontsource-variable/archivo/files/archivo-latin-wdth-normal.woff2?url';
-import bodyWoff2 from '@fontsource-variable/literata/files/literata-latin-opsz-normal.woff2?url';
+// Archivo is self-hosted and carries the whole type system, so the latin cut
+// is preloaded above the fold. JetBrains Mono
+// is the only self-hosted face and it sits below the fold, inside code blocks.
 
 const metaTitle = resumeData.hero
   ? `${resumeData.name} | ${resumeData.hero.headline}`
@@ -26,19 +24,17 @@ const metaDescription =
   (firstSummary ? firstSummary.slice(0, 155) + (firstSummary.length > 155 ? '...' : '') : null) ??
   `${resumeData.name} - ${resumeData.title}. Portfolio with AI-powered resume assistant.`;
 
-// Archivo (display, variable weight + width), Literata (body, variable optical
-// size) and JetBrains Mono (code) are self-hosted via @fontsource (see the
-// app.css @import rules). Vite bundles the woff2 files into the build output,
-// served same-origin. Only the two above-the-fold faces are preloaded; the mono
-// cut is below the fold on the home page and inside case studies.
+// JetBrains Mono is self-hosted via @fontsource (see the app.css @import rule)
+// and Vite bundles its woff2 into the build output, served same-origin.
 export const links: Route.LinksFunction = () => [
   { rel: 'icon', href: '/favicon.svg', type: 'image/svg+xml' },
+  // The one above-the-fold face, self-hosted, so it starts downloading with
+  // the HTML rather than after the CSS is parsed. Font preloads require
+  // crossOrigin even same-origin.
+  { rel: 'preload', href: archivoWoff2, as: 'font', type: 'font/woff2', crossOrigin: 'anonymous' },
   { rel: 'icon', href: '/favicon.ico', sizes: '32x32' },
   // Preload above-the-fold fonts (body serif, heading condensed, label mono) so they
   // start downloading with the HTML instead of after the CSS is parsed.
-  // Font preloads require crossOrigin even for same-origin requests.
-  { rel: 'preload', href: displayWoff2, as: 'font', type: 'font/woff2', crossOrigin: 'anonymous' },
-  { rel: 'preload', href: bodyWoff2, as: 'font', type: 'font/woff2', crossOrigin: 'anonymous' },
 ];
 
 export function Layout({ children }: { children: React.ReactNode }) {
@@ -48,7 +44,8 @@ export function Layout({ children }: { children: React.ReactNode }) {
         <meta charSet="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         {/* One committed look regardless of scheme, so one theme-color. */}
-        <meta name="theme-color" content="#040404" />
+        <meta name="theme-color" content="#080a0f" />
+        <script dangerouslySetInnerHTML={{ __html: GRID_INIT_SCRIPT }} />
         <meta name="description" content={metaDescription} />
 
         {/* Open Graph */}
@@ -170,7 +167,7 @@ export function ErrorBoundary({ error }: Route.ErrorBoundaryProps) {
 
       <footer className="bb-wrap bb-stamps" style={{ marginTop: 'auto' }}>
         <div className="bb-stamps-row">
-          <span>Set in Archivo and Literata</span>
+          <span>Set in Archivo</span>
           <span>
             © {new Date().getFullYear()} {resumeData.name}
           </span>

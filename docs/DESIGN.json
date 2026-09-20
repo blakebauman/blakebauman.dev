@@ -1,295 +1,493 @@
 {
   "schemaVersion": 2,
-  "generatedAt": "2026-05-02T03:50:00Z",
+  "generatedAt": "2026-09-20T15:48:20Z",
   "title": "Design System: blakebauman.com",
   "extensions": {
     "colorMeta": {
-      "slate-mist": {
+      "night": {
         "role": "neutral",
-        "displayName": "Slate Mist",
-        "canonical": "oklch(91% 0.005 250)",
+        "displayName": "Night",
+        "note": "The page ground and the only background under running text. Near-neutral with a residual plateau blue (chroma 0.0115 at hue 267), measured from the shipped hex — not chroma zero.",
+        "canonical": "oklch(14.5% 0.0115 266.8)",
         "tonalRamp": [
-          "oklch(15% 0.005 250)",
-          "oklch(28% 0.005 250)",
-          "oklch(42% 0.005 250)",
-          "oklch(56% 0.005 250)",
-          "oklch(70% 0.005 250)",
-          "oklch(82% 0.005 250)",
-          "oklch(91% 0.005 250)",
-          "oklch(97% 0.005 250)"
+          "#090B10",
+          "#21242A",
+          "#3D4046",
+          "#5B5E64",
+          "#7A7D84",
+          "#9B9EA6",
+          "#C1C4CC",
+          "#EBEEF6"
         ]
       },
-      "plat-deep": {
+      "basalt": {
         "role": "neutral",
-        "displayName": "Plat Deep",
-        "canonical": "oklch(87% 0.005 250)",
+        "displayName": "Basalt",
+        "note": "A material token with exactly one use left in the stylesheet: the copy control on a fenced code block inside a chat answer (.bb-copy-btn). It is a chip on a night-ground block, not a container - a lighter square that reads as pressable against the darker code under it. Ink-2 on basalt is 6.3:1. Not a general surface material; the figure scroller and code bodies it used to carry moved to the well.",
+        "canonical": "oklch(20.4% 0.0129 264.2)",
         "tonalRamp": [
-          "oklch(15% 0.005 250)",
-          "oklch(28% 0.005 250)",
-          "oklch(42% 0.005 250)",
-          "oklch(56% 0.005 250)",
-          "oklch(70% 0.005 250)",
-          "oklch(80% 0.005 250)",
-          "oklch(87% 0.005 250)",
-          "oklch(94% 0.005 250)"
+          "#080B11",
+          "#21242A",
+          "#3C4047",
+          "#5A5E65",
+          "#797D85",
+          "#9A9EA7",
+          "#C0C4CD",
+          "#EAEFF7"
         ]
       },
-      "inkpress": {
+      "ink": {
         "role": "neutral",
-        "displayName": "Inked Espresso",
-        "canonical": "oklch(13% 0.04 30)",
+        "displayName": "Ink",
+        "note": "Display and body text. 17.2:1 on night, 17.5:1 on the well, 11.4:1 on ember, and the primary button's hover fill (night on ink, 17.2:1).",
+        "canonical": "oklch(95.2% 0.0041 91.4)",
         "tonalRamp": [
-          "oklch(13% 0.04 30)",
-          "oklch(22% 0.05 30)",
-          "oklch(32% 0.06 30)",
-          "oklch(44% 0.05 30)",
-          "oklch(58% 0.04 30)",
-          "oklch(72% 0.03 30)",
-          "oklch(85% 0.02 30)",
-          "oklch(95% 0.01 30)"
+          "#0C0B09",
+          "#252422",
+          "#40403D",
+          "#5E5D5B",
+          "#7E7D7A",
+          "#9F9E9B",
+          "#C5C4C1",
+          "#EFEEEB"
         ]
       },
-      "cordovan": {
+      "ink-2": {
+        "role": "neutral",
+        "displayName": "Ink 2",
+        "note": "Metadata, muted prose and secondary links. 7.0:1 on night, so it holds AA at any size.",
+        "canonical": "oklch(68.4% 0.0086 106.6)",
+        "tonalRamp": [
+          "#0B0B07",
+          "#242420",
+          "#40403B",
+          "#5E5E58",
+          "#7E7E78",
+          "#9F9F99",
+          "#C4C4BE",
+          "#EFEFE8"
+        ]
+      },
+      "ink-3": {
+        "role": "neutral",
+        "displayName": "Ink 3",
+        "note": "Container strokes and separators. 3.2:1 on night — not a text colour at body size.",
+        "canonical": "oklch(49.0% 0.0096 278.5)",
+        "tonalRamp": [
+          "#0A0B0F",
+          "#232429",
+          "#3E3F45",
+          "#5C5D63",
+          "#7C7D83",
+          "#9D9EA4",
+          "#C2C4CA",
+          "#EDEEF5"
+        ]
+      },
+      "red": {
         "role": "primary",
-        "displayName": "Cordovan",
-        "canonical": "oklch(38% 0.16 25)",
+        "displayName": "Signal Red",
+        "note": "Adobe Spectrum red-900 (dark theme). The only chromatic accent, and it works in both directions: 5.6:1 as type on night and as a ground under night-coloured type. State and one structural rule; never a surface. It also carries ::selection (night on red, 5.6:1), which used to be the structural fill - which is why selecting text came back sage.",
+        "canonical": "oklch(65.5% 0.2239 30.4)",
         "tonalRamp": [
-          "oklch(15% 0.05 25)",
-          "oklch(25% 0.10 25)",
-          "oklch(38% 0.16 25)",
-          "oklch(50% 0.18 25)",
-          "oklch(60% 0.16 25)",
-          "oklch(72% 0.12 25)",
-          "oklch(84% 0.07 25)",
-          "oklch(95% 0.02 25)"
+          "#440000",
+          "#6C0000",
+          "#940000",
+          "#BC0000",
+          "#E42612",
+          "#FF543E",
+          "#FF7F65",
+          "#FFAB8F"
         ]
       },
-      "vermilion": {
+      "ember": {
         "role": "secondary",
-        "displayName": "Vermilion",
-        "canonical": "oklch(56% 0.13 15)",
+        "displayName": "Ember",
+        "note": "The structural fill, in the accent's own hue. Fill only, never text: the code-block header, the markdown table head, the chat error block, the assistant's marker square, the blockquote rule, and the case-study diagram fills. Derived rather than picked - the same OKLCH lightness as the pinyon-juniper sage it replaces, at the red's hue (30) and twice the chroma, because at the sage's chroma that hue reads brown rather than red. Ink on ember 11.4:1, ink-2 on ember 4.6:1, red on ember 3.7:1; 1.5:1 against night, so it reads as a tint of the ground.",
+        "canonical": "oklch(31.9% 0.0634 31.0)",
         "tonalRamp": [
-          "oklch(18% 0.06 15)",
-          "oklch(30% 0.10 15)",
-          "oklch(42% 0.12 15)",
-          "oklch(56% 0.13 15)",
-          "oklch(68% 0.12 15)",
-          "oklch(78% 0.09 15)",
-          "oklch(88% 0.05 15)",
-          "oklch(96% 0.02 15)"
+          "#1F0000",
+          "#3D1610",
+          "#60352D",
+          "#84564D",
+          "#A9786F",
+          "#D09D93",
+          "#F8C2B8",
+          "#FFE0D5"
         ]
       },
-      "margin-rose": {
-        "role": "tertiary",
-        "displayName": "Margin Rose",
-        "canonical": "oklch(75% 0.06 25)",
+      "ember-lift": {
+        "role": "secondary",
+        "displayName": "Ember Lift",
+        "note": "The lighter structural fill: the assistant marker, the blockquote rule, the chat error border and the diagram strokes. Ink on it measures 8.6:1.",
+        "canonical": "oklch(39.0% 0.0573 30.8)",
         "tonalRamp": [
-          "oklch(20% 0.04 25)",
-          "oklch(35% 0.05 25)",
-          "oklch(48% 0.06 25)",
-          "oklch(60% 0.07 25)",
-          "oklch(75% 0.06 25)",
-          "oklch(85% 0.04 25)",
-          "oklch(92% 0.03 25)",
-          "oklch(97% 0.01 25)"
+          "#1E0100",
+          "#3B1812",
+          "#5D362F",
+          "#81574F",
+          "#A67A71",
+          "#CD9E95",
+          "#F4C4BB",
+          "#FFE1D8"
         ]
+      },
+      "well": {
+        "role": "neutral",
+        "displayName": "Well",
+        "note": "One step below night, and the ground for every container that holds its own content: the chat frame, the expanded chat sheet, the case-study figure scroller and case-study code blocks. Same blue family as night and inside the same near-neutral band, and every text ratio against it is higher than against night: ink 17.5:1, ink-2 7.1:1, red 5.7:1, ink-3 3.2:1. Figures and code moved here from basalt and every value improved - node stroke 2.86:1 -> 3.22:1 (clearing the 3:1 floor for a UI boundary), labels 15.6:1 -> 17.5:1, sub-labels 6.3:1 -> 7.1:1, code ink 15.6:1 -> 17.5:1, the red 5.1:1 -> 5.7:1, the string colour 8.8:1 -> 9.9:1.",
+        "canonical": "oklch(12.8% 0.0108 259.6)",
+        "tonalRamp": [
+          "#090B10",
+          "#212429",
+          "#3F4348",
+          "#60636A",
+          "#82868D",
+          "#A7ABB2",
+          "#CDD1D8",
+          "#EAEFF6"
+        ]
+      },
+      "dot": {
+        "role": "neutral",
+        "displayName": "Dot",
+        "note": "10% ink, painted as a 1px radial-gradient on a 22px pitch (--dot-gap) over the well, on the chat surfaces only - figures and code blocks take the well without it. A dot composites to #1D1E22, 1.2:1 against the well - texture, not an edge. Measured by hand against a dot: ink 14.5:1, ink-2 5.9:1, red 4.7:1, ink-3 2.7:1 (under the 3:1 floor). The contrast harness reads background-color only and cannot see it.",
+        "canonical": "color-mix(in oklab, #F0EFEC 10%, transparent)",
+        "composited": "#1D1E22"
+      },
+      "hair": {
+        "role": "neutral",
+        "displayName": "Hairline",
+        "note": "14% ink over the ground. Structural dividers, section tops, resting row borders.",
+        "canonical": "color-mix(in oklab, #F0EFEC 14%, transparent)"
+      },
+      "hair-strong": {
+        "role": "neutral",
+        "displayName": "Hairline Strong",
+        "note": "26% ink. Emphasis hairlines, hovered row borders, the chat input box, the maturity chip stroke.",
+        "canonical": "color-mix(in oklab, #F0EFEC 26%, transparent)"
       }
     },
     "typographyMeta": {
       "display": {
         "displayName": "Display",
-        "purpose": "Masthead name only. One per page."
+        "purpose": "The masthead name, uppercase, at width stop 110. Nothing else uses it."
+      },
+      "display-long": {
+        "displayName": "Display Long",
+        "purpose": "The case-study title, one stop smaller so a long name still sets on two lines."
+      },
+      "lead": {
+        "displayName": "Lead",
+        "purpose": "Featured project names in the work list, at width stop 104."
       },
       "headline": {
         "displayName": "Headline",
-        "purpose": "Section h2 (Position, Record, Ask the resume, Colophon). Set tight."
+        "purpose": "Section heads on the home page."
+      },
+      "sub": {
+        "displayName": "Sub",
+        "purpose": "Case-study section heads."
       },
       "title": {
         "displayName": "Title",
-        "purpose": "Listing role names, project entry names, callout titles inside listing blocks."
+        "purpose": "Role names in the record; also the chat markdown h1/h2 via aliases."
+      },
+      "lede": {
+        "displayName": "Lede",
+        "purpose": "Masthead subhead, case-study one-liner, colophon and section openers. Capped at 48-58ch with opsz 24."
       },
       "body": {
         "displayName": "Body",
-        "purpose": "Prose copy. IBM Plex Serif, full ink, capped at 60–70ch measure."
+        "purpose": "Running prose in Archivo, a sans, to a 65ch measure. Not a serif: the earlier Literata body is gone from this build."
+      },
+      "body-small": {
+        "displayName": "Body Small",
+        "purpose": "Descriptors, role descriptions, list rows and chat answers."
+      },
+      "ui": {
+        "displayName": "UI",
+        "purpose": "Values in meta lists, footnotes, figure captions, back links."
       },
       "label": {
         "displayName": "Label",
-        "purpose": "Eyebrows, group labels, recordation stamps, mono metadata. The Plex Mono voice."
+        "purpose": "Every stamp, key and chip: 11px uppercase, 0.1em, width stop 88, tabular numerals."
       },
-      "button": {
-        "displayName": "Button",
-        "purpose": "Button labels. Plex Sans Condensed 600, 0.04em letter-spacing."
+      "code": {
+        "displayName": "Code",
+        "purpose": "JetBrains Mono, confined to code blocks, paths, timestamps, source chips and the MCP endpoint."
       }
     },
+    "widthLadder": [
+      {
+        "name": "--w-display",
+        "value": "110%",
+        "purpose": "Display rank. The masthead name and the case-study title."
+      },
+      {
+        "name": "--w-head",
+        "value": "104%",
+        "purpose": "Heading rank: section heads, project names, role names, titles."
+      },
+      {
+        "name": "--w-ui",
+        "value": "100%",
+        "purpose": "UI and reading band. The default; body sets here."
+      },
+      {
+        "name": "--w-meta",
+        "value": "88%",
+        "purpose": "Metadata rank: stamps, keys, chips, nav, buttons."
+      }
+    ],
     "shadows": [],
     "motion": [
       {
-        "name": "ease-state",
-        "value": "120ms ease",
-        "purpose": "Default transition for color and border-color state changes (hover, focus). Short, no overshoot."
+        "name": "--ease",
+        "value": "cubic-bezier(0.22, 1, 0.36, 1)",
+        "purpose": "ease-out-quart; the only easing curve in the system."
+      },
+      {
+        "name": "--t-fast",
+        "value": "120ms",
+        "purpose": "Colour and border state changes on links, buttons, chips and nav."
+      },
+      {
+        "name": "--t-mid",
+        "value": "220ms",
+        "purpose": "Row border transitions and the grid overlay column stagger."
       }
     ],
     "breakpoints": [
-      { "name": "sm", "value": "700px" },
-      { "name": "md", "value": "760px" },
-      { "name": "lg", "value": "800px" },
-      { "name": "xl", "value": "900px" }
+      {
+        "name": "grid-collapse",
+        "value": "720px",
+        "purpose": "Below this the column count drops to six and the overlay hides the last six."
+      },
+      {
+        "name": "compose",
+        "value": "900px",
+        "purpose": "At and above this, lead rows and role rows adopt the twelve-column composition; below, one column."
+      },
+      {
+        "name": "masthead-split",
+        "value": "1000px",
+        "purpose": "The masthead splits into a 1.5fr/1fr name-and-meta pair."
+      },
+      {
+        "name": "row-cap",
+        "value": "1240px",
+        "purpose": "--row-max. Composed rows stop growing; the page keeps going."
+      }
+    ],
+    "zIndex": [
+      {
+        "name": "--z-base",
+        "value": "0"
+      },
+      {
+        "name": "--z-grid",
+        "value": "50"
+      },
+      {
+        "name": "--z-sticky",
+        "value": "100"
+      },
+      {
+        "name": "--z-modal-backdrop",
+        "value": "200"
+      },
+      {
+        "name": "--z-modal",
+        "value": "300"
+      }
     ]
   },
   "components": [
     {
-      "name": "Cordovan Button (signature)",
+      "name": "Primary Button",
       "kind": "button",
-      "refersTo": "button-cordovan",
-      "description": "The brand's headline action. Used for 'Talk to me' — the primary outbound action. One per page.",
-      "html": "<button class=\"ds-btn-cordovan\">Talk to me</button>",
-      "css": ".ds-btn-cordovan { background: #890620; color: #E5E7EA; padding: 16px 28px; border: 0; border-radius: 2px; font: 600 14px/1 'IBM Plex Sans Condensed', 'Helvetica Neue', Arial, sans-serif; letter-spacing: 0.05em; text-transform: uppercase; cursor: pointer; transition: background 120ms ease; } .ds-btn-cordovan:hover { background: #B6465F; } .ds-btn-cordovan:focus-visible { outline: 2px solid #890620; outline-offset: 2px; }"
+      "refersTo": "button-primary",
+      "description": "The one loud action: red fill, night text, square, uppercase at the metadata width stop. Shares one box with the ghost - inline-flex, centred, min-height 48px, padding 13px 24px.",
+      "html": "<a class=\"ds-btn\" href=\"#\">Email me</a>",
+      "css": ".ds-btn{display:inline-flex;align-items:center;justify-content:center;min-height:48px;padding:13px 24px;font-family:var(--font-display);font-stretch:88%;font-size:14px;font-weight:500;letter-spacing:.08em;text-transform:uppercase;border-radius:0;cursor:pointer;text-decoration:none;background:var(--red);color:var(--night);border:1px solid var(--red);transition:background 120ms cubic-bezier(.22,1,.36,1),border-color 120ms cubic-bezier(.22,1,.36,1)}.ds-btn:hover{background:var(--ink);border-color:var(--ink);color:var(--night)}.ds-btn:focus-visible{outline:2px solid var(--ink);outline-offset:3px}"
     },
     {
-      "name": "Inked Button (default)",
-      "kind": "button",
-      "refersTo": "button-inked",
-      "description": "The default in-page action button. Inkpress fill, transitions to Cordovan on hover.",
-      "html": "<button class=\"ds-btn-inked\">Read the case study</button>",
-      "css": ".ds-btn-inked { background: #2C0703; color: #E5E7EA; padding: 11px 19px; border: 1px solid #2C0703; border-radius: 2px; font: 600 14px/1 'IBM Plex Sans Condensed', 'Helvetica Neue', Arial, sans-serif; letter-spacing: 0.04em; cursor: pointer; transition: background 120ms ease, border-color 120ms ease; } .ds-btn-inked:hover { background: #890620; border-color: #890620; } .ds-btn-inked:focus-visible { outline: 2px solid #890620; outline-offset: 2px; }"
-    },
-    {
-      "name": "Ghost Button (outline)",
+      "name": "Ghost Button",
       "kind": "button",
       "refersTo": "button-ghost",
-      "description": "Lowest-emphasis action. Transparent fill, ink border, fills with ink on hover.",
-      "html": "<button class=\"ds-btn-ghost\">Read more</button>",
-      "css": ".ds-btn-ghost { background: transparent; color: #2C0703; padding: 9px 17px; border: 1px solid #2C0703; border-radius: 2px; font: 600 14px/1 'IBM Plex Sans Condensed', 'Helvetica Neue', Arial, sans-serif; letter-spacing: 0.04em; cursor: pointer; transition: background 120ms ease, color 120ms ease; } .ds-btn-ghost:hover { background: #2C0703; color: #E5E7EA; } .ds-btn-ghost:focus-visible { outline: 2px solid #890620; outline-offset: 2px; }"
+      "description": "The secondary action, and the shape a disabled control falls back to rather than dimming a bright fill. Same box as the primary; ink text so it reads as live rather than disabled beside a solid fill.",
+      "html": "<button class=\"ds-btn-ghost\" type=\"button\">Read the case study</button>",
+      "css": ".ds-btn-ghost{display:inline-flex;align-items:center;justify-content:center;min-height:48px;padding:13px 24px;font-family:var(--font-display);font-stretch:88%;font-size:14px;font-weight:500;letter-spacing:.08em;text-transform:uppercase;border-radius:0;cursor:pointer;background:transparent;color:var(--ink);border:1px solid var(--ink-3);transition:color 120ms cubic-bezier(.22,1,.36,1),border-color 120ms cubic-bezier(.22,1,.36,1)}.ds-btn-ghost:hover{color:var(--red);border-color:var(--red)}.ds-btn-ghost:focus-visible{outline:2px solid var(--red);outline-offset:3px}"
     },
     {
-      "name": "Listing Block (signature)",
-      "kind": "card",
-      "refersTo": "listing-block",
-      "description": "The brand's primary content motif. Real-estate-listing-derived metadata block: year column on the left, body column on the right.",
-      "html": "<article class=\"ds-listing\"><div class=\"ds-listing-row\"><div class=\"ds-year\">2022–Present</div><div class=\"ds-body\"><div class=\"ds-head\"><span class=\"ds-role\">Principal Technical Architect</span><span class=\"ds-at\">at</span><span class=\"ds-company\">Adobe</span><span class=\"ds-status ds-status-active\">Active</span></div><div class=\"ds-stack\">ADOBE COMMERCE · AEM EDGE DELIVERY SERVICES · B2B</div><p class=\"ds-desc\">Delivered one of the first production AEM Edge Delivery Services plus Adobe Commerce B2B integrations, for a Fortune 500 company.</p></div></div></article>",
-      "css": ".ds-listing { padding: 28px 0; border-top: 1px solid rgba(44, 7, 3, 0.55); font-family: 'IBM Plex Serif', Georgia, serif; color: #2C0703; } .ds-listing-row { display: grid; grid-template-columns: 110px 1fr; gap: 12px 32px; } .ds-year { font: 500 13px/1.4 'IBM Plex Mono', ui-monospace, monospace; letter-spacing: 0.08em; opacity: 0.62; } .ds-body { display: grid; gap: 12px; } .ds-head { display: flex; flex-wrap: wrap; align-items: baseline; gap: 12px 18px; } .ds-role, .ds-company { font: 600 22px/1.25 'IBM Plex Sans Condensed', sans-serif; letter-spacing: -0.005em; } .ds-at { opacity: 0.55; font: 500 16px/1 'IBM Plex Sans Condensed', sans-serif; } .ds-status { font: 500 10.5px/1 'IBM Plex Mono', monospace; letter-spacing: 0.16em; text-transform: uppercase; padding: 4px 8px; border: 1px solid rgba(44, 7, 3, 0.55); opacity: 0.7; } .ds-status-active { border-color: #890620; color: #890620; opacity: 1; } .ds-stack { font: 500 12px/1.5 'IBM Plex Mono', monospace; letter-spacing: 0.06em; opacity: 0.7; } .ds-desc { font: 400 17px/1.6 'IBM Plex Serif', serif; max-width: 70ch; opacity: 0.92; margin: 4px 0 0; }"
+      "name": "Status Chip",
+      "kind": "chip",
+      "refersTo": "chip-status",
+      "description": "Metadata as a bordered chip. The active variant inverts to a red fill, the only place a chip is loud.",
+      "html": "<span class=\"ds-chip\">Shipped</span> <span class=\"ds-chip ds-chip-active\">Current</span>",
+      "css": ".ds-chip{display:inline-block;font-family:var(--font-display);font-stretch:88%;font-size:11px;font-weight:500;letter-spacing:.1em;text-transform:uppercase;padding:5px 9px;border:1px solid var(--ink-3);border-radius:0;color:var(--ink-2);white-space:nowrap}.ds-chip-active{background:var(--red);border-color:var(--red);color:var(--night)}"
     },
     {
-      "name": "Enamel Mark (signature)",
+      "name": "Grid Toggle",
       "kind": "custom",
-      "refersTo": "enamel-mark",
-      "description": "The brand's load-bearing indicator. A 6–8px Cordovan square that recurs across nav, listings, eyebrows, footer.",
-      "html": "<div class=\"ds-enamel-row\"><div class=\"ds-enamel\"><span class=\"ds-mark ds-mark-active\"></span> Cloudflare-platform commerce</div><div class=\"ds-enamel ds-dim\"><span class=\"ds-mark\"></span> Edge AI</div><div class=\"ds-enamel ds-dim\"><span class=\"ds-mark\"></span> Working notes</div></div>",
-      "css": ".ds-enamel-row { display: flex; flex-direction: column; gap: 10px; font-family: 'IBM Plex Sans Condensed', sans-serif; color: #2C0703; } .ds-enamel { display: flex; align-items: center; gap: 10px; font: 500 14px/1 'IBM Plex Sans Condensed', sans-serif; } .ds-enamel.ds-dim { opacity: 0.4; } .ds-mark { width: 8px; height: 8px; background: transparent; border: 1px solid rgba(44, 7, 3, 0.55); flex: 0 0 8px; } .ds-mark-active { background: #890620; border-color: #890620; }"
+      "refersTo": "grid-toggle",
+      "description": "The signature control. Carries a four-bar mark of the twelve-column overlay it turns on, and inverts to red when pressed.",
+      "html": "<button class=\"ds-grid-toggle\" type=\"button\" aria-pressed=\"false\"><span class=\"ds-mark\" aria-hidden=\"true\"><i></i><i></i><i></i><i></i></span>Grid</button>",
+      "css": ".ds-grid-toggle{display:inline-flex;align-items:center;gap:7px;font-family:var(--font-display);font-stretch:88%;font-size:11px;font-weight:500;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-2);background:transparent;border:1px solid color-mix(in oklab,var(--ink) 26%,transparent);border-radius:0;padding:5px 9px;cursor:pointer;transition:color 120ms cubic-bezier(.22,1,.36,1),border-color 120ms cubic-bezier(.22,1,.36,1),background 120ms cubic-bezier(.22,1,.36,1)}.ds-grid-toggle:hover{color:var(--ink);border-color:var(--ink)}.ds-grid-toggle[aria-pressed=\"true\"]{background:var(--red);border-color:var(--red);color:var(--night)}.ds-mark{display:grid;grid-template-columns:repeat(4,2px);gap:2px;flex:none}.ds-mark i{display:block;height:11px;background:currentColor}"
     },
     {
-      "name": "Recordation Stamp",
-      "kind": "chip",
-      "refersTo": "recordation-stamp",
-      "description": "Small mono metadata. Format: 'Rec. YYYY-MM-DD · v0.1', 'Lot 0042', 'Filed 2026-05-01'. Used in footer stamps row.",
-      "html": "<div class=\"ds-stamps-row\"><span class=\"ds-stamp\">Rec. 2026-05-01 · v0.1</span><span class=\"ds-stamp\">Lot 0042</span><span class=\"ds-stamp\">Set in IBM Plex</span></div>",
-      "css": ".ds-stamps-row { display: flex; flex-wrap: wrap; gap: 8px; } .ds-stamp { font: 500 11px/1.5 'IBM Plex Mono', ui-monospace, monospace; letter-spacing: 0.12em; text-transform: uppercase; opacity: 0.6; padding: 4px 10px; border: 1px solid rgba(44, 7, 3, 0.55); color: #2C0703; }"
+      "name": "Chat Input",
+      "kind": "input",
+      "refersTo": "input-chat",
+      "description": "Field and send button inside one hairline box; the box takes focus-within so the composed control lights as a single object.",
+      "html": "<div class=\"ds-input\"><input type=\"text\" placeholder=\"Ask about the record\" /><button type=\"button\">Ask</button></div>",
+      "css": ".ds-input{display:flex;border:1px solid color-mix(in oklab,var(--ink) 26%,transparent);border-radius:0}.ds-input:focus-within{border-color:var(--red)}.ds-input input{flex:1;min-width:0;background:var(--night);border:0;color:var(--ink);font-family:var(--font-body);font-size:17px;padding:13px 15px}.ds-input input::placeholder{color:var(--ink-2);opacity:1}.ds-input input:focus{outline:none}.ds-input button{font-family:var(--font-display);font-stretch:88%;font-size:14px;font-weight:500;letter-spacing:.08em;text-transform:uppercase;background:var(--red);color:var(--night);border:0;padding-inline:20px;cursor:pointer;transition:background 120ms cubic-bezier(.22,1,.36,1)}.ds-input button:hover{background:color-mix(in oklab,var(--red) 82%,var(--ink))}"
     },
     {
-      "name": "Status Badge",
-      "kind": "chip",
-      "refersTo": "status-badge",
-      "description": "Hairline-bordered mono label. 'Active' uses Cordovan border + Cordovan text. 'Filed' / 'Private' use ink at 70% opacity.",
-      "html": "<div class=\"ds-badges\"><span class=\"ds-status ds-status-active\">Active</span><span class=\"ds-status\">Filed</span><span class=\"ds-status\">Private</span></div>",
-      "css": ".ds-badges { display: flex; gap: 8px; } .ds-status { font: 500 10.5px/1 'IBM Plex Mono', ui-monospace, monospace; letter-spacing: 0.16em; text-transform: uppercase; padding: 4px 8px; border: 1px solid rgba(44, 7, 3, 0.55); color: #2C0703; opacity: 0.7; } .ds-status-active { border-color: #890620; color: #890620; opacity: 1; }"
+      "name": "Top Navigation",
+      "kind": "nav",
+      "refersTo": "nav-link",
+      "description": "Sticky 54px bar: a night wash over a saturating blur, closed by a hairline. Current route takes red text and a red underline.",
+      "html": "<nav class=\"ds-nav\"><a href=\"#\" class=\"is-current\">Work</a><a href=\"#\">Record</a><a href=\"#\">Ask</a></nav>",
+      "css": ".ds-nav{display:flex;gap:clamp(14px,2.4vw,30px);background:color-mix(in oklab,var(--night) 92%,transparent);backdrop-filter:saturate(140%) blur(8px);border-bottom:1px solid color-mix(in oklab,var(--ink) 14%,transparent);padding:12px 0}.ds-nav a{flex:0 0 auto;min-width:24px;padding:4px 2px;text-align:center;font-family:var(--font-display);font-stretch:88%;font-size:11px;font-weight:500;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-2);text-decoration:none;border-bottom:1px solid transparent;white-space:nowrap;transition:color 120ms cubic-bezier(.22,1,.36,1),border-color 120ms cubic-bezier(.22,1,.36,1)}.ds-nav a:hover{color:var(--ink)}.ds-nav a.is-current{color:var(--red);border-bottom-color:var(--red)}.ds-nav a:focus-visible{outline:2px solid var(--red);outline-offset:3px}"
+    },
+    {
+      "name": "Lead Row",
+      "kind": "card",
+      "description": "The composed work row: maturity in the margin columns, name at lead scale across the middle, action at the far edge. Hover states rank in colour, never in movement.",
+      "html": "<a class=\"ds-lead\" href=\"#\"><span class=\"ds-mat\">Production</span><span class=\"ds-nm\">felix</span><span class=\"ds-kind\">An agent runtime with a typed tool layer and a replayable evaluation harness.</span><span class=\"ds-go\">Case study</span></a>",
+      "css": ".ds-lead{display:grid;grid-template-columns:repeat(12,minmax(0,1fr));gap:4px clamp(12px,1.6vw,24px);align-items:start;max-width:1240px;padding-block:clamp(16px,2.4vh,24px);border-bottom:1px solid color-mix(in oklab,var(--ink) 14%,transparent);text-decoration:none;color:var(--ink);transition:border-color 220ms cubic-bezier(.22,1,.36,1)}.ds-lead:hover{border-bottom-color:color-mix(in oklab,var(--ink) 26%,transparent)}.ds-mat{grid-column:1/span 2;grid-row:1;justify-self:start;margin-top:.85em;font-family:var(--font-display);font-stretch:88%;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-2);border:1px solid color-mix(in oklab,var(--ink) 26%,transparent);padding:4px 8px;white-space:nowrap}.ds-nm{grid-column:3/span 7;grid-row:1;font-family:var(--font-display);font-stretch:104%;font-size:clamp(44px,8vw,116px);font-weight:500;line-height:.96;letter-spacing:-.03em}.ds-lead:hover .ds-nm{color:var(--red)}.ds-kind{grid-column:3/span 6;grid-row:2;font-size:17px;line-height:1.38;color:var(--ink-2);max-width:65ch}.ds-go{grid-column:11/span 2;grid-row:1;justify-self:end;margin-top:1.1em;font-family:var(--font-display);font-stretch:88%;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-2);white-space:nowrap;transition:color 120ms cubic-bezier(.22,1,.36,1)}.ds-lead:hover .ds-go{color:var(--red)}"
+    },
+    {
+      "name": "Section Head",
+      "kind": "custom",
+      "description": "Heading, a hairline that runs from the last letter to the stamp, then the stamp. Flex at every width — placed on the columns the rule floated detached in mid-row.",
+      "html": "<div class=\"ds-sec-head\"><h2>Selected work</h2><span class=\"ds-rule\"></span><span class=\"ds-stamp\">03 of 21</span></div>",
+      "css": ".ds-sec-head{display:flex;align-items:baseline;gap:16px;max-width:1240px;margin-bottom:clamp(26px,4vh,44px)}.ds-sec-head h2{margin:0;font-family:var(--font-display);font-stretch:104%;font-size:clamp(34px,5vw,68px);font-weight:500;line-height:1;letter-spacing:-.02em;color:var(--ink)}.ds-rule{flex:1;height:1px;background:color-mix(in oklab,var(--ink) 14%,transparent)}.ds-stamp{font-family:var(--font-display);font-stretch:88%;font-size:11px;font-weight:500;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-2);font-variant-numeric:tabular-nums;white-space:nowrap}"
+    },
+    {
+      "name": "Chat Well",
+      "kind": "card",
+      "refersTo": "chat-well",
+      "description": "The chat's ground: a recessed well one step below the page, marked by a dot grid painted on the frame rather than on the scrolling transcript. The dots are the chat's alone; figures and code blocks take the same well without them.",
+      "html": "<div class=\"ds-chat-well\"><div class=\"ds-chat-who\"><span class=\"ds-chat-mark\"></span>ASSISTANT</div><div class=\"ds-chat-text\">The record answers from its own source.</div></div>",
+      "css": ".ds-chat-well { background-color: var(--well); background-image: radial-gradient(var(--dot) 1px, transparent 1px); background-size: var(--dot-gap) var(--dot-gap); border: 1px solid var(--ink-3); border-radius: 0; padding: clamp(18px, 2.6vw, 26px); min-height: 340px; color: var(--ink); } .ds-chat-who { display: flex; align-items: center; gap: 8px; font-family: var(--font-display); font-stretch: 88%; font-size: 11px; font-weight: 500; letter-spacing: 0.1em; text-transform: uppercase; color: var(--ink-2); margin-bottom: 8px; } .ds-chat-mark { width: 7px; height: 7px; background: var(--ember-lift); flex: none; } .ds-chat-text { font-size: 17px; line-height: 1.6; overflow-wrap: anywhere; }"
+    },
+    {
+      "name": "Figure Well",
+      "kind": "card",
+      "refersTo": "figure-well",
+      "description": "The case-study diagram container: the same well as the chat, without the dot grid, scrolling horizontally below a 660px floor. An ordinary node is filled with the ground itself, so it reads by its --ink-3 stroke alone (3.22:1).",
+      "html": "<figure class=\"ds-fig\"><div class=\"ds-fig-scroll\"><svg viewBox=\"0 0 320 96\" width=\"320\" height=\"96\"><rect x=\"8\" y=\"16\" width=\"140\" height=\"56\" fill=\"var(--well)\" stroke=\"var(--ink-3)\" stroke-width=\"1\"/><text x=\"22\" y=\"40\" fill=\"var(--ink)\" font-family=\"var(--font-display)\" font-size=\"14\" font-weight=\"650\">Worker</text><text x=\"22\" y=\"58\" fill=\"var(--ink-2)\" font-family=\"var(--font-mono)\" font-size=\"12\">workers/app.ts</text><line x1=\"148\" y1=\"44\" x2=\"196\" y2=\"44\" stroke=\"var(--ink-3)\"/><rect x=\"196\" y=\"16\" width=\"116\" height=\"56\" fill=\"var(--ember)\" stroke=\"var(--ember-lift)\" stroke-width=\"1\"/><text x=\"210\" y=\"49\" fill=\"var(--ink)\" font-family=\"var(--font-display)\" font-size=\"14\" font-weight=\"650\">Vectorize</text></svg></div><figcaption>Retrieval path, one hop.</figcaption></figure>",
+      "css": ".ds-fig{margin:0}.ds-fig-scroll{overflow-x:auto;overscroll-behavior-x:contain;border:1px solid var(--ink-3);background:var(--well);border-radius:0;padding:clamp(18px,3vw,30px)}.ds-fig figcaption{margin-top:14px;font-family:var(--font-display);font-size:11px;font-weight:500;line-height:1.6;letter-spacing:.02em;color:var(--ink-2);max-width:62ch}"
+    },
+    {
+      "name": "Code Block",
+      "kind": "custom",
+      "refersTo": "code-well",
+      "description": "A case-study code block: ember header carrying a mono path and a label-stop tag, body on the same well as the figure beside it.",
+      "html": "<div class=\"ds-code\"><div class=\"ds-code-head\"><span class=\"ds-path\">app/lib/vectorize.ts</span><span class=\"ds-tag\">TypeScript</span></div><pre><code><span class=\"ds-key\">const</span> id = <span class=\"ds-str\">slugify</span>(name); <span class=\"ds-cmt\">// same value buildChunks writes</span></code></pre></div>",
+      "css": ".ds-code{border:1px solid var(--ink-3);background:var(--well);border-radius:0;overflow:hidden}.ds-code-head{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:10px 16px;background:var(--ember);border-bottom:1px solid var(--ink-3)}.ds-path{font-family:var(--font-mono);font-size:11px;font-weight:500;color:var(--ink)}.ds-tag{font-family:var(--font-display);font-stretch:88%;font-size:11px;font-weight:500;letter-spacing:.1em;text-transform:uppercase;color:color-mix(in oklab,var(--ink) 78%,transparent)}.ds-code pre{margin:0;padding:18px;overflow-x:auto;font-family:var(--font-mono);font-size:13px;line-height:1.7;color:var(--ink);tab-size:2}.ds-key{color:var(--red)}.ds-cmt{color:var(--ink-2)}.ds-str{color:color-mix(in oklab,var(--red) 55%,var(--ink))}"
     }
   ],
   "narrative": {
-    "northStar": "The Listing Office",
-    "overview": "The site is a 1960s real-estate listing office, transposed to a senior engineer's portfolio. The page reads as a platted document with five lettered sections (§ 01 Masthead, § 02 Position, § 03 Record, § 04 Working artifact, § 05 Colophon). Every entry is filed, dated, stamped. Type carries hierarchy; color punctuates. The voice is considered, exact, dry. The system rejects the SaaS / Vercel-template default (cream ground, gradient blob hero, three-card feature grid, Inter-everywhere typography). Cream is substituted for cool monochrome-tint Slate Mist to escape the warm-on-warm archival-editorial reflex. Inter is rejected for IBM Plex Serif as the body face. The signature gesture is the Enamel Mark — a 6–8px Cordovan square that recurs as a load-bearing indicator across the system.",
+    "northStar": "The Plateau at Night",
+    "overview": "The page is a black field with very large type on it. One grotesque - Archivo - carries display, heading, UI and body alike, at a single weight, and rank is expressed by size, by width on the variable font’s wdth axis, and by which column a thing occupies. There is no second family in the reading band, no case change inside prose, no shadow, no gradient, no rounded corner, and no accent but one red.\n\nThe page is fluid: --shell is 100% and the gutter is the margin, so the edge of the viewport is the edge of the sheet at every width. Fluidity has one cost - a row composed on twelve columns at 2560px puts a name at one edge and its action at the other - and the system pays it with --row-max: 1240px on the composed rows, the content width at 1440 where the composition was measured. The masthead is exempt on purpose.\n\nBeneath that sits a twelve-column grid. Three regions are composed on it - lead rows, role rows and section heads - adopting it at 900px and collapsing to one column below. The grid overlay draws those columns as red hairlines on demand. It is the signature element and it is functional rather than decorative: a reader gets to check the structure instead of taking it on faith.",
     "keyCharacteristics": [
-      "Type carries hierarchy; color punctuates ≤10% of any given screen.",
-      "Single committed light theme. No dark mode. The Slate Mist ground is the brand decision.",
-      "Hairline-only rounding: 0px (display, marks, masthead) and 2px (buttons, tinted surfaces). No SaaS-default 8–12px radii.",
-      "Real-estate-listing register: listing block, plat rule, enamel mark, recordation stamp are the four signature motifs.",
-      "IBM Plex three-voice: Sans Condensed (display), Serif (body, anchoring the editorial register), Mono (eyebrows, metadata, code).",
-      "Motion budget: state transitions only (120ms ease-out). No scroll choreography, no parallax, no autoplay, no 'wow on load.'"
+      "Black ground (#080A0F), near-neutral, never warmed.",
+      "One face, one weight (500), four widths; size and width are the whole hierarchy.",
+      "Radius 0 everywhere; hairlines and fills instead of shadows.",
+      "Fluid page, capped rows (1240px), twelve columns revealed on demand.",
+      "One accent hue at two lightnesses: a signal red for state and one structural rule, a deep ember that fills.",
+      "Motion is state transition only: 120ms and 220ms on one ease-out-quart curve."
     ],
     "rules": [
       {
-        "name": "The One Voice Rule",
-        "body": "Cordovan is the single committed accent. It carries CTAs, links, the Enamel Mark, and current-state indicators. No second saturated accent enters the system. Vermilion is its hover, not a peer.",
+        "name": "The Chroma Discipline Rule",
+        "section": "colors",
+        "body": "Neutrals are near-neutral and stay there: night, basalt and the ink ramp all measure below 0.013 OKLCH chroma (night C 0.0115 at hue 267, basalt C 0.0129, ink C 0.0041). That residual is the plateau’s blue sky in the ground, not warmth - no beige, no brown, no touch of warmth in the near-black, and no neutral that reads as a hue. Measured from the shipped hexes; a repo note elsewhere states these are at chroma exactly 0, and the artifact does not support that figure."
+      },
+      {
+        "name": "The One Hue Rule",
+        "section": "colors",
+        "body": "There is one chromatic hue in the system and it appears at two lightnesses: red signals, ember fills. Red marks state or a single structural rule and is never a surface; ember is never text. Nothing else is coloured - a second hue is what the sage was, and removing it is what made the palette one voice instead of two."
+      },
+      {
+        "name": "The Unmeasurable Texture Rule",
+        "body": "The contrast harness reads each element's resolved background-color and cannot see a background-image, so on the dotted well it reports the well every time and never measures a dot. Measured by hand, text sitting directly on a dot: ink 14.5:1, ink-2 5.9:1, red 4.7:1 - and --ink-3 2.7:1, under the 3:1 floor. The chat renders only ink and ink-2 today, so nothing fails; --ink-3 on the dotted well is the one combination in this system that passes the automated audit and fails the eye. Any new patterned ground inherits this: measure the composite by hand, because the audit will not.",
         "section": "colors"
       },
       {
-        "name": "The Cool-Ground Rule",
-        "body": "The page ground is cool monochrome-tint, never cream or any cream rebrand (vellum, kami, bone, ivory, eggshell, oatmeal). The cream-ground default is the editorial-archival reflex this brand explicitly rejects.",
-        "section": "colors"
+        "name": "The Measured Contrast Rule",
+        "section": "colors",
+        "body": "Every contrast figure in this document was measured against rendered sRGB, never reasoned from OKLCH lightness - OKLCH lightness is perceptual and estimating ratios from it produces wrong answers. Re-measure the whole table after any palette change. The audited state: 438 text elements across / and /work/felix at 1440 and 390, none below WCAG AA."
       },
       {
-        "name": "The Punctuation Rule",
-        "body": "Color punctuates ≤10% of pixel surface. If color reaches 30%+, something is wrong with the typesetting. Restraint as competence signal.",
-        "section": "colors"
+        "name": "The Width Ladder Rule",
+        "section": "typography",
+        "body": "Archivo’s wdth axis encodes rank, and there are exactly four stops: 110% display, 104% heading, 100% UI, 88% metadata. No fifth value, no interpolation. The ladder only exists if the Fontsource wdth entrypoint is imported (@fontsource-variable/archivo/wdth.css); import wght instead and every font-stretch in the sheet silently does nothing while the build stays green."
       },
       {
-        "name": "The Warm-Cool Inversion Rule",
-        "body": "Warm-saturated accents sit on a cool-neutral ground. Never invert this — warm ground with warm accents collapses into the archival-editorial default.",
-        "section": "colors"
+        "name": "The 1.15x Rule",
+        "section": "typography",
+        "body": "Adjacent stops on the type ramp are at least 1.15x apart. Two stops closer than that are two names for one role; collapse the newer one onto the existing stop as an alias."
       },
       {
-        "name": "The Body-Serif Rule",
-        "body": "Body sets in Plex Serif, never Plex Sans. The serif anchor pulls the site out of the saturated 'developer-who-picked-Inter' lane. This is the single most load-bearing typographic decision in the system.",
-        "section": "typography"
+        "name": "The Two Weights Rule",
+        "section": "typography",
+        "body": "500 for everything, 700 only for <strong>, which is semantic rather than hierarchical. Weight never carries rank - width and size do."
       },
       {
-        "name": "The Mono-Reserved Rule",
-        "body": "Plex Mono is for metadata, eyebrows, recordation stamps, and code only. Mono-as-body is on the watch list ('developer who just discovered IBM Plex Mono').",
-        "section": "typography"
+        "name": "The Flat Sheet Rule",
+        "section": "elevation",
+        "body": "No shadow, no gradient, no radius, no glow. If something needs to separate from what is behind it, give it a hairline, a different material (the well or ember), or more space - never a lift."
       },
       {
-        "name": "The No-Em-Dash Rule",
-        "body": "Em dashes are not used in copy. Year ranges use en dashes. Sentence interruptions use commas, colons, semicolons, parentheses. Also not '--'.",
-        "section": "typography"
+        "name": "The Motion Budget Rule",
+        "section": "elevation",
+        "body": "Motion is state transition only: 120ms and 220ms on cubic-bezier(0.22, 1, 0.36, 1). No scroll choreography, no entrance animation, nothing that gates content on an animation finishing. prefers-reduced-motion reduces everything to 0.01ms."
       },
       {
-        "name": "The Italic-One-Word Rule",
-        "body": "Italic accent is one word per heading at most; usually zero. Italic is for actual emphasis, not decoration.",
-        "section": "typography"
-      },
-      {
-        "name": "The Tabular-Numerals Rule",
-        "body": "Numerals are tabular in tables, listings, and metadata; proportional in prose.",
-        "section": "typography"
-      },
-      {
-        "name": "The Flat-By-Default Rule",
-        "body": "Surfaces are flat at rest. No box-shadow. The chat frame and recognition block lift off ground via Plat Deep tint, not via shadow.",
-        "section": "elevation"
-      },
-      {
-        "name": "The Plat-Rule Rule",
-        "body": "Horizontal rules are the divider vocabulary. They use rgba ink at 18% (rule) for fine subdivisions and 55% (rule-strong) for major section borders. Never thicker than 1px. Never in saturated color.",
+        "name": "The Contained Content Rule",
+        "body": "A container that holds its own content rather than carrying the page's - the conversation, a diagram, a code block - sits in --well on a 1px --ink-3 stroke. One ground for all three is one fewer material to justify, and it is the darkest ground in the system, so every token gains contrast on the way in.",
         "section": "elevation"
       }
     ],
     "dos": [
-      "Do carry the Enamel Mark consistently as a load-bearing indicator. It marks meaning (current, primary, latest), never decoration.",
-      "Do use Plex Serif for body. The serif is the anchor that pulls the site out of the 'developer who picked Inter' lane.",
-      "Do name systems precisely in copy. 'A queue' becomes 'a Cloudflare Queue with a 30-second visibility window.' Specificity is the dominant rhetorical move.",
-      "Do use full ink for body text. Opacity-softened body (e.g., body at 65%) is on the watch list.",
-      "Do keep year ranges in en dashes (2022–Present), not em dashes or hyphens.",
-      "Do lift surfaces via Plat Deep tint, never via box-shadow.",
-      "Do cap body measure at 60–70ch.",
-      "Do use tabular numerals in listings and tables; proportional in prose.",
-      "Do verify every claim names the system, the constraint, or the number that backs it up."
+      "Do set body copy in Archivo (`--font-body`, which aliases `--font-display`) at 500, 20px, 1.6, to a 65ch measure.",
+      "Do pick one of the four width stops — 110 / 104 / 100 / 88 — for anything new, and import `@fontsource-variable/archivo/wdth.css` or the stops do not exist.",
+      "Do express hierarchy with size, width and column position, in that order.",
+      "Do compose new rows on the twelve columns with metadata in 1–2, content in 3–9, action in 11–12, and cap them at `--row-max` (1240px).",
+      "Do use `--hair` (14%) for structure and `--hair-strong` (26%) for emphasis and resting interactive borders; those are the only two hairline weights.",
+      "Do keep type on night, the well or ember only; ink on all three measures 11:1 or better. Basalt carries one 11px label (the copy chip) and is not a surface for prose.",
+      "Do re-measure contrast against the rendered DOM after any palette change, and re-measure the Archivo/Helvetica metrics if the font package or the weight moves.",
+      "Do set every stamp, key and chip at the 11px label stop, uppercase, `0.1em`, tabular numerals.",
+      "Do put any container that holds its own content — conversation, diagram, code — on `--well` with a 1px `--ink-3` stroke, and add the dot grid only on the chat surfaces.",
+      "Do give `.btn` and `.btn-ghost` the same box: `inline-flex`, centred, `min-height: 48px`, `padding: 13px 24px`. Agreement is declared, not inherited from whatever row happens to hold them.",
+      "Do re-declare `color` inside any rule that changes a control's background on hover.",
+      "Do name the action in a control's label — the mailto button reads \"Email me\", not \"Talk to me\".",
+      "Do keep tokens in the stylesheet; a renamed token must break visibly in one place rather than silently in five inline styles."
     ],
     "donts": [
-      "Don't use cream or any cream rebrand (vellum, kami, bone, ivory, eggshell, oatmeal, parchment, washi, biscuit) as the page ground. The Slate Mist ground is committed.",
-      "Don't use Inter, Helvetica Neue, or any neutral grotesque as the primary face. IBM Plex is the brand commitment.",
-      "Don't add gradient backgrounds, glassmorphism, blur effects, or background-clip: text gradient text. All on the absolute ban list.",
-      "Don't use border-left or border-right greater than 1px as a colored stripe accent. Side-stripe borders are an absolute ban.",
-      "Don't add the hero-metric template (big number + small label + supporting stats + gradient accent). SaaS cliché.",
-      "Don't stack identical card grids. Three identical icon+heading+text cards in a row is a watch-list pattern.",
-      "Don't ship dark mode without a designed dark variant. Single-mode commitment is the brand decision.",
-      "Don't add scroll choreography, parallax, autoplay video, or 'wow on load' animations.",
-      "Don't use exclamation points outside of quoted speech.",
-      "Don't use em dashes in copy.",
-      "Don't use marketing adjectives: artisanal, crafted, premium, curated, beloved, cozy, warm, inviting, thoughtfully, delightfully, lovingly, uncompromising, bespoke, leveraging, passionate.",
-      "Don't invent 'Tools' or 'Skills' walls. Logo grids of every tool are an explicit anti-reference.",
-      "Don't add a floating 'Talk to me' FAB. The colophon CTA + masthead email is sufficient.",
-      "Don't soften the 'first production' claim back to 'the first production.' The line is 'one of the first production AEM Edge Delivery Services plus Adobe Commerce B2B integrations.' Specificity is honesty.",
-      "Don't add sticky bottom CTAs, intercom-style chat bubbles, or banner cookie consents that violate the document register.",
-      "Don't rename the six DESIGN.md sections."
+      "Don't introduce a serif, a second sans, or any third family. Mono is JetBrains Mono and is confined to code, paths, timestamps and readouts.",
+      "Don't warm the neutrals or push any neutral above ~0.013 OKLCH chroma. The residual blue in night is the world; beige is not.",
+      "Don't add a second accent hue. Red signals, ember fills, and they are one hue at two lightnesses; nothing else is coloured.",
+      "Don't set text on ember below large size — red on ember measures 3.7:1 — and don't set body-size text in `--ink-3` (3.2:1 on night); it is a border and decoration value.",
+      "Don't add a radius, a shadow, a gradient or a decorative blur. If separation is needed, use a hairline, a different material, or space.",
+      "Don't add a type stop within 1.15x of an existing one; alias onto the existing stop instead.",
+      "Don't use weight for hierarchy. 700 belongs to `<strong>` and nowhere else.",
+      "Don't put the masthead's red rule inside a column, and don't cap the masthead at `--row-max`; it is exempt on purpose.",
+      "Don't add scroll-triggered animation, entrance reveals, or any motion outside the 120ms/220ms state-transition budget.",
+      "Don't put `--ink-3` text — or any new colour — on the dotted well without measuring it against a dot by hand. Ink-3 on a dot is 2.7:1, under the 3:1 floor, and the contrast harness cannot see a `background-image`, so it will report the well and pass.",
+      "Don't cap the expanded chat at a fixed card width; it is `100%` x `100dvh` on purpose, because a fluid inline frame outgrows any cap.",
+      "Don't let `.bb-shell` become a scroll container; it clips on x only, or the sticky top bar stops sticking.",
+      "Don't change a button's hover background without re-declaring its `color` in the same rule. The global `a:hover { color: var(--red) }` outranks `.btn`, which only declares its colour at rest: when the primary's hover became an `--ink` fill, the label went red on near-white at 3.05:1, a real failure that the old transparent hover had hidden (red on night is 5.64:1). The automated contrast harness will not catch this — it measures the resting state only.",
+      "Don't move the figure ground without moving the diagram node default with it. `.bb-figure-scroll` is `--well` and `Box` in `app/content/case-studies.tsx` defaults `fill = 'var(--well)'` so an ordinary node sits flush and reads by its stroke; if the ground changes and the default does not, every unfilled node grows a panel behind it.",
+      "Don't treat `--basalt` as a surface material. It has exactly one use in the stylesheet — the copy chip on a chat code block — and reaching for it as a panel ground undoes the recession that makes containers read.",
+      "Don't set a case-study `<strong>` at `--wt`. It is identical to its parent and cancels the browser's bold, which made every term in a term/detail list invisible; `--wt-strong` (700) is what that second weight is for.",
+      "Don't leave a case-study block uncapped. Hero and body children take `--row-max` on the child, not on the centred wrapper, or the page grows a second and third right edge at wide viewports.",
+      "Don't reintroduce kickers or eyebrows above headings. The masthead subhead opens with the job title verbatim instead, and nothing in the build uses one."
     ]
   }
 }
