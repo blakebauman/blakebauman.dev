@@ -1,5 +1,6 @@
 import { Link } from 'react-router';
 import resumeData from '../chat/resume.json';
+import { GridOverlay, GridToggle } from '../components/grid';
 import { type CaseStudySection, caseStudyFor } from '../content/case-studies';
 import type { Route } from './+types/work';
 
@@ -75,15 +76,19 @@ export default function Work({ loaderData }: Route.ComponentProps) {
 
   return (
     <div className="bb-shell">
+      <GridOverlay />
       <header className="bb-top print:hidden">
         <div className="bb-wrap bb-top-in">
           <Link className="bb-top-name" to="/">
             {resumeData.name}
           </Link>
-          <nav className="bb-top-nav" aria-label="Sections">
-            <Link to="/#work">All work</Link>
-            <Link to="/#ask">Ask the record</Link>
-          </nav>
+          <div className="bb-top-right">
+            <nav className="bb-top-nav" aria-label="Sections">
+              <Link to="/#work">All work</Link>
+              <Link to="/#ask">Ask the record</Link>
+            </nav>
+            <GridToggle />
+          </div>
         </div>
       </header>
 
@@ -104,7 +109,7 @@ export default function Work({ loaderData }: Route.ComponentProps) {
             ))}
           </dl>
 
-          <div className="bb-contact" style={{ marginTop: 26 }}>
+          <div className="bb-contact">
             {study.links.map(l => (
               <a key={l.href} href={l.href} rel="noopener noreferrer">
                 {l.label}
@@ -113,7 +118,7 @@ export default function Work({ loaderData }: Route.ComponentProps) {
           </div>
         </div>
 
-        <div className="bb-wrap bb-cs-body" style={{ paddingBottom: 'clamp(60px, 10vh, 120px)' }}>
+        <div className="bb-wrap bb-cs-body">
           {study.sections.map(section => (
             <Section key={section.heading} section={section} />
           ))}
@@ -124,12 +129,12 @@ export default function Work({ loaderData }: Route.ComponentProps) {
               The assistant on the home page answers from this same record, and will tell you what
               is not on it.
             </p>
-            <div style={{ display: 'flex', flexWrap: 'wrap', gap: 12, marginTop: 24 }}>
+            <div className="bb-cs-actions">
               <Link className="btn" to="/#ask">
                 Ask the record
               </Link>
               <a className="btn-ghost" href={`mailto:${resumeData.email}`}>
-                Talk to me
+                Email me
               </a>
             </div>
           </section>
@@ -138,7 +143,7 @@ export default function Work({ loaderData }: Route.ComponentProps) {
 
       <footer className="bb-wrap bb-stamps">
         <div className="bb-stamps-row">
-          <span>Set in Archivo and Literata</span>
+          <span>Set in Archivo</span>
           <span>Built on Cloudflare Workers</span>
           <span>
             © {new Date().getFullYear()} {resumeData.name}

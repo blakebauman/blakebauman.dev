@@ -49,8 +49,11 @@ function Box({
   h,
   label,
   sub,
-  fill = 'var(--panel)',
-  stroke = 'var(--line)',
+  // Flush with the figure ground, so an ordinary node reads by its stroke and
+  // only a deliberately filled one carries a fill. This tracks
+  // `.bb-figure-scroll`; if that ground moves, this moves with it.
+  fill = 'var(--well)',
+  stroke = 'var(--ink-3)',
   labelFill = 'var(--ink)',
 }: {
   x: number;
@@ -73,12 +76,11 @@ function Box({
         fontFamily={F_DISPLAY}
         fontSize="14"
         fontWeight="650"
-        style={{ fontStretch: '100%' }}
       >
         {label}
       </text>
       {sub && (
-        <text x={x + 14} y={y + h / 2 + 14} fill="var(--muted)" fontFamily={F_MONO} fontSize="12">
+        <text x={x + 14} y={y + h / 2 + 14} fill="var(--ink-2)" fontFamily={F_MONO} fontSize="12">
           {sub}
         </text>
       )}
@@ -114,7 +116,7 @@ function Arrow({
         <text
           x={(x1 + x2) / 2}
           y={y1 === y2 ? y1 - 8 : (y1 + y2) / 2 - 5}
-          fill="var(--muted)"
+          fill="var(--ink-2)"
           fontFamily={F_MONO}
           fontSize="12.5"
           textAnchor="middle"
@@ -159,7 +161,7 @@ const felixDiagram = (
     </desc>
     <Defs />
 
-    <text x="0" y="14" fill="var(--muted)" fontFamily={F_MONO} fontSize="12">
+    <text x="0" y="14" fill="var(--ink-2)" fontFamily={F_MONO} fontSize="12">
       client
     </text>
     {['REST / SSE', 'OpenAI-compatible /v1', 'A2A JSON-RPC', 'MCP'].map((s, i) => (
@@ -170,13 +172,13 @@ const felixDiagram = (
           width={200}
           height={34}
           fill="none"
-          stroke="var(--gold)"
+          stroke="var(--red)"
           strokeWidth="1"
         />
         <text
           x={i * 218 + 100}
           y={48}
-          fill="var(--gold)"
+          fill="var(--red)"
           fontFamily={F_MONO}
           fontSize="12.5"
           textAnchor="middle"
@@ -199,8 +201,8 @@ const felixDiagram = (
       h={58}
       label="packages/harness"
       sub="manifests · patterns · tools · session · governance · auth"
-      fill="var(--ox)"
-      stroke="var(--ox-lift)"
+      fill="var(--ember)"
+      stroke="var(--ember-lift)"
     />
     <Box x={548} y={178} w={148} h={58} label="worker" sub="Taskiq consumer" />
     <Box x={708} y={178} w={148} h={58} label="scheduler" sub="cron enqueue" />
@@ -224,10 +226,10 @@ const felixDiagram = (
       strokeWidth="1"
       strokeDasharray="3 4"
     />
-    <text x="0" y="382" fill="var(--muted)" fontFamily={F_MONO} fontSize="12">
+    <text x="0" y="382" fill="var(--ink-2)" fontFamily={F_MONO} fontSize="12">
       every dependency reached through a Protocol, not a vendor SDK
     </text>
-    <text x="0" y="402" fill="var(--muted)" fontFamily={F_MONO} fontSize="12">
+    <text x="0" y="402" fill="var(--ink-2)" fontFamily={F_MONO} fontSize="12">
       so the same code runs on a filesystem-only VM, on AWS, or on GCP
     </text>
   </svg>
@@ -258,7 +260,7 @@ const memoturnDiagram = (
       sub="TypeScript · Python · Go"
     />
     <Arrow x1={230} y1={52} x2={230} y2={92} />
-    <text x={242} y={78} fill="var(--muted)" fontFamily={F_MONO} fontSize="12.5">
+    <text x={242} y={78} fill="var(--ink-2)" fontFamily={F_MONO} fontSize="12.5">
       POST /v1/ingest
     </text>
 
@@ -269,17 +271,17 @@ const memoturnDiagram = (
       h={52}
       label="apps/api"
       sub="Hono on Bun · validate"
-      fill="var(--ox)"
-      stroke="var(--ox-lift)"
+      fill="var(--ember)"
+      stroke="var(--ember-lift)"
     />
 
     {/* The early acknowledgement. This is the whole argument of the design. */}
     <Arrow x1={400} y1={120} x2={498} y2={120} />
-    <rect x={500} y={98} width={380} height={44} fill="none" stroke="var(--gold)" strokeWidth="1" />
-    <text x={514} y={116} fill="var(--gold)" fontFamily={F_MONO} fontSize="12.5">
+    <rect x={500} y={98} width={380} height={44} fill="none" stroke="var(--red)" strokeWidth="1" />
+    <text x={514} y={116} fill="var(--red)" fontFamily={F_MONO} fontSize="12.5">
       207 ack, returned here
     </text>
-    <text x={514} y={132} fill="var(--muted)" fontFamily={F_MONO} fontSize="12.5">
+    <text x={514} y={132} fill="var(--ink-2)" fontFamily={F_MONO} fontSize="12.5">
       before the analytical write, not after
     </text>
 
@@ -347,18 +349,18 @@ const foldDiagram = (
     </desc>
     <Defs />
 
-    <rect x="0" y="0" width="240" height="34" fill="none" stroke="var(--gold)" strokeWidth="1" />
-    <text x="16" y="22" fill="var(--gold)" fontFamily={F_MONO} fontSize="12">
+    <rect x="0" y="0" width="240" height="34" fill="none" stroke="var(--red)" strokeWidth="1" />
+    <text x="16" y="22" fill="var(--red)" fontFamily={F_MONO} fontSize="12">
       POST /mcp
     </text>
 
-    <line x1="20" y1="34" x2="20" y2="546" stroke="var(--line)" strokeWidth="1" />
+    <line x1="20" y1="34" x2="20" y2="546" stroke="var(--ink-3)" strokeWidth="1" />
 
     {FOLD_STAGES.map(([name, detail], i) => {
       const y = 56 + i * 52;
       return (
         <g key={name}>
-          <rect x="14" y={y + 6} width="13" height="13" fill="var(--ox-lift)" />
+          <rect x="14" y={y + 6} width="13" height="13" fill="var(--ember-lift)" />
           <text
             x="46"
             y={y + 17}
@@ -366,11 +368,10 @@ const foldDiagram = (
             fontFamily={F_DISPLAY}
             fontSize="15"
             fontWeight="650"
-            style={{ fontStretch: '100%' }}
           >
             {name}
           </text>
-          <text x="46" y={y + 36} fill="var(--muted)" fontFamily={F_MONO} fontSize="12.5">
+          <text x="46" y={y + 36} fill="var(--ink-2)" fontFamily={F_MONO} fontSize="12.5">
             {detail}
           </text>
         </g>
@@ -382,23 +383,15 @@ const foldDiagram = (
       y="548"
       width="880"
       height="46"
-      fill="var(--ox)"
-      stroke="var(--ox-lift)"
+      fill="var(--ember)"
+      stroke="var(--ember-lift)"
       strokeWidth="1"
     />
-    <rect x="14" y="564" width="13" height="13" fill="var(--gold)" />
-    <text
-      x="46"
-      y={576}
-      fill="var(--ink)"
-      fontFamily={F_DISPLAY}
-      fontSize="15"
-      fontWeight="650"
-      style={{ fontStretch: '100%' }}
-    >
+    <rect x="14" y="564" width="13" height="13" fill="var(--red)" />
+    <text x="46" y={576} fill="var(--ink)" fontFamily={F_DISPLAY} fontSize="15" fontWeight="650">
       audit
     </text>
-    <text x="110" y={576} fill="var(--muted)" fontFamily={F_MONO} fontSize="12.5">
+    <text x="110" y={576} fill="var(--ink-2)" fontFamily={F_MONO} fontSize="12.5">
       one event per request, including denials: a single exit door
     </text>
   </svg>

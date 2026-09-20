@@ -87,8 +87,9 @@ index permanently — retrievable, stale, and invisible to every later populate.
 ### Stack
 - **Framework**: React Router v7 with SSR
 - **Styling**: Tailwind CSS v4, plus a hand-written design system in `app/app.css`
-- **Type**: Archivo Variable (display/UI), Literata Variable (body), JetBrains
-  Mono Variable (code). Self-hosted via `@fontsource-variable/*`.
+- **Type**: Archivo Variable for display, UI *and* body (`--font-body` aliases
+  `--font-display`), JetBrains Mono Variable for code. Self-hosted via
+  `@fontsource-variable/*`. No serif is loaded anywhere.
 - **Deployment**: Cloudflare Workers
 - **AI Services**: Workers AI (embeddings + LLM), Vectorize (vector search)
 - **Validation**: Zod v4 for runtime schema validation
@@ -114,17 +115,36 @@ index permanently — retrievable, stale, and invisible to every later populate.
 before changing anything visual, and treat its Named Rules as binding rather than
 advisory. The three that are load-bearing and easy to break by accident:
 
-- **Body copy sets in Literata, never a sans.** A serif body on a black ground is
-  the single decision separating this design from the Vercel/Linear default it
-  sits next to. Losing it costs more than any other single change.
-- **Neutrals sit at chroma exactly 0.** No "touch of warmth" in the near-black.
-- **The width ladder.** Archivo's `wdth` axis encodes rank: 118% display, 108%
+- **One hue at two lightnesses.** `--red` #FC432E signals and `--ember` #4E251E
+  fills; they are the same hue at 30, and nothing else on the page is coloured.
+  A second accent is the easiest way to lose this palette.
+- **Neutrals stay near-neutral, not neutral.** Night, basalt, the well and the
+  ink ramp all sit under ~0.013 OKLCH chroma on a blue hue — night measures
+  0.0115 at hue 267. The tint is deliberate; what is banned is warmth, and any
+  neutral that reads as a hue.
+- **The width ladder.** Archivo's `wdth` axis encodes rank: 110% display, 104%
   heading, 100% UI, 88% metadata. There are four stops and no others, and the
-  Fontsource `wdth` entrypoint is required for them to exist at all.
+  Fontsource `wdth` entrypoint is required for them to exist at all. With one
+  family and one weight, this axis is most of the hierarchy.
 
 Contrast figures in DESIGN.md were measured against the rendered DOM, not
 estimated from OKLCH lightness. Re-measure after any palette change; OKLCH
 lightness is perceptual and reasoning about it produces wrong answers.
+
+**The contrast harness has two blind spots, and both have already produced a
+real failure here.** It reads each element's resolved `background-color` in its
+resting state, so it cannot see either of these:
+
+- **A `background-image`.** The chat's dot grid composites to #1D1E22 over the
+  well; `--ink-3` on a dot is 2.7:1, under the floor, while the harness happily
+  reports the well at 3.2:1. Nothing renders that combination today.
+- **A state.** The global `a:hover` sets `--red` and outranks `.btn`, which
+  declared its colour only in the resting rule — so the primary button's label
+  went red on a near-white hover fill at 3.05:1. A control that changes its
+  background on hover must re-declare its colour in the same rule.
+
+Measure textures and states by hand. A clean audit is not evidence that either
+is safe.
 
 ### Case studies
 

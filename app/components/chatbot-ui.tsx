@@ -393,9 +393,14 @@ export default function ChatbotUI({
               </button>
             </div>
             <div className="bb-chat-modal-body">
-              {stream}
-              {promptChips}
-              {inputRow}
+              {/* The inner column is what keeps a full-width sheet readable:
+                  the body spans the viewport, the conversation inside it does
+                  not. */}
+              <div className="bb-chat-modal-inner">
+                {stream}
+                {promptChips}
+                {inputRow}
+              </div>
             </div>
           </div>
         </div>

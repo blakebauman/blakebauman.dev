@@ -2,6 +2,7 @@ import { lazy, Suspense, useMemo } from 'react';
 import resumeData from '../chat/resume.json';
 import { LEAD_SLUGS, leadCopyFor } from '../content/case-studies';
 import { orderProjects, type Persona } from '../lib/persona';
+import { GridOverlay, GridToggle } from './grid';
 import { useCurrentSection } from './section-index';
 
 const Chatbot = lazy(() => import('./chatbot'));
@@ -30,6 +31,7 @@ interface ProjectEntry {
   status?: string;
   visibility?: 'public' | 'private';
   listed?: boolean;
+  maturity?: 'production' | 'prototype' | 'reference' | 'archived';
 }
 
 // Project name -> external site, for linkifying project mentions in the hero subhead.
@@ -95,34 +97,39 @@ export function Resume({ chatEnabled, persona, chatGreeting, suggestedPrompts }:
 
   return (
     <div className="bb-shell">
+      <GridOverlay />
       <header className="bb-top print:hidden">
         <div className="bb-wrap bb-top-in">
           <a className="bb-top-name" href="#top">
             {resumeData.name}
           </a>
-          <nav className="bb-top-nav" aria-label="Sections">
-            {sections.map(section => (
-              <a
-                key={section.id}
-                href={`#${section.id}`}
-                className={current === section.id ? 'current' : undefined}
-                aria-current={current === section.id ? 'location' : undefined}
-              >
-                {section.label}
-              </a>
-            ))}
-          </nav>
+          <div className="bb-top-right">
+            <nav className="bb-top-nav" aria-label="Sections">
+              {sections.map(section => (
+                <a
+                  key={section.id}
+                  href={`#${section.id}`}
+                  className={current === section.id ? 'current' : undefined}
+                  aria-current={current === section.id ? 'location' : undefined}
+                >
+                  {section.label}
+                </a>
+              ))}
+            </nav>
+            <GridToggle />
+          </div>
         </div>
       </header>
 
       <main>
         <section className="bb-wrap bb-masthead" id="top">
-          <div>
-            {/* No eyebrow here: the subhead opens with the job title verbatim,
-                so a label above the name was pure repetition. */}
-            <h1>{resumeData.name}</h1>
-            <p className="subhead">{linkifyProjectMentions(resumeData.copy.subhead)}</p>
-          </div>
+          {/* No eyebrow here: the subhead opens with the job title verbatim,
+              so a label above the name was pure repetition. */}
+          <h1>{resumeData.name}</h1>
+
+          <div className="bb-rule" aria-hidden="true" />
+
+          <p className="subhead">{linkifyProjectMentions(resumeData.copy.subhead)}</p>
 
           <dl className="bb-masthead-meta">
             <dt>Based</dt>
@@ -154,9 +161,13 @@ export function Resume({ chatEnabled, persona, chatGreeting, suggestedPrompts }:
           <div className="bb-lead-list">
             {lead.map(project => (
               <a className="bb-lead" key={project.name} href={`/work/${project.name}`}>
+                {/* Source order is the mobile reading order: name, then the fact
+                    that ranks it, then the description, then the action. The
+                    desktop grid repositions these; it never reorders them. */}
                 <span className="nm">{project.name}</span>
-                <span className="go">Case study →</span>
+                {project.maturity && <span className="mat">{project.maturity}</span>}
                 <span className="kind">{leadCopyFor(project.name)}</span>
+                <span className="go">Case study →</span>
               </a>
             ))}
           </div>
@@ -189,8 +200,14 @@ export function Resume({ chatEnabled, persona, chatGreeting, suggestedPrompts }:
           </div>
           <div className="body-grid">
             <div className="lede-set">
-              {resumeData.summary.map(paragraph => (
-                <p key={paragraph.slice(0, 40)} className="lede">
+              {resumeData.summary.map((paragraph, i) => (
+                <p
+                  key={paragraph.slice(0, 40)}
+                  /* The first paragraph sets at lede scale. Eight paragraphs at
+                     one size is a block, not a passage; the section needs a way
+                     in and this is the cheapest one that adds no copy. */
+                  className={i === 0 ? 'lede lede-open' : 'lede'}
+                >
                   {paragraph}
                 </p>
               ))}
@@ -210,7 +227,7 @@ export function Resume({ chatEnabled, persona, chatGreeting, suggestedPrompts }:
             {resumeData.experience.map((exp, idx) => (
               <article key={`${exp.company}-${exp.role}-${exp.years}`} className="bb-role">
                 <div className="term">{exp.years.replace(/-/g, '–')}</div>
-                <div>
+                <div className="role-block">
                   <h3 className="role">{exp.role}</h3>
                   <span className="company">{exp.company}</span>
                   <p className="desc">{exp.description}</p>
@@ -266,11 +283,13 @@ export function Resume({ chatEnabled, persona, chatGreeting, suggestedPrompts }:
                         display: 'flex',
                         alignItems: 'center',
                         justifyContent: 'center',
-                        font: '600 11px/1 var(--font-display)',
-                        fontStretch: 'var(--w-meta)',
-                        letterSpacing: '0.16em',
+                        fontFamily: 'var(--font-display)',
+                        fontSize: 'var(--fs-label-s)',
+                        fontWeight: 'var(--wt-label-s)',
+                        lineHeight: 1,
+                        letterSpacing: 'var(--tr-label-s)',
                         textTransform: 'uppercase',
-                        color: 'var(--muted)',
+                        color: 'var(--ink-2)',
                       }}
                     >
                       Loading the index
@@ -304,7 +323,7 @@ export function Resume({ chatEnabled, persona, chatGreeting, suggestedPrompts }:
             </div>
             <div className="cta">
               <a className="btn" href={`mailto:${resumeData.email}`}>
-                Talk to me
+                Email me
               </a>
               <p className="secondary">
                 Or find me on <a href={resumeData.github}>github</a>,{' '}
@@ -326,7 +345,7 @@ export function Resume({ chatEnabled, persona, chatGreeting, suggestedPrompts }:
 
       <footer className="bb-wrap bb-stamps">
         <div className="bb-stamps-row">
-          <span>Set in Archivo and Literata</span>
+          <span>Set in Archivo</span>
           <span>Built on Cloudflare Workers</span>
           <span>
             © {todayYear} {resumeData.name}
