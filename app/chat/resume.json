@@ -27,7 +27,7 @@
     "artifactHeading": "Ask the resume",
     "artifactSubhead": "It will tell you what I've worked on and what I haven't.",
     "colophon": "The record is maintained as a record, not a marketing document. What's listed is what happened.",
-    "mcp": "This page is also an MCP server. A client pointed at it gets the same six read-only tools the assistant here uses \u2014 search the record, list the projects and roles, open any of them in full."
+    "mcp": "This page is also an MCP server. A client pointed at it gets the same six read-only tools the assistant here uses — search the record, list the projects and roles, open any of them in full."
   },
   "blockquote": {
     "text": "I know how large systems fail, and how to fix them.",
@@ -219,13 +219,13 @@
         "Governance is first-class: auth, approvals, an append-only audit trail, usage meters, and opt-in SOC 2 and EU AI Act mappings.",
         "Vendor independence by construction: object store, secrets backend, and warehouse are Protocols, so the same code runs on a filesystem-only VM or on AWS and GCP."
       ],
-      "lastActivity": "2026-08-25"
+      "lastActivity": "2026-09-19"
     },
     {
       "name": "felix-workers",
       "year": "2025–2026",
       "status": "Filed",
-      "visibility": "public",
+      "visibility": "private",
       "listed": false,
       "description": "The TypeScript predecessor to felix: a managed agents harness on Cloudflare Workers with manifest-defined agents, swappable session strategies, pattern and provider registries, and transport-labelled tool executors. On top sat Felix Commerce, an agentic commerce layer with an Agentic Commerce Protocol merchant endpoint, approval-gated Stripe checkout, per-brand D2C storefronts, and B2B quote-to-cash.",
       "context": "Superseded in August 2026 by the Python rewrite at felix-run/felix, which is self-hostable and vendor-neutral rather than bound to Workers. The commerce layer did not carry over. The repository is still public at github.com/blakebauman/felix.",
@@ -286,7 +286,7 @@
         "Passes the official MCP conformance suite 40/40; shipped at v1.4.1 with the API contract frozen at v1.0.0, hardened with fuzzers and chaos tests.",
         "OpenTelemetry tracing and Prometheus metrics throughout."
       ],
-      "lastActivity": "2026-08-14"
+      "lastActivity": "2026-09-07"
     },
     {
       "name": "memoturn",
@@ -325,7 +325,7 @@
         "Multi-provider playground with streaming, plus SSO, RBAC, and audit logs for team use.",
         "An MCP server exposes prompts and datasets directly to agent IDEs, so the eval loop reaches the place the prompts are actually written."
       ],
-      "lastActivity": "2026-08-12"
+      "lastActivity": "2026-09-18"
     },
     {
       "name": "skillist",
@@ -359,7 +359,7 @@
         "Two npm packages published under MIT, including @skillist/cli for local skill development.",
         "Neon Postgres via Hyperdrive with R2 and KV storage, a Vite and TanStack Router console, and Better Auth covering OAuth, magic links, and passkeys."
       ],
-      "lastActivity": "2026-08-11"
+      "lastActivity": "2026-09-07"
     },
     {
       "name": "edgevault",
@@ -395,7 +395,7 @@
         "Vectorize-backed semantic search over configuration, plus a Streamable-HTTP MCP server so agents can read and change config under the same policy as humans.",
         "Open-core: the MIT core is public, the Stripe billing layer is kept proprietary."
       ],
-      "lastActivity": "2026-08-09"
+      "lastActivity": "2026-09-13"
     },
     {
       "name": "memoturn-db",
@@ -424,7 +424,7 @@
       "name": "prompton",
       "year": "2026",
       "status": "Active",
-      "visibility": "public",
+      "visibility": "private",
       "description": "Native, conversation-first database client with a Rust tool-calling agent. Ask a question in English, watch it write and run the SQL, and keep production connections read-only until a human approves the write.",
       "context": "Tauri 2 desktop app: TypeScript UI over a Rust core that owns the agent loop and the drivers. Connects to PostgreSQL, MySQL, SQLite, and Cloudflare D1 in one workspace. Skills live on disk as SKILL.md files, so the agent's database-specific knowledge is version-controlled text rather than hidden state. Credentials go to the OS keyring, never a config file.",
       "tech": [
@@ -451,7 +451,7 @@
         "Credentials are held in the OS keyring. macOS and Linux, with CI running typecheck, build, and cargo test.",
         "Self-described MVP."
       ],
-      "lastActivity": "2026-07-24"
+      "lastActivity": "2026-08-29"
     },
     {
       "name": "deckhand",
@@ -471,7 +471,7 @@
         "Adobe Spectrum design system, macOS and Linux, MIT licensed.",
         "Pre-release: DMGs are ad-hoc signed, not notarized."
       ],
-      "lastActivity": "2026-07-20"
+      "lastActivity": "2026-09-08"
     },
     {
       "name": "timetracker-app",
@@ -508,7 +508,7 @@
         "Pushes time entries to Adobe Workfront and Microsoft Dynamics.",
         "MV3 Chrome extension, and Playwright end-to-end coverage."
       ],
-      "lastActivity": "2026-08-10"
+      "lastActivity": "2026-09-19"
     },
     {
       "name": "offpavement-shop",
@@ -560,7 +560,7 @@
         "Answers surface which sections grounded them, so a claim can be traced back to the record.",
         "Rate limited per IP at the edge with the native Workers rate-limiting binding."
       ],
-      "lastActivity": "2026-08-13"
+      "lastActivity": "2026-09-20"
     },
     {
       "name": "nomoji.dev",
