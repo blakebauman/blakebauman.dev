@@ -246,7 +246,7 @@ export function Resume({ chatEnabled, persona, chatGreeting, suggestedPrompts }:
               {resumeData.recognition.map(item => (
                 <div key={item.title} className="bb-rec-block">
                   <div className="term">{item.year}</div>
-                  <div>
+                  <div className="rec-body">
                     <p className="title">{item.title}</p>
                     <p className="desc">{item.description}</p>
                   </div>
