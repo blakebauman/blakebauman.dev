@@ -259,7 +259,7 @@
       "status": "Active",
       "visibility": "public",
       "description": "Enterprise MCP gateway: one governed endpoint between every MCP client and every MCP server. Federates multiple servers behind namespaced tools with deny-by-default ABAC policy, JWT/JWKS auth with OAuth token exchange (RFC 8693), and credential brokering so agents never hold raw API keys.",
-      "context": "Single static Go binary (~22 MB distroless image) on the official MCP Go SDK, with optional Redis for distributed fleet state. Rate limiting, circuit breakers, caching, load balancing with health checks, dynamic registry discovery, hot config reload, a console UI, and a Kubernetes discovery controller with Helm chart. Structured audit events for every request (including denials) plus OpenTelemetry tracing and Prometheus metrics. Passes the official MCP conformance suite 40/40; v1.4.1 with the API contract frozen at v1.0.0, hardened with fuzzers and chaos tests.",
+      "context": "Single static Go binary (~22 MB distroless image) on the official MCP Go SDK, with optional Redis for distributed fleet state. Rate limiting, circuit breakers, caching, load balancing with health checks, dynamic registry discovery, hot config reload, a console UI, and a Kubernetes discovery controller with Helm chart. Structured audit events for every request (including denials) plus OpenTelemetry tracing and Prometheus metrics. Passes the official MCP conformance suite 40/40; v1.15.0 with the API contract frozen at v1.0.0, hardened with fuzzers and chaos tests.",
       "tech": [
         "Go",
         "MCP",
@@ -283,7 +283,7 @@
         "Credential brokering with OAuth 2.0 token exchange (RFC 8693) so agents never hold raw API keys.",
         "Single static Go binary in a roughly 22 MB distroless image, built on the official MCP Go SDK, with optional Redis for distributed fleet state.",
         "Operational surface: rate limiting, circuit breakers, caching, load balancing with health checks, dynamic registry discovery, hot config reload, and a Kubernetes discovery controller with a Helm chart.",
-        "Passes the official MCP conformance suite 40/40; shipped at v1.4.1 with the API contract frozen at v1.0.0, hardened with fuzzers and chaos tests.",
+        "Passes the official MCP conformance suite 40/40; shipped at v1.15.0 with the API contract frozen at v1.0.0, hardened with fuzzers and chaos tests.",
         "OpenTelemetry tracing and Prometheus metrics throughout."
       ],
       "lastActivity": "2026-09-07"
