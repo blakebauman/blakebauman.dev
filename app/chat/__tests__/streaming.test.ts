@@ -50,6 +50,54 @@ describe('sseTransformResponse', () => {
     expect(onComplete).toHaveBeenCalledWith('Hello world');
   });
 
+  it('keeps a numeric token, including zero, and emits it as a string', async () => {
+    // Workers AI types `response` as a string and does not always send one: a
+    // token of pure digits arrives as a number. Captured from production as a
+    // frame reading {"content": 2}. The old truthiness check then deleted the
+    // number 0 outright, which on this record turns "40/40" into "4/4" and
+    // "v1.14.0" into "v1.14." while still reading as fluent prose.
+    const stream = upstream([
+      'data: {"response":"fold passes "}\n\n',
+      'data: {"response":4}\n\n',
+      'data: {"response":0}\n\n',
+      'data: {"response":"/40"}\n\n',
+      'data: [DONE]\n\n',
+    ]);
+
+    const onComplete = vi.fn();
+    const frames = await readFrames(sseTransformResponse(stream, onComplete));
+    const contents = frames.filter(f => f !== '[DONE]').map(f => JSON.parse(f).content);
+
+    expect(contents).toEqual(['fold passes ', '4', '0', '/40']);
+    // Every one a string: the browser concatenates these, and a number that
+    // survives to `+=` is a type the UI never agreed to render.
+    expect(contents.every(c => typeof c === 'string')).toBe(true);
+    expect(onComplete).toHaveBeenCalledWith('fold passes 40/40');
+  });
+
+  it('drops a structured token rather than streaming JSON at the reader', async () => {
+    // A tool call or other structured delta reaching this point would
+    // concatenate as "[object Object]" and go out as a frame whose `content`
+    // is an object. The answer is text; anything that is not becomes nothing.
+    const error = vi.spyOn(console, 'error').mockImplementation(() => {});
+    const stream = upstream([
+      'data: {"response":"Blake built "}\n\n',
+      'data: {"response":{"name":"get_project","arguments":{"name":"fold"}}}\n\n',
+      'data: {"response":"fold."}\n\n',
+      'data: [DONE]\n\n',
+    ]);
+
+    const onComplete = vi.fn();
+    const frames = await readFrames(sseTransformResponse(stream, onComplete));
+    const contents = frames.filter(f => f !== '[DONE]').map(f => JSON.parse(f).content);
+
+    expect(contents).toEqual(['Blake built ', 'fold.']);
+    expect(JSON.stringify(contents)).not.toContain('get_project');
+    expect(onComplete).toHaveBeenCalledWith('Blake built fold.');
+    expect(error).toHaveBeenCalled();
+    error.mockRestore();
+  });
+
   it('reassembles frames split across network chunk boundaries', async () => {
     // Chunk boundaries do not respect SSE frame boundaries; dropping the
     // trailing partial line loses tokens silently.
