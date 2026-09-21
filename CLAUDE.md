@@ -68,15 +68,18 @@ VECTORIZE_ADMIN_KEY=... pnpm run vectorize:populate  # Rebuild the index from re
 VECTORIZE_ADMIN_KEY=... pnpm run vectorize:eval      # Golden-set retrieval eval: recall@k, MRR, score distribution
 ```
 
-There is one populate path: `POST /api/populate-vectorize` on the main worker.
-A separate `vectorize-worker` used to own a second, divergent copy of it. It has
-been deleted *from this repo*, but as of 2026-09-20 the script is still deployed
-on the account and `vectorize.blakebauman.dev` is still bound to it, so that
-populate path is still reachable by anyone holding the admin key. Retire both.
+There is one populate path: `POST /api/populate-vectorize` on the main worker,
+and as of 2026-09-20 that is now literally true. A separate `vectorize-worker`
+owned a second, divergent copy of it; it was deleted from this repo earlier, and
+the deployed script and its `vectorize.blakebauman.dev` custom domain were
+deleted from the account on 2026-09-20. The deployed bundle is backed up at
+`../vectorize-worker-deployed-backup-2026-09-20.js`, outside this repo.
 
-The note here used to say it omitted `ai-context.json`. Read from the deployed
-bundle (last pushed 2026-08-08), that is wrong, and the truth is worse. It does
-index the layer — but under the schema and chunker of an older generation:
+Why it mattered is worth keeping, because it is the argument against ever
+standing up a second populate path. The note here used to say that worker
+omitted `ai-context.json`. Read from the deployed bundle (last pushed
+2026-08-08), that was wrong, and the truth was worse. It *did* index the layer —
+but under the schema and chunker of an older generation:
 
 - **No title in the embedded text.** Its chunk is `text: item.text`; the current
   `buildChunks` embeds `` `${title}\n${body}` ``. The title is the first embedded
@@ -92,8 +95,11 @@ index the layer — but under the schema and chunker of an older generation:
   orphans, permanently.
 - **A bundled snapshot of the content**, frozen at its last deploy.
 
-So the failure is not a missing layer, it is the live index silently replaced
-with a stale one, embedded under the old scheme, unreconcilable afterwards.
+So the failure was never a missing layer. It was the live index silently
+replaced with a stale one, embedded under the old scheme, unreconcilable
+afterwards — and reachable by anyone holding the admin key. A populate path that
+does not share `buildChunks` is a way to corrupt the index quietly, however
+correct it looks on its own.
 
 Populate is reconciling, not just additive. Vectorize has no API to list the ids
 it holds, so `migrations/003_vector_manifest.sql` records what the last populate
