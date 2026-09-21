@@ -68,19 +68,66 @@ export function sseTransformResponse(
       }
 
       // Workers AI streams in SSE format: data: {"response":"text"}
+      //
+      // `response` is documented as a string and usually is one. It is not
+      // always: a token made entirely of digits arrives as a NUMBER. That was
+      // captured live from production — a frame reading {"content": 2} reached
+      // the browser, which is this transform handing the value straight
+      // through. `as { response?: string }` asserted a type nobody checked, so
+      // the compiler was satisfied and the runtime was not.
+      //
+      // Two consequences, and the quiet one is the dangerous one:
+      //
+      //   - `if (parsed.response)` is false for the number 0, so a bare "0"
+      //     token was dropped from the answer outright. On a record whose
+      //     load-bearing claims are "40/40", "v1.14.0" and "~22 MB", deleting
+      //     a zero does not read as a bug — it reads as fluent prose that is
+      //     quietly wrong, which is the one failure this whole codebase is
+      //     built to prevent.
+      //   - A non-primitive `response` — a structured delta, a tool call —
+      //     concatenates as "[object Object]" and goes out as a frame whose
+      //     `content` is an object, turning the reader's answer into
+      //     structure.
+      //
+      // So: the type is checked rather than asserted, digits are stringified,
+      // anything else is dropped and logged, and `content` is a string by
+      // construction. Deliberately not Zod, which this file would otherwise
+      // reach for — this runs once per token and the shape is a single field.
       const processLine = (line: string) => {
         if (!line.startsWith('data: ')) return;
         const jsonStr = line.slice(6).trim();
         if (jsonStr === '[DONE]') return;
+
+        let parsed: unknown;
         try {
-          const parsed = JSON.parse(jsonStr) as { response?: string };
-          if (parsed.response) {
-            accumulatedResponse += parsed.response;
-            controller.enqueue(encoder.encode(frame({ content: parsed.response })));
-          }
+          parsed = JSON.parse(jsonStr);
         } catch {
           // Malformed event - skip
+          return;
         }
+        if (typeof parsed !== 'object' || parsed === null) return;
+
+        const token = (parsed as { response?: unknown }).response;
+        if (token === undefined || token === null) return;
+
+        let text: string;
+        if (typeof token === 'string') {
+          text = token;
+        } else if (typeof token === 'number' && Number.isFinite(token)) {
+          text = String(token);
+        } else {
+          console.error('[chat-stream] dropped an unexpected token type', {
+            type: typeof token,
+          });
+          return;
+        }
+
+        // Against '' rather than truthiness, which is the whole point: "0" is
+        // a token worth keeping.
+        if (text === '') return;
+
+        accumulatedResponse += text;
+        controller.enqueue(encoder.encode(frame({ content: text })));
       };
 
       try {

@@ -40,7 +40,9 @@ interface ChatResponse {
 // frame if generation breaks mid-response.
 interface StreamChunk {
   type?: 'steps' | 'sources' | 'error';
-  content?: string;
+  /** Typed `unknown`, not `string`: this is parsed off the wire, and the
+   *  previous `as StreamChunk` cast is exactly how a number reached `+=`. */
+  content?: unknown;
   sources?: ContextSource[];
   steps?: AgentStep[];
   error?: string;
@@ -300,7 +302,14 @@ export default function Chatbot({ greeting, suggestedPrompts }: ChatbotProps = {
               return;
             }
 
-            if (parsed.content) {
+            // The transform guarantees a string, and this checks anyway: an
+            // open page outlives the worker version that served it, so the
+            // frames arriving here are not necessarily the ones the current
+            // code sends. `+=` on an object renders "[object Object]" into the
+            // answer, and the comparison is against '' rather than truthiness
+            // because a "0" token arrives from Workers AI as the number 0 and
+            // a truthy check deletes it.
+            if (typeof parsed.content === 'string' && parsed.content !== '') {
               accumulatedContent += parsed.content;
               // Update the message with accumulated content
               setMessages(prev =>
