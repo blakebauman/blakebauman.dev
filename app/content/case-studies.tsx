@@ -626,7 +626,7 @@ export const CASE_STUDIES: CaseStudy[] = [
     meta: [
       { k: 'Year', v: '2026' },
       { k: 'Language', v: 'Go' },
-      { k: 'Release', v: 'v1.14.0' },
+      { k: 'Release', v: 'v1.15.0' },
       { k: 'Conformance', v: '40/40' },
       { k: 'Image', v: '~22 MB' },
     ],
