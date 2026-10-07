@@ -209,7 +209,10 @@
         "agent",
         "integrate",
         "llms.txt",
-        "tools"
+        "tools",
+        "this record",
+        "mcp client",
+        "point a client"
       ],
       "text": "This site is React Router v7 with SSR on Cloudflare Workers, and its chatbot is deliberately narrow: it answers from the record and nothing else. The resume and a chat-only context layer are chunked and embedded with Workers AI at populate time and stored in Vectorize. A topic guardrail runs before the model, so off-topic prompts and injection attempts are refused without spending an inference call. The assistant then works as a tool-calling agent over a small set of read-only tools: it can search the index, list the projects and roles, open any one of them, and read a case study, deciding which to call rather than being handed one retrieval up front. If that loop fails it falls back to single-shot retrieval, which embeds the question, matches the index against a score floor, and fences the matched chunks into the prompt. Either way retrieved text is fenced as reference material and treated as data, never as instructions. Answers stream over SSE, cite the sections that grounded them, and show which tools were called. The same tools are served publicly as a Model Context Protocol endpoint at blakebauman.com/mcp — JSON-RPC over POST, unauthenticated and read-only — so an external agent can query the record directly instead of through the chatbot; blakebauman.com/llms.txt is a plain-text index of the same material. Source at github.com/blakebauman/blakebauman.dev."
     },
@@ -360,6 +363,23 @@
         "felix commerce"
       ],
       "text": "Several projects on the record are ancestors rather than dead ends, and the lineage explains the current work. The TypeScript Felix on Cloudflare Workers, which carried Felix Commerce as an agentic commerce layer, was superseded in August 2026 by the Python rewrite at felix-run/felix; the repository is still public but the commerce layer was not carried forward. edgeconfig-monorepo, a multi-format configuration platform with SSE live updates, revision history and environment promotion on Workers and Durable Objects, became edgevault. adventure-agent's LangGraph orchestration became the agent patterns in Felix, and tracing it with LangSmith became the case for Memoturn. fleet-workspace is explicitly a demonstration of hierarchical Durable Objects rather than a product."
+    },
+    {
+      "id": "faq-who-is-blake-bauman",
+      "title": "Blake Bauman, Principal Technical Architect at Adobe: who he is",
+      "kind": "faq",
+      "topics": [
+        "who is",
+        "who is blake",
+        "blake bauman",
+        "introduction",
+        "bio",
+        "biography",
+        "about him",
+        "overview",
+        "which blake bauman"
+      ],
+      "text": "Blake Bauman is a Principal Technical Architect at Adobe, based in Arizona and working remotely. At Adobe he architects and ships enterprise commerce for Fortune 500 clients on Adobe Commerce and AEM Edge Delivery Services, and delivers solutions on Adobe Experience Platform Agent Orchestrator and CX Enterprise Coworker. Independently he builds agent infrastructure: Felix, a self-hostable agents harness; Memoturn, an evaluation and observability layer; and Fold, an MCP governance gateway. His public work is at blakebauman.com and github.com/blakebauman. Other people share the name; this record describes only Blake Bauman the software architect, and says nothing about anyone else called Blake Bauman."
     },
     {
       "id": "faq-current-work",

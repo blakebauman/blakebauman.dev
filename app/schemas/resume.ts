@@ -137,6 +137,14 @@ export const ResumeDataSchema = z.object({
   sections: SectionIntrosSchema,
   copy: CopySchema.optional(),
   bluesky: z.string().optional(),
+  // Further profiles of the same person, emitted as schema.org `sameAs`. Every
+  // one that points back here corroborates which Blake Bauman this is.
+  profiles: z.array(z.object({ network: z.string(), url: z.string() })).optional(),
+  // Site-relative path to a portrait, used as the Person image in JSON-LD.
+  image: z.string().optional(),
+  // Last substantive edit to the record (YYYY-MM-DD): sitemap lastmod and
+  // ProfilePage dateModified.
+  updated: z.string().optional(),
 });
 
 /**

@@ -2,6 +2,7 @@ import { Link } from 'react-router';
 import resumeData from '../chat/resume.json';
 import { GridOverlay, GridToggle } from '../components/grid';
 import { type CaseStudySection, caseStudyFor } from '../content/case-studies';
+import { caseStudyGraph, pageMeta } from '../lib/seo';
 import type { Route } from './+types/work';
 
 // The case studies are static module content, including hand-authored SVG. A
@@ -18,15 +19,15 @@ export function loader({ params }: Route.LoaderArgs) {
 export function meta({ data }: Route.MetaArgs) {
   const study = data?.slug ? caseStudyFor(data.slug) : undefined;
   if (!study) {
-    return [{ title: 'Not found | Blake Bauman' }];
+    return [{ title: 'Not found | Blake Bauman' }, { name: 'robots', content: 'noindex' }];
   }
-  return [
-    { title: `${study.name} | Blake Bauman` },
-    { name: 'description', content: study.oneLine },
-    { property: 'og:title', content: `${study.name} · ${resumeData.name}` },
-    { property: 'og:description', content: study.oneLine },
-    { property: 'og:type', content: 'article' },
-  ];
+  return pageMeta({
+    title: `${study.name}: a case study by ${resumeData.name}`,
+    description: study.oneLine,
+    path: `/work/${study.slug}`,
+    type: 'article',
+    jsonLd: caseStudyGraph(study),
+  });
 }
 
 function Section({ section }: { section: CaseStudySection }) {

@@ -5,6 +5,8 @@ import { RETRIEVAL_CONFIG } from '../app/chat/context';
 import resumeData from '../app/chat/resume.json';
 import { canonicalHostRedirect } from '../app/lib/canonical-host';
 import { isAuthorized, jsonResponse, serverErrorResponse } from '../app/lib/http';
+import { markdownFor } from '../app/lib/markdown';
+import { CONTENT_SIGNAL, markdownPath } from '../app/lib/seo';
 import { populateVectorizeIndex } from '../app/lib/vectorize';
 import { ChatLogsQuerySchema } from '../app/schemas/admin';
 import type { Env } from '../app/types';
@@ -136,6 +138,12 @@ export default {
         headers: url.pathname === '/mcp' ? MCP_CORS_HEADERS : corsHeaders,
       });
     }
+
+    // Markdown for agents: `/index.md`, `/work/<slug>.md`, or `/` and
+    // `/work/<slug>` requested with `Accept: text/markdown`. Generated from the
+    // same record the page renders, so no HTML conversion is involved.
+    const markdown = markdownFor(request, url);
+    if (markdown) return markdown;
 
     // Model Context Protocol endpoint. Exposes the same tool layer the site's
     // own assistant uses, so an external agent and the on-site chat answer from
@@ -378,18 +386,38 @@ export default {
       cloudflare: { env, ctx },
     });
 
+    if (!(response.headers.get('Content-Type') ?? '').startsWith('text/html')) {
+      return response;
+    }
+
+    const page = new Response(response.body, response);
+
+    // Discovery for agents that read headers before bodies (Cloudflare's
+    // agent-readiness checks among them): the llms.txt index, this page's
+    // markdown twin, and the API catalog. Vary because the same URL answers
+    // with markdown when asked for it.
+    page.headers.append(
+      'Link',
+      [
+        '</llms.txt>; rel="describedby"; type="text/markdown"',
+        `<${markdownPath(url.pathname)}>; rel="alternate"; type="text/markdown"`,
+        '</.well-known/api-catalog>; rel="api-catalog"',
+        '</sitemap.xml>; rel="sitemap"',
+      ].join(', ')
+    );
+    page.headers.set('Content-Signal', CONTENT_SIGNAL);
+    page.headers.append('Vary', 'Accept');
+
     // Mark first-time visitors so loaders can detect returning visitors (signal-aware
     // personalization). Only on document GETs that didn't already carry the cookie.
     if (request.method === 'GET' && !hasSeenCookie(request) && isDocumentRequest(request)) {
-      const withCookie = new Response(response.body, response);
-      withCookie.headers.append(
+      page.headers.append(
         'Set-Cookie',
         'bb_seen=1; Path=/; Max-Age=15552000; HttpOnly; SameSite=Lax; Secure'
       );
-      return withCookie;
     }
 
-    return response;
+    return page;
   },
 
   /**
