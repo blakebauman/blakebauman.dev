@@ -11,6 +11,7 @@
   "github": "https://github.com/blakebauman",
   "website": "https://blakebauman.com",
   "bluesky": "https://bsky.app/profile/blakebauman.dev",
+  "updated": "2026-10-07",
   "summary": [
     "I'm a Principal Technical Architect at Adobe. For Fortune 500 clients I architect and ship enterprise commerce on Adobe Commerce and AEM Edge Delivery Services, including one of the first production EDS plus Commerce B2B integrations.",
     "Increasingly that means the agentic layer on top of it. I build client solutions on Adobe Experience Platform Agent Orchestrator and CX Enterprise Coworker, which coordinate agents across analytics, content production, and journey orchestration with governance and human approval in the loop, and I've contributed to the core code behind them.",

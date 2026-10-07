@@ -23,6 +23,8 @@ export interface CaseStudy {
   slug: string;
   name: string;
   oneLine: string;
+  /** Last substantive edit (YYYY-MM-DD): sitemap lastmod and article dateModified. */
+  updated: string;
   /** Shown on the home page beside the display-scale name. */
   leadCopy: string;
   meta: Array<{ k: string; v: string }>;
@@ -405,6 +407,7 @@ export const CASE_STUDIES: CaseStudy[] = [
     name: 'felix',
     oneLine:
       'A self-hostable agents harness. Agents are YAML, not code, and the runtime they compile into is governed by default.',
+    updated: '2026-09-20',
     leadCopy: 'A self-hostable agents harness in Python. Agents are YAML, not code.',
     meta: [
       { k: 'Year', v: '2026' },
@@ -526,6 +529,7 @@ export const CASE_STUDIES: CaseStudy[] = [
     name: 'memoturn',
     oneLine:
       'An open-source AI engineering platform: tracing, evals, prompts and cost analytics, with the transactional and analytical stores kept apart on purpose.',
+    updated: '2026-09-20',
     leadCopy: 'LLM observability and evals, OpenTelemetry-native and self-hostable.',
     meta: [
       { k: 'Year', v: '2026' },
@@ -622,6 +626,7 @@ export const CASE_STUDIES: CaseStudy[] = [
     name: 'fold',
     oneLine:
       'One governed endpoint between every MCP client and every MCP server. Forty out of forty on the official conformance suite, on every merge.',
+    updated: '2026-09-20',
     leadCopy: 'The enterprise MCP gateway in Go. Federation, policy, audit.',
     meta: [
       { k: 'Year', v: '2026' },

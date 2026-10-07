@@ -1,0 +1,86 @@
+<!doctype html>
+<!--
+  The Open Graph card, rendered once to public/og.png by `pnpm run og:image`.
+  Tokens are copied from app/app.css, not linked: this page is rendered by a
+  bare headless Chrome, outside the build, and a var() it cannot resolve fails
+  silently. Re-render after a palette change.
+-->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<style>
+  @font-face {
+    font-family: 'Archivo';
+    src: url('../../node_modules/@fontsource-variable/archivo/files/archivo-latin-wdth-normal.woff2') format('woff2');
+    font-weight: 100 900;
+    font-stretch: 62% 125%;
+  }
+  :root {
+    --night: #080a0f;
+    --ink: #f0efec;
+    --ink-2: #9a9a94;
+    --red: #fc432e;
+    --hair: color-mix(in oklab, #f0efec 14%, transparent);
+  }
+  html, body { margin: 0; }
+  body {
+    width: 1200px;
+    height: 630px;
+    box-sizing: border-box;
+    padding: 72px 80px;
+    background: var(--night);
+    color: var(--ink);
+    font-family: 'Archivo', sans-serif;
+    font-weight: 500;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+  }
+  .meta {
+    font-stretch: 88%;
+    font-size: 22px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--ink-2);
+    display: flex;
+    align-items: center;
+    gap: 14px;
+  }
+  .dot { width: 12px; height: 12px; background: var(--red); border-radius: 50%; }
+  h1 {
+    margin: 0;
+    font-weight: 500;
+    font-stretch: 110%;
+    font-size: 132px;
+    line-height: 0.95;
+    letter-spacing: -0.035em;
+  }
+  .role {
+    margin-top: 28px;
+    font-stretch: 104%;
+    font-size: 40px;
+    letter-spacing: -0.01em;
+    color: var(--ink-2);
+  }
+  .role b { font-weight: 500; color: var(--ink); }
+  footer {
+    border-top: 1px solid var(--hair);
+    padding-top: 24px;
+    display: flex;
+    justify-content: space-between;
+    font-stretch: 88%;
+    font-size: 24px;
+    color: var(--ink-2);
+  }
+  footer span:first-child { color: var(--red); }
+</style>
+</head>
+<body>
+  <div class="meta"><span class="dot"></span>The record</div>
+  <div>
+    <h1>Blake Bauman</h1>
+    <div class="role"><b>Principal Technical Architect</b> at Adobe.<br>Enterprise commerce and agent infrastructure.</div>
+  </div>
+  <footer><span>blakebauman.com</span><span>Arizona, US</span></footer>
+</body>
+</html>

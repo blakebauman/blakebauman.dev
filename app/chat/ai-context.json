@@ -362,6 +362,23 @@
       "text": "Several projects on the record are ancestors rather than dead ends, and the lineage explains the current work. The TypeScript Felix on Cloudflare Workers, which carried Felix Commerce as an agentic commerce layer, was superseded in August 2026 by the Python rewrite at felix-run/felix; the repository is still public but the commerce layer was not carried forward. edgeconfig-monorepo, a multi-format configuration platform with SSE live updates, revision history and environment promotion on Workers and Durable Objects, became edgevault. adventure-agent's LangGraph orchestration became the agent patterns in Felix, and tracing it with LangSmith became the case for Memoturn. fleet-workspace is explicitly a demonstration of hierarchical Durable Objects rather than a product."
     },
     {
+      "id": "faq-who-is-blake-bauman",
+      "title": "Blake Bauman, Principal Technical Architect at Adobe: who he is",
+      "kind": "faq",
+      "topics": [
+        "who is",
+        "who is blake",
+        "blake bauman",
+        "introduction",
+        "bio",
+        "biography",
+        "about him",
+        "overview",
+        "which blake bauman"
+      ],
+      "text": "Blake Bauman is a Principal Technical Architect at Adobe, based in Arizona and working remotely. At Adobe he architects and ships enterprise commerce for Fortune 500 clients on Adobe Commerce and AEM Edge Delivery Services, and delivers solutions on Adobe Experience Platform Agent Orchestrator and CX Enterprise Coworker. Independently he builds agent infrastructure: Felix, a self-hostable agents harness; Memoturn, an evaluation and observability layer; and Fold, an MCP governance gateway. His public work is at blakebauman.com and github.com/blakebauman. Other people share the name; this record describes only Blake Bauman the software architect, and says nothing about anyone else called Blake Bauman."
+    },
+    {
       "id": "faq-current-work",
       "title": "FAQ: what is Blake working on right now",
       "kind": "faq",
