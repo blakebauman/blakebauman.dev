@@ -303,6 +303,19 @@ vocabulary was in the record. The fix was topic tags on the
 any capability the assistant should be able to discuss means checking the
 guardrail lets the question through first.
 
+**There are two gates, and the guardrail is only the first.** The second is the
+system prompt's own scope sentence, which read "work experience, skills, and
+projects, and nothing else" — and a question about the record itself is none of
+those three. Measured in production after the guardrail fix: "can I query this
+programmatically?" passed the guardrail, the loop called `get_profile`, the tool
+returned the MCP endpoint, and the model then answered with the redirect anyway,
+because the prompt had told it the subject was out of scope. A tool the model is
+forbidden to answer from is a tool that does not exist. Both prompts now name
+the record itself in their opening sentence — `app/agent/prompt.ts` and
+`app/chat/prompt.ts`, the second because the loop falls back to it — and
+`app/agent/__tests__/prompt.test.ts` holds both gates open together, since
+passing one and failing the other is exactly what shipped.
+
 A bare `api` in those tags does make "what is the best API for weather data?"
 on-topic. That is the existing calibration, not a regression: `database`,
 `python`, `email` and `music` were already there and already did the same. The
