@@ -9,9 +9,9 @@ async function body(): Promise<string> {
 }
 
 describe('llms.txt', () => {
-  it('is served as plain text and cached', async () => {
+  it('is served as markdown and cached', async () => {
     const response = loader() as Response;
-    expect(response.headers.get('Content-Type')).toContain('text/plain');
+    expect(response.headers.get('Content-Type')).toContain('text/markdown');
     expect(response.headers.get('Cache-Control')).toContain('max-age');
   });
 

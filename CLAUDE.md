@@ -29,7 +29,9 @@ end against a deployment.
 `cloudflareDevProxy`, which supplies bindings to the React Router dev server;
 the worker entry is only the SSR build input. So everything that lives in its
 `fetch` — CORS, rate limiting, `/mcp`, `/api/populate-vectorize`,
-`/api/debug/retrieval`, `/api/admin/chat-logs`, and the 405 gate on `/api/chat` —
+`/api/debug/retrieval`, `/api/admin/chat-logs`, the 405 gate on `/api/chat`,
+markdown for agents (`*.md` and `Accept: text/markdown`), and the `Link` /
+`Content-Signal` headers on HTML —
 is bypassed in dev, and those paths fall through to a React Router 404. To
 exercise any of it locally, `pnpm run build && pnpm exec wrangler dev --local`.
 Pass `--port` explicitly: other Workers projects on this machine hold 8787.
@@ -293,6 +295,54 @@ unauthenticated. So discovery is three deliberate pointers:
   programmatically?", which is the question the other two are really for, asked
   by someone already talking to the thing that can answer it.
 
+Two generic agent-discovery standards sit underneath those, neither MCP-specific:
+`/.well-known/api-catalog` (RFC 9727, a linkset naming `/mcp` and pointing back
+to llms.txt), and a `Link` header on every HTML response naming llms.txt, the
+page's markdown twin, the catalog and the sitemap.
+
+### SEO and answer engines
+
+The goal is entity resolution: when a search engine or a model is asked about
+"Blake Bauman", this site is the record it resolves the name to. Other people
+share the name, so everything here works to make *which* Blake Bauman
+unambiguous.
+
+- **`app/lib/seo.ts` owns every page-specific head tag.** `pageMeta()` returns
+  title, description, self-canonical, markdown alternate, Open Graph, Twitter
+  and JSON-LD as React Router meta descriptors. Do not add any of those to
+  `root.tsx`: it used to declare them, route meta was appended after, and every
+  case study shipped two descriptions, two `og:type`s and a canonical naming
+  the home page — which tells Google the page is a duplicate and keeps it out
+  of results. `seo.test.ts` asserts one of each.
+- **The JSON-LD is one graph joined by `@id`** — `#person`, `#website`,
+  `#profile` — and case studies are `TechArticle`s whose author is the same
+  `#person`. `sameAs` is built from linkedin/github/bluesky plus `profiles[]`
+  in resume.json; adding a profile there is how a new corroborating account
+  reaches the graph.
+- **`identitySentence()` is the disambiguating sentence** — name, title,
+  employer, place. It opens llms.txt's blockquote, the markdown, and
+  `Person.description`, because answer engines quote first sentences. The
+  `faq-who-is-blake-bauman` ai-context entry says the same for the chat.
+- **Markdown for agents is generated, not converted.** `app/lib/markdown.ts`
+  builds it from resume.json and CASE_STUDIES — the same source as the page —
+  and serves it at `/index.md`, `/work/<slug>.md`, `/llms-full.txt`, and on `/`
+  or `/work/<slug>` when `Accept` prefers `text/markdown`. Cloudflare's managed
+  Markdown for Agents needs a paid plan and would convert the rendered page,
+  colophon and all.
+- **`CONTENT_SIGNAL` is `search=yes, ai-input=yes, ai-train=yes`**, in
+  robots.txt and as a header. Training is allowed on purpose: a model that was
+  never trained on the record knows only the other Blake Baumans.
+- **`updated` dates** (resume.json, and each CaseStudy) feed sitemap
+  `lastmod`, `dateModified` and markdown frontmatter. Bump them on substantive
+  edits; a stale lastmod is how a crawler decides not to recrawl.
+- `public/og.png` is rendered from `scripts/og-image/card.html` by
+  `pnpm run og:image`, with tokens copied from app.css. Re-render after a
+  palette change.
+
+Cloudflare's AI Crawl Control can block AI crawlers at the zone regardless of
+robots.txt. If answer engines stop citing the site, check that before anything
+in this repo.
+
 **The topic guardrail is part of this and is easy to forget.** It runs before
 any model call, so a question it refuses is one the assistant can never answer
 however good its tools are. When `/mcp` shipped, five of six natural phrasings
@@ -419,10 +469,11 @@ Two things deliberately did **not** move with the domain:
   backed by a TXT record on the `.dev` zone, so that zone cannot be torn down,
   and changing the handle is a Bluesky-side migration rather than an edit here.
 
-`resume.json`'s `website` is the de facto site-URL constant — `root.tsx` takes
-canonical, `og:url` and JSON-LD `Person.url` from it, and `agent/tools.ts` and
-`components/resume.tsx` derive the `/mcp` URL from it. The three text surfaces
-(`sitemap.xml`, `llms.txt`, `robots.txt`) each hardcode the origin separately.
+`resume.json`'s `website` is the site-URL constant. `SITE_URL` in
+`app/lib/seo.ts` derives from it and feeds canonical, `og:url`, the JSON-LD,
+the markdown, and the text surfaces (`sitemap.xml`, `llms.txt`, `robots.txt`,
+the api-catalog); `agent/tools.ts` and `components/resume.tsx` derive the `/mcp`
+URL from it as well.
 
 ### Cloudflare Bindings (wrangler.jsonc)
 - `AI` - Workers AI for embeddings (@cf/baai/bge-base-en-v1.5) and LLM (@cf/meta/llama-3.3-70b-instruct-fp8-fast)

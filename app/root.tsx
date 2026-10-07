@@ -16,14 +16,6 @@ import './app.css';
 // is preloaded above the fold. JetBrains Mono
 // is the only self-hosted face and it sits below the fold, inside code blocks.
 
-const metaTitle = resumeData.hero
-  ? `${resumeData.name} | ${resumeData.hero.headline}`
-  : `${resumeData.name} | ${resumeData.title} @ ${resumeData.experience[0]?.company ?? 'Adobe'}`;
-const firstSummary = resumeData.summary[0];
-const metaDescription =
-  (firstSummary ? firstSummary.slice(0, 155) + (firstSummary.length > 155 ? '...' : '') : null) ??
-  `${resumeData.name} - ${resumeData.title}. Portfolio with AI-powered resume assistant.`;
-
 // JetBrains Mono is self-hosted via @fontsource (see the app.css @import rule)
 // and Vite bundles its woff2 into the build output, served same-origin.
 export const links: Route.LinksFunction = () => [
@@ -46,22 +38,11 @@ export function Layout({ children }: { children: React.ReactNode }) {
         {/* One committed look regardless of scheme, so one theme-color. */}
         <meta name="theme-color" content="#080a0f" />
         <script dangerouslySetInnerHTML={{ __html: GRID_INIT_SCRIPT }} />
-        <meta name="description" content={metaDescription} />
-
-        {/* Open Graph */}
-        <meta property="og:title" content={metaTitle} />
-        <meta property="og:description" content={metaDescription} />
-        <meta property="og:url" content={resumeData.website} />
-        <meta property="og:type" content="website" />
-        <meta property="og:site_name" content={resumeData.name} />
-
-        {/* Twitter Card */}
-        <meta name="twitter:card" content="summary" />
-        <meta name="twitter:title" content={metaTitle} />
-        <meta name="twitter:description" content={metaDescription} />
-
-        {/* Canonical URL */}
-        <link rel="canonical" href={resumeData.website} />
+        {/*
+          Title, description, canonical, Open Graph and JSON-LD are per route
+          (app/lib/seo.ts). Declaring them here as well emitted every one of
+          them twice, with the home URL as every page's canonical.
+        */}
 
         {/* Performance-focused meta tags */}
         <meta httpEquiv="X-UA-Compatible" content="IE=edge" />
@@ -70,29 +51,6 @@ export function Layout({ children }: { children: React.ReactNode }) {
         <meta name="apple-mobile-web-app-capable" content="yes" />
         <meta name="apple-mobile-web-app-status-bar-style" content="default" />
         <meta name="apple-mobile-web-app-title" content={resumeData.name} />
-
-        {/* JSON-LD structured data for Person */}
-        <script
-          type="application/ld+json"
-          dangerouslySetInnerHTML={{
-            __html: JSON.stringify({
-              '@context': 'https://schema.org',
-              '@type': 'Person',
-              name: resumeData.name,
-              jobTitle: resumeData.title,
-              worksFor: {
-                '@type': 'Organization',
-                name: resumeData.experience[0]?.company ?? 'Adobe',
-              },
-              url: resumeData.website,
-              sameAs: [
-                resumeData.linkedin,
-                resumeData.github,
-                ...(resumeData.bluesky ? [resumeData.bluesky] : []),
-              ],
-            }),
-          }}
-        />
 
         <Meta />
         <Links />

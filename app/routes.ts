@@ -5,6 +5,8 @@ export default [
   route('work/:slug', 'routes/work.tsx'),
   route('api/chat', 'routes/api/chat.tsx'),
   route('llms.txt', 'routes/llms.txt.tsx'),
+  route('llms-full.txt', 'routes/llms-full.txt.tsx'),
+  route('.well-known/api-catalog', 'routes/api-catalog.tsx'),
   route('robots.txt', 'routes/robots.txt.tsx'),
   route('sitemap.xml', 'routes/sitemap.xml.tsx'),
 ] satisfies RouteConfig;

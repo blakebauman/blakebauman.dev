@@ -26,7 +26,8 @@
     "prepare": "lefthook install",
     "vectorize:populate": "curl -sS -X POST -H \"Authorization: Bearer $VECTORIZE_ADMIN_KEY\" https://blakebauman.com/api/populate-vectorize",
     "vectorize:eval": "tsx scripts/eval-retrieval.ts",
-    "sync:github": "tsx scripts/sync-github.ts"
+    "sync:github": "tsx scripts/sync-github.ts",
+    "og:image": "sh scripts/og-image/render.sh"
   },
   "dependencies": {
     "@fontsource-variable/archivo": "^5.3.0",
