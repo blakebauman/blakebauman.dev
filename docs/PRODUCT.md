@@ -99,7 +99,7 @@ Real, in the repository:
   resume.json, with hand-authored inline SVG diagrams.
 - `app/chat/ai-context.json` — 41 chat-only entries (28 background, 10 FAQ,
   3 scope).
-- Live systems named with versions: fold at v1.14.0 with a frozen API and 40/40
+- Live systems named with versions: fold at v1.15.0 with a frozen API and 40/40
   MCP conformance; edgevault at edgevault.io; this site.
 - **2nd Place, Adobe AI Summit & Hackathon (2025)** — a DA.live content
   generation plugin over Adobe Commerce catalog data, multi-agent LangChain
