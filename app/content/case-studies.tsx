@@ -151,20 +151,23 @@ function Defs() {
 /* --------------------------------- felix --------------------------------- */
 
 const felixDiagram = (
-  <svg viewBox="0 0 880 430" role="img" aria-labelledby="felix-dg-t felix-dg-d">
+  <svg viewBox="0 0 880 500" role="img" aria-labelledby="felix-dg-t felix-dg-d">
     <title id="felix-dg-t">Felix request and execution paths</title>
     <desc id="felix-dg-d">
       A client reaches felix-api over one of four surfaces: REST and SSE, an OpenAI-compatible v1
-      endpoint, A2A JSON-RPC, and MCP. The API resolves a YAML manifest through the harness package,
-      which owns patterns, tools, session strategy, governance and auth. Durable runs are enqueued
-      to a Taskiq worker; a separate scheduler enqueues cron tasks. All three processes share
+      endpoint, A2A JSON-RPC, and MCP. The web client reaches it through its own proxy Worker; the
+      terminal client calls it directly. The API resolves a YAML manifest through the harness
+      package, which calls models only through the separate felix_ai package. Durable runs are
+      enqueued to a Taskiq worker; a separate scheduler enqueues cron tasks. All of them share
       Postgres with pgvector as the system of record, Valkey as cache and queue transport, and a
-      pluggable object store backed by the filesystem, S3 or GCS.
+      pluggable object store backed by the filesystem, S3 or GCS. Optionally, the harness calls out
+      to a workspace gateway Worker, which runs each workspace scope in a Durable Object and a
+      Container with the internet off, checkpointed to R2. Nothing on that side calls back.
     </desc>
     <Defs />
 
     <text x="0" y="14" fill="var(--ink-2)" fontFamily={F_MONO} fontSize="12">
-      client
+      client · the web UI through its proxy Worker, the TUI direct
     </text>
     {['REST / SSE', 'OpenAI-compatible /v1', 'A2A JSON-RPC', 'MCP'].map((s, i) => (
       <g key={s}>
@@ -194,25 +197,28 @@ const felixDiagram = (
     ))}
 
     <Box x={0} y={94} w={856} h={52} label="felix-api" sub="CPython 3.14 · Granian · FastAPI" />
-    <Arrow x1={428} y1={146} x2={428} y2={176} />
+    <Arrow x1={180} y1={146} x2={180} y2={176} />
 
     <Box
       x={0}
       y={178}
-      w={520}
+      w={360}
       h={58}
       label="packages/harness"
-      sub="manifests · patterns · tools · session · governance · auth"
+      sub="manifests · patterns · governance"
       fill="var(--ember)"
       stroke="var(--ember-lift)"
     />
+    {/* The model layer may not import the harness; the arrow only runs one way. */}
+    <Arrow x1={360} y1={207} x2={370} y2={207} />
+    <Box x={372} y={178} w={148} h={58} label="packages/ai" sub="models · catalog" />
     <Box x={548} y={178} w={148} h={58} label="worker" sub="Taskiq consumer" />
     <Box x={708} y={178} w={148} h={58} label="scheduler" sub="cron enqueue" />
     {/* The scheduler enqueues; the worker consumes. Without it running alongside,
         nothing periodic fires at all. */}
     <Arrow x1={708} y1={207} x2={698} y2={207} />
 
-    <Arrow x1={260} y1={236} x2={260} y2={276} />
+    <Arrow x1={180} y1={236} x2={180} y2={276} />
     <Arrow x1={622} y1={236} x2={622} y2={276} />
 
     <Box x={0} y={278} w={276} h={52} label="PostgreSQL" sub="+ pgvector · system of record" />
@@ -221,18 +227,39 @@ const felixDiagram = (
 
     <line
       x1="0"
-      y1="360"
+      y1="352"
       x2="856"
-      y2="360"
+      y2="352"
       stroke="var(--hair)"
       strokeWidth="1"
       strokeDasharray="3 4"
     />
-    <text x="0" y="382" fill="var(--ink-2)" fontFamily={F_MONO} fontSize="12">
+    <text x="0" y="372" fill="var(--ink-2)" fontFamily={F_MONO} fontSize="12">
+      optional · FELIX_WORKSPACE_BACKEND=hosted
+    </text>
+
+    {/* The harness is the only caller. Routed down the right margin so the lane
+        reads as something felix-api reaches out to, never the other way. */}
+    <path
+      d="M 856 120 L 870 120 L 870 412 L 858 412"
+      fill="none"
+      stroke="var(--hair-strong)"
+      strokeWidth="1"
+      markerEnd="url(#bb-arrow)"
+    />
+    <Box x={656} y={386} w={200} h={52} label="workspace-gateway" sub="Worker · bearer" />
+    <Arrow x1={656} y1={412} x2={630} y2={412} />
+    <Box x={428} y={386} w={200} h={52} label="Durable Object" sub="one per tenant scope" />
+    <Arrow x1={428} y1={412} x2={402} y2={412} />
+    <Box x={200} y={386} w={200} h={52} label="Container" sub="microVM · internet off" />
+    <Arrow x1={200} y1={412} x2={174} y2={412} />
+    <Box x={0} y={386} w={172} h={52} label="R2" sub="checkpoints" />
+
+    <text x="0" y="470" fill="var(--ink-2)" fontFamily={F_MONO} fontSize="12">
       every dependency reached through a Protocol, not a vendor SDK
     </text>
-    <text x="0" y="402" fill="var(--ink-2)" fontFamily={F_MONO} fontSize="12">
-      so the same code runs on a filesystem-only VM, on AWS, or on GCP
+    <text x="0" y="490" fill="var(--ink-2)" fontFamily={F_MONO} fontSize="12">
+      Cloudflare runs the sandbox, never the harness, and nothing there calls back
     </text>
   </svg>
 );
@@ -407,18 +434,21 @@ export const CASE_STUDIES: CaseStudy[] = [
     name: 'felix',
     oneLine:
       'A self-hostable agents harness. Agents are YAML, not code, and the runtime they compile into is governed by default.',
-    updated: '2026-09-20',
+    updated: '2026-10-07',
     leadCopy: 'A self-hostable agents harness in Python. Agents are YAML, not code.',
     meta: [
       { k: 'Year', v: '2026' },
       { k: 'Language', v: 'Python 3.14' },
       { k: 'Licence', v: 'Apache-2.0' },
-      { k: 'Release', v: 'v0.2.0' },
+      { k: 'Release', v: 'v0.11.1' },
+      { k: 'Clients', v: 'Web · TUI' },
       { k: 'Status', v: 'Early' },
     ],
     links: [
       { label: 'github.com/felix-run/felix', href: 'https://github.com/felix-run/felix' },
+      { label: 'github.com/felix-run/web', href: 'https://github.com/felix-run/web' },
       { label: 'docs.felix.run', href: 'https://docs.felix.run/' },
+      { label: 'make.felix.run', href: 'https://make.felix.run/' },
     ],
     sections: [
       {
@@ -426,7 +456,7 @@ export const CASE_STUDIES: CaseStudy[] = [
         paragraphs: [
           'An agent is authored as a felix/v1 YAML manifest and compiled into a running, governed agent: durable fibers, memory, skills, evaluation, approvals and sandboxes, all declared rather than wired. Changing what an agent does is a config change.',
           'The same agent is served over four surfaces at once. A REST and SSE endpoint, an OpenAI-compatible /v1 where the manifest name is the model id, A2A JSON-RPC for agent-to-agent calls, and MCP. A client that already speaks any one of those needs no adapter.',
-          'It is the third version of this idea. The first ran on AWS Bedrock and LangGraph, the second was TypeScript on Cloudflare Workers with an agentic commerce layer on top. This one dropped both the edge runtime and the commerce layer in exchange for running anywhere the operator controls.',
+          'It ships with its own operator clients: a web UI at make.felix.run and a full-screen terminal client, both running one shared engine. It is the third version of the idea, after AWS Bedrock with LangGraph and then TypeScript on Cloudflare Workers. This one runs anywhere the operator controls.',
         ],
       },
       {
@@ -434,13 +464,13 @@ export const CASE_STUDIES: CaseStudy[] = [
         figure: {
           node: felixDiagram,
           caption:
-            'Three processes share one datastore triple. The scheduler is separate from the worker on purpose: without it running alongside, nothing periodic fires at all, which is the kind of failure that looks like a bug in the agent rather than a missing process.',
+            'Three processes share one datastore triple, and the scheduler is separate from the worker on purpose: without it, nothing periodic fires, which looks like a bug in the agent rather than a missing process. The sandbox lane is optional and one-way. felix-api or the worker calls the gateway; nothing in Cloudflare calls the harness.',
         },
       },
       {
         heading: 'A manifest',
         code: {
-          path: 'manifests/governed.yaml',
+          path: 'manifests/governed.yaml (abridged)',
           tag: 'felix/v1',
           lines: (
             <>
@@ -451,35 +481,36 @@ export const CASE_STUDIES: CaseStudy[] = [
               <span className="c-key">name</span>: governed{'\n'}
               <span className="c-key">spec</span>:{'\n'}
               {'  '}
-              <span className="c-key">model</span>:{'\n'}
-              {'    '}
-              <span className="c-key">id</span>: claude-sonnet{'\n'}
-              {'    '}
-              <span className="c-key">thinking_budget</span>: 4096{'\n'}
+              <span className="c-key">pattern</span>: react{' '}
+              <span className="c-cmt">
+                # or deep, reflect, plan_execute, router, parallel, groupchat
+              </span>
+              {'\n'}
               {'  '}
               <span className="c-key">session</span>:{'\n'}
               {'    '}
               <span className="c-key">strategy</span>: compacting{' '}
-              <span className="c-cmt"># or windowed:N, semantic:N, full_replay</span>
+              <span className="c-cmt"># or windowed:N, summarizing:N, semantic:N, full_replay</span>
               {'\n'}
               {'  '}
               <span className="c-key">execution</span>:{'\n'}
               {'    '}
               <span className="c-key">mode</span>: durable{' '}
-              <span className="c-cmt"># 202 + resume_token; Temporal optional</span>
+              <span className="c-cmt"># 202 + resume_token; resumes from the session log</span>
               {'\n'}
               {'  '}
-              <span className="c-key">memory</span>:{'\n'}
+              <span className="c-key">workspace</span>:{'\n'}
               {'    '}
-              <span className="c-key">capture</span>: true{'\n'}
-              {'  '}
-              <span className="c-key">mcp_servers</span>:{' '}
-              <span className="c-cmt"># bound in as server__tool</span>
+              <span className="c-key">scope</span>: thread{' '}
+              <span className="c-cmt"># or tenant, deployment</span>
               {'\n'}
-              {'    '}- <span className="c-key">id</span>: search{'\n'}
+              {'  '}
+              <span className="c-key">approvals</span>:{'\n'}
+              {'    '}- <span className="c-key">id</span>: memory-forget{'\n'}
               {'      '}
-              <span className="c-key">url</span>:{' '}
-              <span className="c-str">https://mcp.internal/mcp</span>
+              <span className="c-key">tools</span>: [forget]{'\n'}
+              {'      '}
+              <span className="c-key">allow_unattended</span>: false
             </>
           ),
         },
@@ -490,35 +521,52 @@ export const CASE_STUDIES: CaseStudy[] = [
           {
             term: 'A run that dies mid-tool',
             detail:
-              'leaves a tool call with no result, and nothing outside the tool can tell whether the effect landed. The call is closed out with an interrupted result before the thread resumes, because a provider rejects the whole transcript over one unanswered call. Tools declare whether they are safe to re-run and the default is that they are not: re-running a search costs latency, re-running a payment charges twice.',
+              'leaves a call with no result, and nothing outside the tool knows whether the effect landed. It is closed with an interrupted result before the thread resumes, since a provider rejects a transcript over one unanswered call. Tools declare whether they are safe to re-run and the default is no: a re-run search costs latency, a re-run payment charges twice.',
           },
           {
             term: 'Extended thinking is stateful once tools are involved.',
             detail:
-              'The provider signs each thinking block, and a later turn replaying a tool call has to replay the signed reasoning that produced it. Blocks are captured off the response and replayed ahead of the tool_use blocks. A block whose signature was not captured is dropped rather than sent, because an unverifiable signature rejects the entire turn.',
+              'A later turn replaying a tool call has to replay the signed reasoning that produced it. Blocks are captured and replayed ahead of the tool_use blocks; one whose signature was not captured is dropped, because an unverifiable signature rejects the whole turn.',
           },
           {
             term: 'Side requests poison the prompt cache.',
             detail:
-              'Compaction, memory extraction, inbound screening and branch summarisation each carry a completely different prefix. Sharing the conversation cache identity would churn the cached prefix the next real turn would have hit, and write an entry nothing ever reads. They opt out.',
+              'Compaction, memory extraction, screening and branch summaries carry a different prefix. Sharing the conversation cache identity would churn the prefix the next real turn needs. They opt out.',
           },
           {
-            term: 'An unknown model id has to fail in two directions at once.',
+            term: 'A rewind on one replica races a turn on another.',
             detail:
-              'The request shape assumes the current generation, because sending a parameter a model has removed is a hard 400 while omitting an optional one is not. The context window stays conservative, because over-advertising a window invites a request the model will reject.',
+              'Each turn records the thread’s leaf epoch when it starts; a rewind or fork bumps it, an append never does. The turn’s leaf write is conditional on the epoch, so the rewind stands and the next turn continues from it.',
           },
           {
-            term: 'A dropped stream is only partly recoverable, and the docs say so.',
+            term: 'A resent stream must never run twice.',
             detail:
-              'Structural SSE frames carry an id cursor, so a reconnect can replay what was missed and tail the thread. Token-level frames deliberately do not, which per the SSE spec leaves the client on the last structural id. The run itself is still torn down on disconnect: what comes back is the thread, not the abandoned turn.',
+              'An idempotency key gets 409 while the first send is still streaming, then a replay of only what that request appended. Keys are scoped per principal, not per tenant, because a replay returns before inbound auth runs. A first send that appended nothing frees its key.',
           },
+          {
+            term: 'A durable run can need the client.',
+            detail:
+              'A run in the worker has no line to the browser, so client-tool requests are recorded in the database and re-derived on every poll of the stream, never sent over an in-process bus. The same rule carries approvals.',
+          },
+          {
+            term: 'A hosted shell never falls back to the host.',
+            detail:
+              'Commands pass the same screening, then run in the scope’s microVM with the internet off. Anything that needs a real host directory is refused. The gateway names the sandbox from tenant and scope, so a leaked token reaches nothing outside that scheme.',
+          },
+        ],
+      },
+      {
+        heading: 'The clients',
+        paragraphs: [
+          'The web UI is an instrument panel, not a chat window: its job is knowing what the agent just did, and whether to let it continue. Browser and terminal share one engine whose single event switch answers the three frames a run blocks on, a tool request, an approval, a question. Miss one and the run hangs.',
+          'The harness lives in another repository, so the wire contract is regenerated from a harness checkout, never a running server, and CI checks routes, stream events and payload fields against it. A run keeps going when the operator switches threads, and the model gets identical answers from a browser folder and a terminal working directory.',
         ],
       },
       {
         heading: 'Where it actually is',
         paragraphs: [
-          'Released Apache-2.0 at v0.2.0 in August 2026, with CI, a Helm chart, deploy notes for AWS and GCP, and a docs site. Around 290 Python modules and 97 test files.',
-          'It is not battle-tested and this page will not claim it is. The TypeScript version is the one that ran longest. What this version has is a smaller dependency surface and no cloud it cannot leave.',
+          'v0.11.1, after eighteen releases since August 2026: 304 Python modules, 371 test files, 33 migrations, Helm, AWS and GCP deploys, and an optional Cloudflare sandbox. The web UI runs at make.felix.run, behind sign-in.',
+          'It is moving fast, not battle-tested, and nothing on this page is a usage claim. The TypeScript version is still the one that ran longest. What this one has is a smaller dependency surface and no cloud it cannot leave.',
         ],
       },
     ],

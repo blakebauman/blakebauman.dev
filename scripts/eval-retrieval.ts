@@ -64,6 +64,10 @@ const GOLDEN_SET: GoldenCase[] = [
     question: 'What orchestration patterns does he support?',
     expect: ['project_felix', 'ai_context_felix-harness'],
   },
+  {
+    question: 'Does Felix have a UI?',
+    expect: ['project_felix', 'ai_context_felix-harness'],
+  },
   { question: 'What is Fold?', expect: ['project_fold', 'ai_context_fold-gateway'] },
   {
     question: 'Tell me about the MCP gateway',
