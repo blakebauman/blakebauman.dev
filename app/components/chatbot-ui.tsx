@@ -261,7 +261,7 @@ export default function ChatbotUI({
         e.preventDefault();
         onSendMessage();
       }}
-      aria-label="Ask the resume"
+      aria-label="Ask the record"
     >
       <label htmlFor="chat-input" className="sr-only">
         Ask a question about Blake's experience
@@ -373,7 +373,7 @@ export default function ChatbotUI({
             <div className="bb-chat-modal-head">
               <span className="bb-chat-modal-title">
                 <span className="mark" aria-hidden="true" />
-                Ask the resume
+                Ask the record
               </span>
               <button
                 type="button"
