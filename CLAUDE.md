@@ -149,13 +149,10 @@ advisory. The three that are load-bearing and easy to break by accident:
   ink ramp all sit under ~0.013 OKLCH chroma on a blue hue — night measures
   0.0115 at hue 267. The tint is deliberate; what is banned is warmth, and any
   neutral that reads as a hue.
-- **The width ladder.** Archivo's `wdth` axis encodes rank: 62% display, 75%
-  heading, 100% UI, 88% metadata — an American gothic, condensed at the top of
-  the ramp and regular where people read. There are four stops and no others,
-  and the Fontsource `wdth` entrypoint is required for them to exist at all.
-  With one family and one weight, this axis is most of the hierarchy.
-  `--fs-display` is computed from the row so the name fills it on one line;
-  change the name's width and the divisor in that token has to move with it.
+- **The width ladder.** Archivo's `wdth` axis encodes rank: 110% display, 104%
+  heading, 100% UI, 88% metadata. There are four stops and no others, and the
+  Fontsource `wdth` entrypoint is required for them to exist at all. With one
+  family and one weight, this axis is most of the hierarchy.
 
 Contrast figures in DESIGN.md were measured against the rendered DOM, not
 estimated from OKLCH lightness. Re-measure after any palette change; OKLCH

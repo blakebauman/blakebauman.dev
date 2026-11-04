@@ -67,41 +67,9 @@
 @font-face {
   font-family: "Archivo Fallback";
   src: local("Helvetica Neue"), local("Helvetica"), local("Arial");
-  font-stretch: 76% 125%;
   size-adjust: 100.66%;
   ascent-override: 87.23%;
   descent-override: 20.86%;
-  line-gap-override: 0%;
-}
-
-/* The two condensed stops get their own fallback, because a wdth-100 face
-   standing in for wdth 62 is half again as wide: the masthead name, which is
-   sized to fill the row on one line, would wrap until Archivo arrived and then
-   snap back. Arial Narrow ships with macOS and with Office on Windows; where it
-   is absent, local() fails and the stretch falls through to the face above.
-
-   Measured in the browser against Archivo at wght 500, kerning on: the name at
-   wdth 62 is 82.57% of Arial Narrow's width, and a mixed sample at wdth 75 is
-   97.8%. The vertical overrides are Archivo's own ascent (0.878) and descent
-   (0.210) divided by each size-adjust. The ranges are disjoint from the face
-   above so that a request at the 88% stop still matches it exactly. */
-@font-face {
-  font-family: "Archivo Fallback";
-  src: local("Arial Narrow"), local("ArialNarrow");
-  font-stretch: 50% 68%;
-  size-adjust: 82.57%;
-  ascent-override: 106.34%;
-  descent-override: 25.43%;
-  line-gap-override: 0%;
-}
-
-@font-face {
-  font-family: "Archivo Fallback";
-  src: local("Arial Narrow"), local("ArialNarrow");
-  font-stretch: 69% 75.9%;
-  size-adjust: 97.8%;
-  ascent-override: 89.78%;
-  descent-override: 21.47%;
   line-gap-override: 0%;
 }
 
@@ -152,23 +120,18 @@
   --hair: color-mix(in oklab, var(--ink) 14%, transparent);
   --hair-strong: color-mix(in oklab, var(--ink) 26%, transparent);
   /* The width ladder. Archivo's wdth axis encodes rank, and these are the only
-     four stops in the system. The display band is condensed and the reading
-     band is not: the American gothic arrangement, where Alternate Gothic and
-     Trade Gothic Condensed set the headline and a regular cut sets the story.
-     Narrow and large means loud; regular means read; narrow and small, tracked
-     in caps, means metadata.
+     four stops in the system. Wider means more important.
 
      This exists because size is otherwise the ONLY hierarchy device here — one
      family, one weight, no case change in the reading band — and a system with
-     a single device collapses: an audit of an earlier build found nine of
+     a single device collapses: an audit of the previous build found nine of
      thirteen adjacent size steps too close to read apart. Width is the second
-     device. Condensing the display band, rather than extending it as the
-     previous ladder did at 110 / 104, buys height: the name sets on one line
-     across the full row at 240px instead of wrapping at 200. 62% is the
-     axis minimum. Measured spread at wght 500: average advance 0.413 at 88%,
-     0.458 at 100%; the name runs 5.27em at 62% against 7.6em at 100%. */
-  --w-display: 62%;
-  --w-head: 75%;
+     device, and it is the one the references pinned in this brief actually use
+     (Akzidenz-Grotesk's condensed and extended cuts are how Swiss sheets rank
+     a label against a heading). Measured spread at wght 500: average advance
+     0.413 at 88%, 0.458 at 100%, 0.500 at 108%. */
+  --w-display: 110%;
+  --w-head: 104%;
   --w-ui: 100%;
   --w-meta: 88%;
 
@@ -184,18 +147,10 @@
      `--fs-button`, `--fs-sm`, `--fs-title-s`, `--fs-title-xs` and `--fs-role`
      are aliases onto real stops rather than stops of their own.
 
-     Painted text ramp: 11 / 14 / 17 / 20 / 24 / 29 / 40 / 68 / 116 / 240.
+     Painted text ramp: 11 / 14 / 17 / 20 / 24 / 29 / 40 / 68 / 116 / 170 / 200.
   ------------------------------------------------------------------------- */
-  /* Sized from the row itself, so the uppercase name fills it on one line at
-     every width. The divisor is the name's ink, not its advance: it advances
-     5.27em at the 62% stop but paints 5.16em, the rest being the sidebearings
-     of the B and the N, and the masthead h1 pulls those out past the row so the
-     letters land on the ends of the red rule. The cap is where the row caps at
-     1240px. At 375 it sets 65px across a 335px row; at 1440, 240px across 1240. */
-  --fs-display: clamp(52px, (100vw - 2 * var(--gutter)) / 5.17, 240px);
-  /* Case-study titles are one short lowercase word. Condensed, they no longer
-     need a smaller stop to fit, so this is an alias like the ones below. */
-  --fs-display-long: var(--fs-display);
+  --fs-display: clamp(72px, 13vw, 200px);
+  --fs-display-long: clamp(60px, 11vw, 170px);
   --fs-lead: clamp(44px, 8vw, 116px);
   --fs-head: clamp(34px, 5vw, 68px);
   --fs-sub: clamp(26px, 3.2vw, 40px);
@@ -227,16 +182,14 @@
   --wt: 500;
   --wt-strong: 700;
 
-  /* Tracking. Positive in the uppercase band and looser as type shrinks, because
-     tracked caps need more air the smaller they set. The condensed band sits at
-     or just under zero: a narrow face has small counters and short sidebearings
-     already, and the -0.03em the extended display used to carry closes the
-     name's L–A kern pair into a collision. */
-  --tr-display: 0em;
-  --tr-head: -0.008em;
-  --tr-sub: -0.004em;
-  --tr-role: 0em;
-  --tr-title: 0em;
+  /* Tracking. Negative in the display band and tighter as type grows; positive
+     in the uppercase band and looser as type shrinks, because tracked caps need
+     more air the smaller they set. */
+  --tr-display: -0.03em;
+  --tr-head: -0.02em;
+  --tr-sub: -0.014em;
+  --tr-role: -0.012em;
+  --tr-title: -0.008em;
   --tr-body: 0;
   --tr-ui: 0.02em;
   --tr-button: 0.08em;
@@ -908,14 +861,10 @@ svg {
   line-height: 0.86;
   letter-spacing: var(--tr-display);
   margin-top: clamp(16px, 2.4vh, 26px);
-  /* Hangs the sidebearings outside the row: 0.05em is the B's, so its stem
-     lands on the rule's start. The end margin only has to give the 5.27em
-     advance room inside the box, or the name wraps with the row still short. */
-  margin-inline: -0.05em -0.06em;
   /* Measured from the baseline rather than from this box, which ends 0.096em
      under the letters at this line-height: stacked on that and the row gap, the
-     rule sat 56px off at 235px and, because the row gap does not scale with the
-     name, 0.45em off on a phone. This cancels both and leaves 0.1em of clear
+     rule sat 52px off at 200px and, because the row gap does not scale with the
+     name, over 0.4em off on a phone. This cancels both and leaves 0.1em of clear
      space, floored so the rule does not touch a small name. It has to be this
      margin and not one on the rule: a grid track cannot go negative, so the
      rule's own margin just collapses its row and moves nothing. */

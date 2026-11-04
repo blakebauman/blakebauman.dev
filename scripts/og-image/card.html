@@ -3,7 +3,7 @@
   The Open Graph card, rendered once to public/og.png by `pnpm run og:image`.
   Tokens are copied from app/app.css, not linked: this page is rendered by a
   bare headless Chrome, outside the build, and a var() it cannot resolve fails
-  silently. Re-render after a palette or type change.
+  silently. Re-render after a palette change.
 -->
 <html lang="en">
 <head>
@@ -47,24 +47,19 @@
     gap: 14px;
   }
   .dot { width: 12px; height: 12px; background: var(--red); border-radius: 50%; }
-  /* The page's display stop: uppercase at the 62% width, sized so the name's ink
-     fills the 1040px content width on one line. It paints 5.16em and advances
-     5.27em, so the B's sidebearing hangs outside the margin, as on the page. */
   h1 {
     margin: 0;
     font-weight: 500;
-    font-stretch: 62%;
-    font-size: 201px;
-    line-height: 0.86;
-    letter-spacing: 0;
-    margin-inline: -0.05em -0.06em;
-    text-transform: uppercase;
+    font-stretch: 110%;
+    font-size: 132px;
+    line-height: 0.95;
+    letter-spacing: -0.035em;
   }
   .role {
     margin-top: 28px;
-    font-stretch: 75%;
-    font-size: 44px;
-    letter-spacing: 0;
+    font-stretch: 104%;
+    font-size: 40px;
+    letter-spacing: -0.01em;
     color: var(--ink-2);
   }
   .role b { font-weight: 500; color: var(--ink); }
