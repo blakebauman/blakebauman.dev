@@ -67,9 +67,41 @@
 @font-face {
   font-family: "Archivo Fallback";
   src: local("Helvetica Neue"), local("Helvetica"), local("Arial");
+  font-stretch: 76% 125%;
   size-adjust: 100.66%;
   ascent-override: 87.23%;
   descent-override: 20.86%;
+  line-gap-override: 0%;
+}
+
+/* The two condensed stops get their own fallback, because a wdth-100 face
+   standing in for wdth 62 is half again as wide: the masthead name, which is
+   sized to fill the row on one line, would wrap until Archivo arrived and then
+   snap back. Arial Narrow ships with macOS and with Office on Windows; where it
+   is absent, local() fails and the stretch falls through to the face above.
+
+   Measured in the browser against Archivo at wght 500, kerning on: the name at
+   wdth 62 is 82.57% of Arial Narrow's width, and a mixed sample at wdth 75 is
+   97.8%. The vertical overrides are Archivo's own ascent (0.878) and descent
+   (0.210) divided by each size-adjust. The ranges are disjoint from the face
+   above so that a request at the 88% stop still matches it exactly. */
+@font-face {
+  font-family: "Archivo Fallback";
+  src: local("Arial Narrow"), local("ArialNarrow");
+  font-stretch: 50% 68%;
+  size-adjust: 82.57%;
+  ascent-override: 106.34%;
+  descent-override: 25.43%;
+  line-gap-override: 0%;
+}
+
+@font-face {
+  font-family: "Archivo Fallback";
+  src: local("Arial Narrow"), local("ArialNarrow");
+  font-stretch: 69% 75.9%;
+  size-adjust: 97.8%;
+  ascent-override: 89.78%;
+  descent-override: 21.47%;
   line-gap-override: 0%;
 }
 
@@ -120,18 +152,23 @@
   --hair: color-mix(in oklab, var(--ink) 14%, transparent);
   --hair-strong: color-mix(in oklab, var(--ink) 26%, transparent);
   /* The width ladder. Archivo's wdth axis encodes rank, and these are the only
-     four stops in the system. Wider means more important.
+     four stops in the system. The display band is condensed and the reading
+     band is not: the American gothic arrangement, where Alternate Gothic and
+     Trade Gothic Condensed set the headline and a regular cut sets the story.
+     Narrow and large means loud; regular means read; narrow and small, tracked
+     in caps, means metadata.
 
      This exists because size is otherwise the ONLY hierarchy device here — one
      family, one weight, no case change in the reading band — and a system with
-     a single device collapses: an audit of the previous build found nine of
+     a single device collapses: an audit of an earlier build found nine of
      thirteen adjacent size steps too close to read apart. Width is the second
-     device, and it is the one the references pinned in this brief actually use
-     (Akzidenz-Grotesk's condensed and extended cuts are how Swiss sheets rank
-     a label against a heading). Measured spread at wght 500: average advance
-     0.413 at 88%, 0.458 at 100%, 0.500 at 108%. */
-  --w-display: 110%;
-  --w-head: 104%;
+     device. Condensing the display band, rather than extending it as the
+     previous ladder did at 110 / 104, buys height: the name sets on one line
+     across the full row at 240px instead of wrapping at 200. 62% is the
+     axis minimum. Measured spread at wght 500: average advance 0.413 at 88%,
+     0.458 at 100%; the name runs 5.27em at 62% against 7.6em at 100%. */
+  --w-display: 62%;
+  --w-head: 75%;
   --w-ui: 100%;
   --w-meta: 88%;
 
@@ -147,10 +184,18 @@
      `--fs-button`, `--fs-sm`, `--fs-title-s`, `--fs-title-xs` and `--fs-role`
      are aliases onto real stops rather than stops of their own.
 
-     Painted text ramp: 11 / 14 / 17 / 20 / 24 / 29 / 40 / 68 / 116 / 170 / 200.
+     Painted text ramp: 11 / 14 / 17 / 20 / 24 / 29 / 40 / 68 / 116 / 240.
   ------------------------------------------------------------------------- */
-  --fs-display: clamp(72px, 13vw, 200px);
-  --fs-display-long: clamp(60px, 11vw, 170px);
+  /* Sized from the row itself, so the uppercase name fills it on one line at
+     every width. The divisor is the name's ink, not its advance: it advances
+     5.27em at the 62% stop but paints 5.16em, the rest being the sidebearings
+     of the B and the N, and the masthead h1 pulls those out past the row so the
+     letters land on the ends of the red rule. The cap is where the row caps at
+     1240px. At 375 it sets 65px across a 335px row; at 1440, 240px across 1240. */
+  --fs-display: clamp(52px, (100vw - 2 * var(--gutter)) / 5.17, 240px);
+  /* Case-study titles are one short lowercase word. Condensed, they no longer
+     need a smaller stop to fit, so this is an alias like the ones below. */
+  --fs-display-long: var(--fs-display);
   --fs-lead: clamp(44px, 8vw, 116px);
   --fs-head: clamp(34px, 5vw, 68px);
   --fs-sub: clamp(26px, 3.2vw, 40px);
@@ -182,14 +227,16 @@
   --wt: 500;
   --wt-strong: 700;
 
-  /* Tracking. Negative in the display band and tighter as type grows; positive
-     in the uppercase band and looser as type shrinks, because tracked caps need
-     more air the smaller they set. */
-  --tr-display: -0.03em;
-  --tr-head: -0.02em;
-  --tr-sub: -0.014em;
-  --tr-role: -0.012em;
-  --tr-title: -0.008em;
+  /* Tracking. Positive in the uppercase band and looser as type shrinks, because
+     tracked caps need more air the smaller they set. The condensed band sits at
+     or just under zero: a narrow face has small counters and short sidebearings
+     already, and the -0.03em the extended display used to carry closes the
+     name's L–A kern pair into a collision. */
+  --tr-display: 0em;
+  --tr-head: -0.008em;
+  --tr-sub: -0.004em;
+  --tr-role: 0em;
+  --tr-title: 0em;
   --tr-body: 0;
   --tr-ui: 0.02em;
   --tr-button: 0.08em;
@@ -765,8 +812,9 @@ svg {
   /* Row gap is small and column gap is large. A uniform gap put ~56px between
      the name and its rule, which detached the rule from the name and pushed the
      email — the primary action — under the fold at 1440x900. */
+  --mast-gap: clamp(14px, 1.8vw, 22px);
   padding-block: clamp(36px, 8vh, 84px) clamp(32px, 5vh, 56px);
-  row-gap: clamp(14px, 1.8vw, 22px);
+  row-gap: var(--mast-gap);
   align-items: end;
   position: relative;
 }
@@ -794,7 +842,11 @@ svg {
 .bb-masthead-meta {
   display: grid;
   grid-template-columns: auto 1fr;
-  gap: 10px 18px;
+  gap: 8px 18px;
+  /* Baseline, with one line height for every value. Padding on the links alone
+     made the plain-text row shorter than the two linked ones, so the rows ran
+     uneven and each key sat at a different height against its value. */
+  align-items: baseline;
   margin: 0;
   padding-top: 14px;
   border-top: 1px solid var(--hair);
@@ -808,7 +860,6 @@ svg {
   letter-spacing: var(--tr-label-s);
   text-transform: uppercase;
   color: var(--ink-2);
-  padding-top: 3px;
 }
 
 .bb-masthead-meta dd {
@@ -818,15 +869,14 @@ svg {
   font-weight: var(--wt);
   letter-spacing: var(--tr-ui);
   font-variant-numeric: tabular-nums;
-  line-height: 1.4;
+  line-height: 26px;
 }
 
 .bb-masthead-meta dd a {
+  /* Inline-block at the dd's 26px line clears the 24px minimum pointer target
+     (WCAG 2.2 2.5.8). These are standalone links, not links inside a sentence,
+     so the inline exception does not apply. */
   display: inline-block;
-  /* 24px minimum pointer target (WCAG 2.2 2.5.8). These are standalone links,
-     not links inside a sentence, so the inline exception does not apply. */
-  padding-block: 3px;
-  line-height: 1.4;
   color: var(--ink);
   text-decoration: none;
 }
@@ -836,10 +886,6 @@ svg {
 }
 
 
-/* A 3px red rule the full width of the masthead, under the name. It is a
-   child of the masthead grid rather than of the name column, because nested in
-   the column it rendered at the prose measure — about 40% of the width the
-   contract specifies. */
 /* The name and the rule each span the full grid; the subhead and the meta list
    share the row beneath, which is the order FIRST VIEWPORT specifies. Nested
    inside a column the rule rendered at the prose measure, about 40% of the
@@ -853,7 +899,6 @@ svg {
 .bb-masthead .bb-rule {
   height: 3px;
   background: var(--red);
-  margin-top: clamp(8px, 1.2vh, 14px);
 }
 
 .bb-masthead h1 {
@@ -863,6 +908,20 @@ svg {
   line-height: 0.86;
   letter-spacing: var(--tr-display);
   margin-top: clamp(16px, 2.4vh, 26px);
+  /* Hangs the sidebearings outside the row: 0.05em is the B's, so its stem
+     lands on the rule's start. The end margin only has to give the 5.27em
+     advance room inside the box, or the name wraps with the row still short. */
+  margin-inline: -0.05em -0.06em;
+  /* Measured from the baseline rather than from this box, which ends 0.096em
+     under the letters at this line-height: stacked on that and the row gap, the
+     rule sat 56px off at 235px and, because the row gap does not scale with the
+     name, 0.45em off on a phone. This cancels both and leaves 0.1em of clear
+     space, floored so the rule does not touch a small name. It has to be this
+     margin and not one on the rule: a grid track cannot go negative, so the
+     rule's own margin just collapses its row and moves nothing. */
+  margin-bottom: calc(
+    max(10px, var(--fs-display) * 0.1) - var(--fs-display) * 0.096 - var(--mast-gap)
+  );
   text-transform: uppercase;
 }
 
@@ -1120,6 +1179,18 @@ svg {
   user-select: none;
 }
 
+/* Below the width the whole list fits on one line a separator can only end up
+   dangling at the end of a row, so the list runs on space alone. */
+@media (max-width: 1119px) {
+  .bb-index {
+    column-gap: 22px;
+  }
+
+  .bb-index .sep {
+    display: none;
+  }
+}
+
 .bb-index-note {
   margin-top: 14px;
   font-size: var(--fs-ui);
@@ -1164,13 +1235,13 @@ svg {
   line-height: var(--lh-prose);
 }
 
-/* The way into the section. Set at lede scale with a red rule above it,
-   so the eight paragraphs below have something to be subordinate to. */
+/* The way into the section. Set at lede scale so the paragraphs below have
+   something to be subordinate to. Size does that alone: the masthead's is the
+   one structural red rule, and a second here spent it on a line that already
+   sits under the section head's hairline. */
 .bb-position .lede-open {
   font-size: var(--fs-lede);
   line-height: var(--lh-lede);
-  padding-top: clamp(14px, 2vh, 22px);
-  border-top: 3px solid var(--red);
 }
 
 .bb-position .footnote {
@@ -1203,6 +1274,12 @@ svg {
   padding-top: 0;
 }
 
+/* Before the query, not after it: same specificity, so placed later this won
+   at every width and dropped the chip onto a row of its own under the role. */
+.bb-role .status-cell {
+  grid-column: 1 / -1;
+}
+
 @media (min-width: 900px) {
   .bb-role {
     align-items: start;
@@ -1224,7 +1301,8 @@ svg {
   }
 }
 
-.bb-role .term {
+.bb-role .term,
+.bb-rec-block .term {
   font-family: var(--font-display);
   font-stretch: var(--w-meta);
   font-size: var(--fs-label);
@@ -1264,10 +1342,6 @@ svg {
   color: var(--ink);
   max-width: var(--measure);
   margin-top: 12px;
-}
-
-.bb-role .status-cell {
-  grid-column: 1 / -1;
 }
 
 @media (min-width: 800px) and (max-width: 899px) {
@@ -1450,6 +1524,9 @@ svg {
   font-size: 0.92em;
   color: var(--ink);
   white-space: nowrap;
+  /* JetBrains Mono's ligatures respace "://", and a URL someone will copy has to
+     look like what it is. */
+  font-variant-ligatures: none;
 }
 
 .bb-colophon-grid .cta {
@@ -1997,6 +2074,9 @@ svg {
   font-size: var(--fs-body-s);
   padding: 13px 15px;
   resize: none;
+  /* The placeholder is wider than the field on a phone; it ends in an ellipsis
+     rather than being sliced through a word. */
+  text-overflow: ellipsis;
 }
 
 .bb-chat-input input::placeholder,
@@ -2521,8 +2601,8 @@ svg {
     break-inside: avoid;
   }
 
-  .bb-masthead h1 {
-    font-size: 34pt;
+  .bb-masthead {
+    --fs-display: 34pt;
   }
 
   .bb-lead .nm {

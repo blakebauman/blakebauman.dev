@@ -1,6 +1,6 @@
 ---
 name: blakebauman.com
-description: A black-ground record set in one grotesque at four widths, on a page that is the viewport rather than a card centred on it.
+description: A black-ground record set in one grotesque at four widths, condensed to an American gothic at the top of the ramp, on a page that is the viewport rather than a card centred on it.
 colors:
   night: "#080A0F"
   basalt: "#14171D"
@@ -17,46 +17,46 @@ colors:
 typography:
   display:
     fontFamily: "Archivo Variable, Archivo Fallback, Helvetica, Arial, sans-serif"
-    fontSize: "clamp(72px, 13vw, 200px)"
+    fontSize: "clamp(52px, (100vw - 2 * var(--gutter)) / 5.17, 240px)"
     fontWeight: 500
     lineHeight: 0.86
-    letterSpacing: "-0.03em"
-    fontVariation: "'wdth' 110"
+    letterSpacing: "0"
+    fontVariation: "'wdth' 62"
   display-long:
     fontFamily: "Archivo Variable, Archivo Fallback, Helvetica, Arial, sans-serif"
-    fontSize: "clamp(60px, 11vw, 170px)"
+    fontSize: "clamp(52px, (100vw - 2 * var(--gutter)) / 5.17, 240px)"
     fontWeight: 500
     lineHeight: 0.88
-    letterSpacing: "-0.03em"
-    fontVariation: "'wdth' 110"
+    letterSpacing: "0"
+    fontVariation: "'wdth' 62"
   lead:
     fontFamily: "Archivo Variable, Archivo Fallback, Helvetica, Arial, sans-serif"
     fontSize: "clamp(44px, 8vw, 116px)"
     fontWeight: 500
     lineHeight: 0.96
-    letterSpacing: "-0.03em"
-    fontVariation: "'wdth' 104"
+    letterSpacing: "0"
+    fontVariation: "'wdth' 75"
   headline:
     fontFamily: "Archivo Variable, Archivo Fallback, Helvetica, Arial, sans-serif"
     fontSize: "clamp(34px, 5vw, 68px)"
     fontWeight: 500
     lineHeight: 1
-    letterSpacing: "-0.02em"
-    fontVariation: "'wdth' 104"
+    letterSpacing: "-0.008em"
+    fontVariation: "'wdth' 75"
   sub:
     fontFamily: "Archivo Variable, Archivo Fallback, Helvetica, Arial, sans-serif"
     fontSize: "clamp(26px, 3.2vw, 40px)"
     fontWeight: 500
     lineHeight: 1.12
-    letterSpacing: "-0.014em"
-    fontVariation: "'wdth' 104"
+    letterSpacing: "-0.004em"
+    fontVariation: "'wdth' 75"
   title:
     fontFamily: "Archivo Variable, Archivo Fallback, Helvetica, Arial, sans-serif"
     fontSize: "29px"
     fontWeight: 500
     lineHeight: 1.2
-    letterSpacing: "-0.008em"
-    fontVariation: "'wdth' 104"
+    letterSpacing: "0"
+    fontVariation: "'wdth' 75"
   lede:
     fontFamily: "Archivo Variable, Archivo Fallback, Helvetica, Arial, sans-serif"
     fontSize: "clamp(20px, 2.4vw, 24px)"
@@ -262,25 +262,25 @@ A near-neutral dark field carrying one accent hue at two lightnesses — a signa
 **Body Font:** Archivo Variable — the same face. `--font-body` is an alias of `--font-display`.
 **Label/Mono Font:** JetBrains Mono Variable (code, timestamps, source chips, the MCP endpoint)
 
-**Body copy sets in Archivo, a sans.** An earlier iteration of this site set body in a serif (Literata); that face is not in this build and no serif is loaded anywhere. Any instruction elsewhere in the repo asserting a serif body, or naming Literata, IBM Plex or Helvetica Neue as a family here, is stale. Helvetica appears only as the metric source for the fallback `@font-face`: Archivo at wght 500 / wdth 100 was measured with fontTools against the shipped woff2 at 0.66% wider than Helvetica and Arial, x-height 0.526 against 0.523, which is what `size-adjust: 100.66%` and the ascent/descent overrides encode. Self-hosting removed a real split — Helvetica Neue is Monotype-licensed and resolves only on Apple platforms, so every other visitor was previously served Arial, a different face at a different weight.
+**Body copy sets in Archivo, a sans.** An earlier iteration of this site set body in a serif (Literata); that face is not in this build and no serif is loaded anywhere. Any instruction elsewhere in the repo asserting a serif body, or naming Literata, IBM Plex or Helvetica Neue as a family here, is stale. Helvetica appears only as the metric source for the fallback `@font-face`: Archivo at wght 500 / wdth 100 was measured with fontTools against the shipped woff2 at 0.66% wider than Helvetica and Arial, x-height 0.526 against 0.523, which is what `size-adjust: 100.66%` and the ascent/descent overrides encode. Self-hosting removed a real split — Helvetica Neue is Monotype-licensed and resolves only on Apple platforms, so every other visitor was previously served Arial, a different face at a different weight. The two condensed stops have their own fallback faces under the same family name, both `local("Arial Narrow")`, split by `font-stretch` range (50–68% and 69–75.9%, disjoint from the regular face's 76–125% so the 88% stop still matches it exactly). Measured in the browser: the name at wdth 62 is 82.57% of Arial Narrow's width, a mixed sample at wdth 75 is 97.8%, and with those `size-adjust` values the fallback name sets at exactly the width Archivo does, so it does not wrap and snap back while the font loads. Where Arial Narrow is absent, the stretch falls through to the regular face.
 
-**Character:** Industrial, tight, and loud at the top of the ramp. Display sets at 0.86 line-height with `-0.03em` tracking so the name behaves as a block of material; prose runs at 1.6 to 65ch and is quiet by comparison.
+**Character:** American gothic at the top of the ramp, a regular grotesque below it. The display and heading band is condensed — the arrangement of Alternate Gothic and Trade Gothic Condensed, where a narrow cut sets the headline and a regular one sets the story — so the name sets as one tall line across the full row at 0.86 line-height, a band of material rather than a stacked block. Prose runs at 1.6 to 65ch at the regular width and is quiet by comparison. The condensed band carries zero or near-zero tracking: a narrow face has short sidebearings already, and negative tracking closes the name's L–A kern pair into a collision.
 
 ### Hierarchy
-- **Display** (500, `clamp(72px, 13vw, 200px)`, 0.86, wdth 110): The masthead name, uppercase, and nothing else. `display-long` (`clamp(60px, 11vw, 170px)`, 0.88) is the case-study title.
-- **Lead** (500, `clamp(44px, 8vw, 116px)`, 0.96, wdth 104): Featured project names in the work list.
-- **Headline** (500, `clamp(34px, 5vw, 68px)`, 1.0, wdth 104): Section heads. **Sub** (`clamp(26px, 3.2vw, 40px)`, 1.12) is the case-study section head.
-- **Title** (500, 29px, 1.2, wdth 104): Role names in the record.
+- **Display** (500, `clamp(52px, (100vw - 2 * var(--gutter)) / 5.17, 240px)`, 0.86, wdth 62, tracking 0): The masthead name, uppercase. It is sized from the row, not from a vw guess, and from the name's ink rather than its advance: it advances 5.27em at this width but paints 5.16em, and the h1 hangs the sidebearings outside the row (`margin-inline: -0.05em -0.06em`), so the B's stem and the N's stem land on the ends of the red rule at every viewport. It stops at 240px where the row caps at 1240px. `display-long` is now an alias of it, at 0.88, for the case-study title — one short lowercase word that no longer needs a smaller stop to fit.
+- **Lead** (500, `clamp(44px, 8vw, 116px)`, 0.96, wdth 75): Featured project names in the work list.
+- **Headline** (500, `clamp(34px, 5vw, 68px)`, 1.0, wdth 75): Section heads. **Sub** (`clamp(26px, 3.2vw, 40px)`, 1.12) is the case-study section head.
+- **Title** (500, 29px, 1.2, wdth 75): Role names in the record.
 - **Lede** (500, `clamp(20px, 2.4vw, 24px)`, 1.38, `opsz` 24, capped 48–58ch): The masthead subhead, case-study one-liner, colophon and section openers.
 - **Body** (500, 20px, 1.6, `opsz` 16, max 65ch): Running prose. **Body small** (17px) carries descriptors, role descriptions and chat answers.
 - **UI** (500, 14px, `0.02em`): Values in meta lists, footnotes, figure captions, back links.
 - **Label** (500, 11px, `0.1em`, uppercase, wdth 88, tabular numerals): Every stamp, key, chip and metadata line in the system.
 - **Code** (JetBrains Mono, 13px, 1.7): Code blocks; 11px for source chips, timestamps and paths, and `0.92em`/`0.88em` for mono inline in prose so it tracks its context.
 
-Painted ramp, in px: 11 / 14 / 17 / 20 / 24 / 29 / 40 / 68 / 116 / 170 / 200. `--fs-role`, `--fs-title-s`, `--fs-title-xs`, `--fs-sm`, `--fs-button`, `--fs-label` and `--fs-code-s` are aliases onto those stops, not stops of their own.
+Painted ramp, in px: 11 / 14 / 17 / 20 / 24 / 29 / 40 / 68 / 116 / 240. `--fs-role`, `--fs-title-s`, `--fs-title-xs`, `--fs-sm`, `--fs-button`, `--fs-label` and `--fs-code-s` are aliases onto those stops, not stops of their own.
 
 ### Named Rules
-**The Width Ladder Rule.** Archivo's `wdth` axis encodes rank, and there are exactly four stops: 110% display, 104% heading, 100% UI, 88% metadata. No fifth value, no interpolation between them. This exists because size would otherwise be the only hierarchy device — one family, one weight, no case change in the reading band — and an audit of the previous build found nine of thirteen adjacent size steps too close to read apart. The ladder only exists if the Fontsource `wdth` entrypoint is imported (`@fontsource-variable/archivo/wdth.css`); import the `wght` entrypoint instead and every `font-stretch` in the sheet silently does nothing while the build stays green.
+**The Width Ladder Rule.** Archivo's `wdth` axis encodes rank, and there are exactly four stops: 62% display, 75% heading, 100% UI, 88% metadata. No fifth value, no interpolation between them. Rank is not monotonic in width and is not meant to be: narrow and large is loud, regular is read, narrow and small in tracked caps is metadata — size and case separate the two narrow bands, width separates both from the reading band. The ladder was 110 / 104 at the top until it was turned into an American gothic; the extended display wrapped the name to two lines at every width under 1692px, where the condensed one holds it to one. This exists because size would otherwise be the only hierarchy device — one family, one weight, no case change in the reading band — and an audit of the previous build found nine of thirteen adjacent size steps too close to read apart. The ladder only exists if the Fontsource `wdth` entrypoint is imported (`@fontsource-variable/archivo/wdth.css`); import the `wght` entrypoint instead and every `font-stretch` in the sheet silently does nothing while the build stays green.
 
 **The 1.15x Rule.** Adjacent stops on the type ramp are at least 1.15x apart. Two stops closer than that are two names for one role, not two roles; collapse the newer one onto the existing stop as an alias.
 
@@ -288,7 +288,7 @@ Painted ramp, in px: 11 / 14 / 17 / 20 / 24 / 29 / 40 / 68 / 116 / 170 / 200. `-
 
 ## Elevation
 
-There is no elevation. Radius is 0 on every surface in the system, there is no `box-shadow` anywhere, no gradient, and no decorative blur. Depth is carried by three things instead: **scale** (the ramp spans 11px to 200px, so importance is legible before anything is read), **hairline weight** (`--hair` at 14% ink for structure, `--hair-strong` at 26% for emphasis and for a resting interactive border), and **column position** (metadata hangs in columns 1–2, content spans 3–9, the action sits in 11–12). Panels are distinguished by material, not by height, and the material moves *downward*: a container that holds its own content — the chat, a figure, a code block — sits in `--well`, a ground below night, bounded by an `--ink-3` stroke. That is depth by recession rather than by lift, and the chat marks it further with a dot grid rather than with a shadow.
+There is no elevation. Radius is 0 on every surface in the system, there is no `box-shadow` anywhere, no gradient, and no decorative blur. Depth is carried by three things instead: **scale** (the ramp spans 11px to 240px, so importance is legible before anything is read), **hairline weight** (`--hair` at 14% ink for structure, `--hair-strong` at 26% for emphasis and for a resting interactive border), and **column position** (metadata hangs in columns 1–2, content spans 3–9, the action sits in 11–12). Panels are distinguished by material, not by height, and the material moves *downward*: a container that holds its own content — the chat, a figure, a code block — sits in `--well`, a ground below night, bounded by an `--ink-3` stroke. That is depth by recession rather than by lift, and the chat marks it further with a dot grid rather than with a shadow.
 
 The one blur in the build is functional, not ornamental: the sticky top bar is a 92% night wash with `backdrop-filter: saturate(140%) blur(8px)` so scrolling display type does not collide with the nav text sitting over it.
 
@@ -338,10 +338,10 @@ The one blur in the build is functional, not ornamental: the sticky top bar is a
 Twelve full-height columns of red at 14% fill with 80% red edges, drawn fixed over the page, staggered in at 12ms per column. The toggle carries a four-bar mark of the thing it turns on, sets `aria-pressed`, inverts to a red fill when on, persists in `localStorage`, and is restored by an inline script before first paint. The fill was raised from 8%/52% because at the old values a pixel diff could only resolve half the columns — a structure you have to squint at does not discharge the claim the control makes.
 
 ### Masthead
-Uppercase display name spanning all twelve columns, a 3px red rule directly beneath it spanning the same twelve (a child of the masthead grid, never nested in a column), then the subhead in 1–6 and the meta list in 8–12 sharing the row below. Column 7 is empty and is the separation; the row gap stays small, because a uniform gap detached the rule from the name and pushed the email below the fold at 1440x900. The metadata takes five columns rather than four for one reason: the contact address sets 176px, cannot break, and four columns at the 900px threshold leave it 178px — a fit by two pixels is a coincidence, not a column count. The meta list is a two-column `<dl>` of 11px uppercase keys against 14px tabular-numeral values over a `--hair` top border.
+Uppercase display name spanning all twelve columns, its ink meeting both ends of a 3px red rule directly beneath it spanning the same twelve (a child of the masthead grid, never nested in a column), 0.1em below the baseline with a 10px floor, then the subhead in 1–6 and the meta list in 8–12 sharing the row below. Column 7 is empty and is the separation; the row gap stays small, because a uniform gap detached the rule from the name and pushed the email below the fold at 1440x900. The metadata takes five columns rather than four for one reason: the contact address sets 176px, cannot break, and four columns at the 900px threshold leave it 178px — a fit by two pixels is a coincidence, not a column count. The meta list is a two-column `<dl>` of 11px uppercase keys against 14px tabular-numeral values over a `--hair` top border, baseline-aligned, every value on one 26px line so plain and linked rows keep the same rhythm and the links clear the 24px target.
 
 ### Composed Rows (`.bb-lead`, `.bb-role`, `.bb-sec-head`)
-Every composed region sits on the twelve columns, all capped at `--row-max`. A lead row puts maturity in columns 1–2, the project name at lead scale across 3–9, the descriptor narrower beneath it across 3–8, and the action in 11–12; hover states rank in colour (name and action to red, bottom border to `--hair-strong`), never in movement. A role row is the same skeleton: years in 1–2, role and company in 3–9, status chip in 11–12. A section head is flex at every width — heading, a `flex: 1` hairline that runs from the last letter to the stamp, then the stamp — because placed on the columns the rule floated detached in the middle of the row; it is capped at `--row-max` like the rest, so both its ends still land on the grid. The remaining regions take the same twelve: masthead subhead 1–6 and meta 8–12, Position prose 1–7 and its footnote 9–12, recognition 1–2 and 3–9 like the roles above it, the chat aside 1–4 and the frame 5–12, the colophon 1–5 and its actions 9–12, and the case-study meta strip five facts of two columns each.
+Every composed region sits on the twelve columns, all capped at `--row-max`. A lead row puts maturity in columns 1–2, the project name at lead scale across 3–9, the descriptor narrower beneath it across 3–8, and the action in 11–12; hover states rank in colour (name and action to red, bottom border to `--hair-strong`), never in movement. A role row is the same skeleton: years in 1–2, role and company in 3–9, status chip in 11–12. A section head is flex at every width — heading, a `flex: 1` hairline that runs from the last letter to the stamp, then the stamp — because placed on the columns the rule floated detached in the middle of the row; it is capped at `--row-max` like the rest, so both its ends still land on the grid. The remaining regions take the same twelve: masthead subhead 1–6 and meta 8–12, Position prose 1–7 and its footnote 9–12, recognition 1–2 and 3–9 like the roles above it, the chat aside 1–4 and the frame 5–12, the colophon 1–5 and its actions 9–12, and the case-study meta strip one fact per two columns.
 
 ### Case Study (`app/routes/work.tsx`)
 Back link, display-long title, a one-line summary capped at 48ch, and a meta strip of 11px keys over 14px values on a hairline. Body sections are separated by `clamp(44px, 6.5vh, 76px)`, prose holds the 65ch measure, and lists are hairline-separated rows rather than bullets. Every block in the hero and the body is capped at `--row-max` (1240px) on the child rather than on the centred wrapper, so the page has one right edge held to the left margin. Term/detail lists set their `<strong>` at `--wt-strong`; it previously set `--wt`, identical to its parent, which cancelled the browser's bold and made the terms invisible. Figures are hand-authored inline SVG inside a well-ground scroller with a `min-width: 660px` floor, so on a phone a diagram scrolls rather than scaling into illegibility; in print that floor is released so it scales to the page. Code blocks sit on the same well behind an ember header carrying a mono path on the left and a label-stop tag on the right. The diagram primitive `Box` defaults its fill to `var(--well)` so an ordinary node sits flush with the figure ground and reads by its `--ink-3` stroke alone (3.22:1); only a deliberately emphasised node carries a fill, and those take `--ember` with an `--ember-lift` stroke.
@@ -356,7 +356,7 @@ The whole identity resets to ink on white: night and basalt become `#fff`, red b
 
 ### Do:
 - **Do** set body copy in Archivo (`--font-body`, which aliases `--font-display`) at 500, 20px, 1.6, to a 65ch measure.
-- **Do** pick one of the four width stops — 110 / 104 / 100 / 88 — for anything new, and import `@fontsource-variable/archivo/wdth.css` or the stops do not exist.
+- **Do** pick one of the four width stops — 62 / 75 / 100 / 88 — for anything new, and import `@fontsource-variable/archivo/wdth.css` or the stops do not exist.
 - **Do** express hierarchy with size, width and column position, in that order.
 - **Do** compose new rows on the twelve columns with metadata in 1–2, content in 3–9, action in 11–12, and cap them at `--row-max` (1240px).
 - **Do** add a new region to the shared grid rule rather than giving it a `grid-template-columns` of its own, and put every `grid-column` inside the `min-width: 900px` query — `--cols` is 1 below it, and a span of seven on a one-column grid generates six implicit columns.
@@ -379,7 +379,7 @@ The whole identity resets to ink on white: night and basalt become `#fff`, red b
 - **Don't** add a radius, a shadow, a gradient or a decorative blur. If separation is needed, use a hairline, a different material, or space.
 - **Don't** add a type stop within 1.15x of an existing one; alias onto the existing stop instead.
 - **Don't** use weight for hierarchy. 700 belongs to `<strong>` and nowhere else.
-- **Don't** put the masthead's red rule inside a column. It is a child of the masthead grid spanning `1 / -1`, so it ends on the same line as the section stamps, the row actions and the last footer stamp. The masthead is no longer exempt from `--row-max`: `--fs-display` clamps at 200px, the name sets 1692px and wraps to two lines at every width below that, so the exemption bought empty space rather than larger type.
+- **Don't** put the masthead's red rule inside a column. It is a child of the masthead grid spanning `1 / -1`, so it ends on the same line as the section stamps, the row actions and the last footer stamp. The masthead is not exempt from `--row-max`: `--fs-display` is computed from the row and caps at 240px exactly where the row caps, so an exemption would buy empty space rather than larger type.
 - **Don't** add scroll-triggered animation, entrance reveals, or any motion outside the 120ms/220ms state-transition budget.
 - **Don't** put `--ink-3` text — or any new colour — on the dotted well without measuring it against a dot by hand. Ink-3 on a dot is 2.7:1, under the 3:1 floor, and the contrast harness cannot see a `background-image`, so it will report the well and pass.
 - **Don't** cap the expanded chat at a fixed card width; it is `100%` x `100dvh` on purpose, because a fluid inline frame outgrows any cap.

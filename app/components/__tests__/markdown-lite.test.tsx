@@ -39,7 +39,7 @@ describe('MarkdownLite', () => {
     expect(container.querySelectorAll('ol li')).toHaveLength(2);
   });
 
-  // An answer renders inside the "Ask the resume" section, whose own heading is
+  // An answer renders inside the "Ask the record" section, whose own heading is
   // an h2. Emitting h1/h2 from markdown there would break the page's heading
   // order, so the three markdown levels are demoted to h3/h4/h5. Deeper markdown
   // headings still collapse into the third slot.
