@@ -98,6 +98,9 @@ export function Resume({ chatEnabled, persona, chatGreeting, suggestedPrompts }:
   return (
     <div className="bb-shell">
       <GridOverlay />
+      <a className="btn bb-skip print:hidden" href="#main">
+        Skip to content
+      </a>
       <header className="bb-top print:hidden">
         <div className="bb-wrap bb-top-in">
           <a className="bb-top-name" href="#top">
@@ -121,7 +124,7 @@ export function Resume({ chatEnabled, persona, chatGreeting, suggestedPrompts }:
         </div>
       </header>
 
-      <main>
+      <main id="main" tabIndex={-1}>
         <section className="bb-wrap bb-masthead" id="top">
           {/* No eyebrow here: the subhead opens with the job title verbatim,
               so a label above the name was pure repetition. */}

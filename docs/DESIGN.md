@@ -17,84 +17,84 @@ colors:
 typography:
   display:
     fontFamily: "Archivo Variable, Archivo Fallback, Helvetica, Arial, sans-serif"
-    fontSize: "clamp(72px, 13vw, 200px)"
+    fontSize: "clamp(min(4.5rem, (100vw - 2 * var(--gutter)) / 4.75), 13vw, 12.5rem)"
     fontWeight: 500
     lineHeight: 0.86
     letterSpacing: "-0.03em"
     fontVariation: "'wdth' 110"
   display-long:
     fontFamily: "Archivo Variable, Archivo Fallback, Helvetica, Arial, sans-serif"
-    fontSize: "clamp(60px, 11vw, 170px)"
+    fontSize: "clamp(min(3.75rem, (100vw - 2 * var(--gutter)) / 5), 11vw, 10.625rem)"
     fontWeight: 500
     lineHeight: 0.88
     letterSpacing: "-0.03em"
     fontVariation: "'wdth' 110"
   lead:
     fontFamily: "Archivo Variable, Archivo Fallback, Helvetica, Arial, sans-serif"
-    fontSize: "clamp(44px, 8vw, 116px)"
+    fontSize: "clamp(min(2.75rem, 13.75vw), 8vw, 7.25rem)"
     fontWeight: 500
     lineHeight: 0.96
     letterSpacing: "-0.03em"
     fontVariation: "'wdth' 104"
   headline:
     fontFamily: "Archivo Variable, Archivo Fallback, Helvetica, Arial, sans-serif"
-    fontSize: "clamp(34px, 5vw, 68px)"
+    fontSize: "clamp(min(2.125rem, 10.6vw), 5vw, 4.25rem)"
     fontWeight: 500
     lineHeight: 1
     letterSpacing: "-0.02em"
     fontVariation: "'wdth' 104"
   sub:
     fontFamily: "Archivo Variable, Archivo Fallback, Helvetica, Arial, sans-serif"
-    fontSize: "clamp(26px, 3.2vw, 40px)"
+    fontSize: "clamp(min(1.625rem, 8.1vw), 3.2vw, 2.5rem)"
     fontWeight: 500
     lineHeight: 1.12
     letterSpacing: "-0.014em"
     fontVariation: "'wdth' 104"
   title:
     fontFamily: "Archivo Variable, Archivo Fallback, Helvetica, Arial, sans-serif"
-    fontSize: "29px"
+    fontSize: "1.8125rem"
     fontWeight: 500
     lineHeight: 1.2
     letterSpacing: "-0.008em"
     fontVariation: "'wdth' 104"
   lede:
     fontFamily: "Archivo Variable, Archivo Fallback, Helvetica, Arial, sans-serif"
-    fontSize: "clamp(20px, 2.4vw, 24px)"
+    fontSize: "clamp(1.25rem, 2.4vw, 1.5rem)"
     fontWeight: 500
     lineHeight: 1.38
     letterSpacing: "0"
     fontVariation: "'wdth' 100, 'opsz' 24"
   body:
     fontFamily: "Archivo Variable, Archivo Fallback, Helvetica, Arial, sans-serif"
-    fontSize: "20px"
+    fontSize: "1.25rem"
     fontWeight: 500
     lineHeight: 1.6
     letterSpacing: "0"
     fontVariation: "'wdth' 100, 'opsz' 16"
   body-small:
     fontFamily: "Archivo Variable, Archivo Fallback, Helvetica, Arial, sans-serif"
-    fontSize: "17px"
+    fontSize: "1.0625rem"
     fontWeight: 500
     lineHeight: 1.6
     letterSpacing: "0"
     fontVariation: "'wdth' 100"
   ui:
     fontFamily: "Archivo Variable, Archivo Fallback, Helvetica, Arial, sans-serif"
-    fontSize: "14px"
+    fontSize: "0.875rem"
     fontWeight: 500
     lineHeight: 1.4
     letterSpacing: "0.02em"
     fontVariation: "'wdth' 100"
   label:
     fontFamily: "Archivo Variable, Archivo Fallback, Helvetica, Arial, sans-serif"
-    fontSize: "11px"
+    fontSize: "0.6875rem"
     fontWeight: 500
     lineHeight: 1.1
     letterSpacing: "0.1em"
     fontVariation: "'wdth' 88"
   code:
     fontFamily: "JetBrains Mono Variable, ui-monospace, SF Mono, Menlo, monospace"
-    fontSize: "13px"
+    fontSize: "0.8125rem"
     fontWeight: 500
     lineHeight: 1.7
     letterSpacing: "0"
@@ -267,11 +267,13 @@ A near-neutral dark field carrying one accent hue at two lightnesses — a signa
 **Character:** Industrial, tight, and loud at the top of the ramp. Display sets at 0.86 line-height with `-0.03em` tracking so the name behaves as a block of material; prose runs at 1.6 to 65ch and is quiet by comparison.
 
 ### Hierarchy
-- **Display** (500, `clamp(72px, 13vw, 200px)`, 0.86, wdth 110): The masthead name, uppercase, and nothing else. `display-long` (`clamp(60px, 11vw, 170px)`, 0.88) is the case-study title.
-- **Lead** (500, `clamp(44px, 8vw, 116px)`, 0.96, wdth 104): Featured project names in the work list.
-- **Headline** (500, `clamp(34px, 5vw, 68px)`, 1.0, wdth 104): Section heads. **Sub** (`clamp(26px, 3.2vw, 40px)`, 1.12) is the case-study section head.
+Every size is a rem token, so a reader's browser font size reaches the whole ramp, and px figures in this document are at the default 16px root. The floors of the large stops are capped by the viewport as well as set in rem: "BAUMAN" runs 4.71em and "memoturn" 4.92em, neither can break, and a fixed floor cut the name off on a 320px phone. Check rendered text, not element boxes: the box stays inside the row while the word runs out of it.
+
+- **Display** (500, `clamp(min(4.5rem, (100vw - 2 * var(--gutter)) / 4.75), 13vw, 12.5rem)`, 0.86, wdth 110): The masthead name, uppercase, and nothing else. `display-long` (`clamp(min(3.75rem, (100vw - 2 * var(--gutter)) / 5), 11vw, 10.625rem)`, 0.88) is the case-study title.
+- **Lead** (500, `clamp(min(2.75rem, 13.75vw), 8vw, 7.25rem)`, 0.96, wdth 104): Featured project names in the work list.
+- **Headline** (500, `clamp(min(2.125rem, 10.6vw), 5vw, 4.25rem)`, 1.0, wdth 104): Section heads. **Sub** (`clamp(min(1.625rem, 8.1vw), 3.2vw, 2.5rem)`, 1.12) is the case-study section head.
 - **Title** (500, 29px, 1.2, wdth 104): Role names in the record.
-- **Lede** (500, `clamp(20px, 2.4vw, 24px)`, 1.38, `opsz` 24, capped 48–58ch): The masthead subhead, case-study one-liner, colophon and section openers.
+- **Lede** (500, `clamp(1.25rem, 2.4vw, 1.5rem)`, 1.38, `opsz` 24, capped 48–58ch): The masthead subhead, case-study one-liner, colophon and section openers.
 - **Body** (500, 20px, 1.6, `opsz` 16, max 65ch): Running prose. **Body small** (17px) carries descriptors, role descriptions and chat answers.
 - **UI** (500, 14px, `0.02em`): Values in meta lists, footnotes, figure captions, back links.
 - **Label** (500, 11px, `0.1em`, uppercase, wdth 88, tabular numerals): Every stamp, key, chip and metadata line in the system.
@@ -328,7 +330,8 @@ The one blur in the build is functional, not ornamental: the sticky top bar is a
 ### Inputs / Fields
 - **Chat input (`.bb-chat-input`):** A single `--hair-strong` box containing a night-ground field and a red send button; the field itself has no border and no focus outline of its own.
 - **Focus:** The wrapper takes `:focus-within` and turns its border red, so the composed control lights as one object.
-- **Global focus:** `2px solid var(--red)` with `3px` offset on `:focus-visible`.
+- **Global focus:** `2px solid var(--red)` with `3px` offset on `:focus-visible`. Scrolling figures and code blocks take a tab stop so a keyboard can reach what is clipped, with the ring inset `-2px` because those boxes clip anything outside them.
+- **Skip link:** A primary button off-screen until focused, the first tab stop on every page, landing on `<main>`.
 
 ### Navigation
 - **Top bar (`.bb-top`):** 54px, sticky, a 92% night wash over `blur(8px)`, closed by a `--hair` bottom border. The name sets at the UI stop in uppercase at the 88% width; nav items set at the 11px label stop in `--ink-2`, hover to ink, and the current route takes red text plus a red bottom border.
@@ -338,7 +341,7 @@ The one blur in the build is functional, not ornamental: the sticky top bar is a
 Twelve full-height columns of red at 14% fill with 80% red edges, drawn fixed over the page, staggered in at 12ms per column. The toggle carries a four-bar mark of the thing it turns on, sets `aria-pressed`, inverts to a red fill when on, persists in `localStorage`, and is restored by an inline script before first paint. The fill was raised from 8%/52% because at the old values a pixel diff could only resolve half the columns — a structure you have to squint at does not discharge the claim the control makes.
 
 ### Masthead
-Uppercase display name spanning all twelve columns, a 3px red rule directly beneath it spanning the same twelve (a child of the masthead grid, never nested in a column), 0.1em below the last baseline with a 10px floor, then the subhead in 1–6 and the meta list in 8–12 sharing the row below. Column 7 is empty and is the separation; the row gap stays small, because a uniform gap detached the rule from the name and pushed the email below the fold at 1440x900. The metadata takes five columns rather than four for one reason: the contact address sets 176px, cannot break, and four columns at the 900px threshold leave it 178px — a fit by two pixels is a coincidence, not a column count. The meta list is a two-column `<dl>` of 11px uppercase keys against 14px tabular-numeral values over a `--hair` top border, baseline-aligned, every value on one 26px line so plain and linked rows keep the same rhythm and the links clear the 24px target.
+Uppercase display name spanning all twelve columns, a 3px red rule directly beneath it spanning the same twelve (a child of the masthead grid, never nested in a column), 0.1em below the last baseline with a 10px floor, then the subhead in 1–6 and the meta list in 8–12 sharing the row below. Column 7 is empty and is the separation; the row gap stays small, because a uniform gap detached the rule from the name and pushed the email below the fold at 1440x900. The metadata takes five columns rather than four for one reason: the contact address sets 176px, cannot break, and four columns at the 900px threshold leave it 178px — a fit by two pixels is a coincidence, not a column count. The meta list is a two-column `<dl>` of 11px uppercase keys against 14px tabular-numeral values over a `--hair` top border, baseline-aligned, every value on one 1.625rem line so plain and linked rows keep the same rhythm and the links clear the 24px target.
 
 ### Composed Rows (`.bb-lead`, `.bb-role`, `.bb-sec-head`)
 Every composed region sits on the twelve columns, all capped at `--row-max`. A lead row puts maturity in columns 1–2, the project name at lead scale across 3–9, the descriptor narrower beneath it across 3–8, and the action in 11–12; hover states rank in colour (name and action to red, bottom border to `--hair-strong`), never in movement. A role row is the same skeleton: years in 1–2, role and company in 3–9, status chip in 11–12. A section head is flex at every width — heading, a `flex: 1` hairline that runs from the last letter to the stamp, then the stamp — because placed on the columns the rule floated detached in the middle of the row; it is capped at `--row-max` like the rest, so both its ends still land on the grid. The remaining regions take the same twelve: masthead subhead 1–6 and meta 8–12, Position prose 1–7 and its footnote 9–12, recognition 1–2 and 3–9 like the roles above it, the chat aside 1–4 and the frame 5–12, the colophon 1–5 and its actions 9–12, and the case-study meta strip one fact per two columns.
@@ -347,7 +350,7 @@ Every composed region sits on the twelve columns, all capped at `--row-max`. A l
 Back link, display-long title, a one-line summary capped at 48ch, and a meta strip of 11px keys over 14px values on a hairline. Body sections are separated by `clamp(44px, 6.5vh, 76px)`, prose holds the 65ch measure, and lists are hairline-separated rows rather than bullets. Every block in the hero and the body is capped at `--row-max` (1240px) on the child rather than on the centred wrapper, so the page has one right edge held to the left margin. Term/detail lists set their `<strong>` at `--wt-strong`; it previously set `--wt`, identical to its parent, which cancelled the browser's bold and made the terms invisible. Figures are hand-authored inline SVG inside a well-ground scroller with a `min-width: 660px` floor, so on a phone a diagram scrolls rather than scaling into illegibility; in print that floor is released so it scales to the page. Code blocks sit on the same well behind an ember header carrying a mono path on the left and a label-stop tag on the right. The diagram primitive `Box` defaults its fill to `var(--well)` so an ordinary node sits flush with the figure ground and reads by its `--ink-3` stroke alone (3.22:1); only a deliberately emphasised node carries a fill, and those take `--ember` with an `--ember-lift` stroke.
 
 ### Chat ("Ask the record")
-The frame (`.bb-chat-frame`) sits in `--well` on an `--ink-3` stroke, minimum 340px tall, with the stream scrolling inside it (`max-height: 46vh`) rather than growing the page. A `radial-gradient` dot grid (`--dot` at 1px on a `--dot-gap` 22px pitch) is painted on the frame and not on the scrolling transcript, so the grid stays put while the conversation moves over it. Expanding (`.bb-chat-modal-card`) keeps the same well and the same grid at the same pitch and changes only the size of the surface: it is a full-viewport sheet, `100%` x `100dvh`, not a centred card. The old `min(920px, 100%)` cap made Expand a lie — once the page went fluid the card was *narrower* than the inline frame it replaced at wide viewports. Turns are separated by `--hair` and led by an uppercase 11px speaker line with a 7px square marker — ember-lift for the assistant, red for Blake — and a mono timestamp pushed to the right. Tool steps and source chips share one metadata register, because they are two halves of one claim. Markdown inside an answer is styled in the stylesheet, never inline in the component: the previous version inlined palette tokens and a palette change turned every one of them into an invalid value with no error.
+The frame (`.bb-chat-frame`) sits in `--well` on an `--ink-3` stroke, minimum 340px tall, with the stream scrolling inside it (`max-height: 46vh`) rather than growing the page. A `radial-gradient` dot grid (`--dot` at 1px on a `--dot-gap` 22px pitch) is painted on the frame and not on the scrolling transcript, so the grid stays put while the conversation moves over it. Expanding opens a native modal `<dialog>` (`.bb-chat-modal`), so the browser owns focus containment, Escape and the inert page behind it; the conversation renders in one place at a time, focus goes to the input where there is a hover pointer, and it returns to Expand on close. The sheet inside it (`.bb-chat-modal-card`) keeps the same well and the same grid at the same pitch and changes only the size of the surface: it is a full-viewport sheet, `100%` x `100dvh`, not a centred card. The old `min(920px, 100%)` cap made Expand a lie — once the page went fluid the card was *narrower* than the inline frame it replaced at wide viewports. Turns are separated by `--hair` and led by an uppercase 11px speaker line with a 7px square marker — ember-lift for the assistant, red for Blake — and a mono timestamp pushed to the right. Tool steps and source chips share one metadata register, because they are two halves of one claim. Markdown inside an answer is styled in the stylesheet, never inline in the component: the previous version inlined palette tokens and a palette change turned every one of them into an invalid value with no error.
 
 ### Print
 The whole identity resets to ink on white: night and basalt become `#fff`, red becomes `#111`, body drops to 11pt at weight 400 with normal tracking, and the top bar, chat frame and index note are removed. Ember flattens to `#f0f0f0` (and ember-lift to `#999`) rather than white, because it carries the diagram nodes and the code header that would otherwise disappear; the well goes white and `--dot` goes transparent, so the grid does not print.
@@ -364,7 +367,7 @@ The whole identity resets to ink on white: night and basalt become `#fff`, red b
 - **Do** use `--hair` (14%) for structure and `--hair-strong` (26%) for emphasis and resting interactive borders; those are the only two hairline weights.
 - **Do** keep type on night, the well or ember only; ink on all three measures 11:1 or better. Basalt carries one 11px label (the copy chip) and is not a surface for prose.
 - **Do** re-measure contrast against the rendered DOM after any palette change, and re-measure the Archivo/Helvetica metrics if the font package or the weight moves.
-- **Do** set every stamp, key and chip at the 11px label stop, uppercase, `0.1em`, tabular numerals.
+- **Do** set every stamp, key and chip at the 11px label stop, uppercase, `0.1em`, tabular numerals. Role years, figure captions and the chat's send button take `--fs-label`, an alias of the 14px UI stop, because they are read rather than scanned.
 - **Do** put any container that holds its own content — conversation, diagram, code — on `--well` with a 1px `--ink-3` stroke, and add the dot grid only on the chat surfaces.
 - **Do** give `.btn` and `.btn-ghost` the same box: `inline-flex`, centred, `min-height: 48px`, `padding: 13px 24px`. Agreement is declared, not inherited from whatever row happens to hold them.
 - **Do** re-declare `color` inside any rule that changes a control's background on hover.

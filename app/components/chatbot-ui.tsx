@@ -1,4 +1,5 @@
 import type { ChangeEvent, KeyboardEvent, RefObject } from 'react';
+import { useEffect, useRef } from 'react';
 // Single source of truth. This list previously existed identically here and in
 // persona.ts, which is exactly the shape of duplication that drifts.
 import { DEFAULT_SUGGESTED_PROMPTS } from '@/lib/persona';
@@ -119,14 +120,39 @@ export default function ChatbotUI({
   onDismissError,
   onToggleExpand,
 }: ChatbotUIProps) {
+  const regionRef = useRef<HTMLDivElement>(null);
+  const expandButtonRef = useRef<HTMLButtonElement>(null);
+  const dialogRef = useRef<HTMLDialogElement>(null);
+  const heldHeightRef = useRef<number | undefined>(undefined);
+  const wasExpandedRef = useRef(false);
+
+  // A native modal dialog, so the browser owns containment, Escape and the inert
+  // page behind it. The previous hand-built one declared aria-modal and did none
+  // of that: focus fell to <body> on open and close, Tab walked out to controls
+  // hidden behind the sheet, and Escape only worked from the input.
+  useEffect(() => {
+    if (isExpanded) {
+      const dialog = dialogRef.current;
+      if (dialog && !dialog.open) dialog.showModal();
+      // Straight to the input where there is a keyboard. On touch, focusing it
+      // would throw the software keyboard over the sheet the visitor just opened.
+      if (window.matchMedia('(hover: hover)').matches) inputRef.current?.focus();
+    } else if (wasExpandedRef.current) {
+      expandButtonRef.current?.focus();
+    }
+    wasExpandedRef.current = isExpanded;
+  }, [isExpanded, inputRef]);
+
+  const handleExpand = () => {
+    heldHeightRef.current = regionRef.current?.offsetHeight;
+    onToggleExpand();
+  };
+
   const handleKeyDown = (e: KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === 'Escape') {
+    // Expanded, Escape belongs to the dialog.
+    if (e.key === 'Escape' && !isExpanded) {
       e.preventDefault();
-      if (isExpanded) {
-        onToggleExpand();
-      } else if (onClearInput) {
-        onClearInput();
-      }
+      onClearInput?.();
     }
   };
 
@@ -290,13 +316,9 @@ export default function ChatbotUI({
         maxLength={CHAT_LIMITS.maxPromptLength}
       />
       <span id="chat-hint" className="sr-only">
-        Press Enter to send your message, Escape to clear
+        Press Enter to send your message, Escape to {isExpanded ? 'close' : 'clear'}
       </span>
-      <button
-        type="submit"
-        disabled={isLoading || !input.trim()}
-        aria-label={isLoading ? 'Sending message' : 'Send message'}
-      >
+      <button type="submit" disabled={isLoading || !input.trim()}>
         {isLoading ? (
           <>
             <span className="bb-chat-spinner" aria-hidden="true" />
@@ -314,62 +336,56 @@ export default function ChatbotUI({
       <button
         type="button"
         className="bb-chat-action"
-        onClick={onToggleExpand}
-        aria-label={isExpanded ? 'Close expanded chat' : 'Expand chat'}
+        ref={expandButtonRef}
+        onClick={handleExpand}
+        aria-label="Expand chat"
       >
         <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
           <path
             strokeLinecap="round"
             strokeLinejoin="round"
             strokeWidth={2}
-            d={
-              isExpanded
-                ? 'M6 18L18 6M6 6l12 12'
-                : 'M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4'
-            }
+            d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4"
           />
         </svg>
-        {isExpanded ? 'Close' : 'Expand'}
+        Expand
       </button>
     </div>
+  );
+
+  // Rendered in exactly one place at a time. It used to mount in both, which put
+  // two inputs on one id and two elements on every shared ref.
+  const conversation = (
+    <>
+      {stream}
+      {promptChips}
+      {inputRow}
+    </>
   );
 
   return (
     <>
       <div
+        ref={regionRef}
         className={isExpanded ? 'invisible' : ''}
         role="region"
         aria-label="Resume chat assistant"
-        aria-hidden={isExpanded}
+        // Holds the page's height while the conversation is in the dialog, so
+        // closing it lands where it opened.
+        style={isExpanded ? { minHeight: heldHeightRef.current } : undefined}
       >
         {actions}
-        {stream}
-        {promptChips}
-        {inputRow}
+        {!isExpanded && conversation}
       </div>
 
       {isExpanded && (
-        <div className="bb-chat-modal" aria-hidden={!isExpanded}>
-          <button
-            type="button"
-            onClick={onToggleExpand}
-            aria-label="Close expanded chat"
-            className="absolute"
-            style={{
-              position: 'absolute',
-              inset: 0,
-              background: 'transparent',
-              border: 0,
-              zIndex: 0,
-            }}
-          />
-          <div
-            className="bb-chat-modal-card"
-            role="dialog"
-            aria-label="Expanded chat"
-            aria-modal="true"
-            style={{ position: 'relative', zIndex: 1 }}
-          >
+        <dialog
+          ref={dialogRef}
+          className="bb-chat-modal"
+          aria-label="Expanded chat"
+          onClose={onToggleExpand}
+        >
+          <div className="bb-chat-modal-card">
             <div className="bb-chat-modal-head">
               <span className="bb-chat-modal-title">
                 <span className="mark" aria-hidden="true" />
@@ -396,14 +412,10 @@ export default function ChatbotUI({
               {/* The inner column is what keeps a full-width sheet readable:
                   the body spans the viewport, the conversation inside it does
                   not. */}
-              <div className="bb-chat-modal-inner">
-                {stream}
-                {promptChips}
-                {inputRow}
-              </div>
+              <div className="bb-chat-modal-inner">{conversation}</div>
             </div>
           </div>
-        </div>
+        </dialog>
       )}
     </>
   );

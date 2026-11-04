@@ -51,7 +51,12 @@ function Section({ section }: { section: CaseStudySection }) {
 
       {section.figure && (
         <figure className="bb-figure">
-          <div className="bb-figure-scroll">{section.figure.node}</div>
+          {/* Focusable because it scrolls: below 660px the diagram overflows, and
+              a keyboard has no other way to reach what is clipped. */}
+          {/* biome-ignore lint/a11y/noNoninteractiveTabindex: a scroll region needs a tab stop */}
+          <div className="bb-figure-scroll" role="region" aria-label="Diagram" tabIndex={0}>
+            {section.figure.node}
+          </div>
           <figcaption>{section.figure.caption}</figcaption>
         </figure>
       )}
@@ -62,7 +67,8 @@ function Section({ section }: { section: CaseStudySection }) {
             <span className="path">{section.code.path}</span>
             <span className="tag">{section.code.tag}</span>
           </div>
-          <pre>
+          {/* biome-ignore lint/a11y/noNoninteractiveTabindex: a scroll region needs a tab stop */}
+          <pre role="region" aria-label={`Code: ${section.code.path}`} tabIndex={0}>
             <code>{section.code.lines}</code>
           </pre>
         </div>
@@ -78,6 +84,9 @@ export default function Work({ loaderData }: Route.ComponentProps) {
   return (
     <div className="bb-shell">
       <GridOverlay />
+      <a className="btn bb-skip print:hidden" href="#main">
+        Skip to content
+      </a>
       <header className="bb-top print:hidden">
         <div className="bb-wrap bb-top-in">
           <Link className="bb-top-name" to="/">
@@ -93,7 +102,7 @@ export default function Work({ loaderData }: Route.ComponentProps) {
         </div>
       </header>
 
-      <main>
+      <main id="main" tabIndex={-1}>
         <div className="bb-wrap bb-cs-hero">
           <Link className="bb-back" to="/#work">
             ← The record

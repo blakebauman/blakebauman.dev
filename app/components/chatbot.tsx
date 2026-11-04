@@ -153,6 +153,9 @@ export default function Chatbot({ greeting, suggestedPrompts }: ChatbotProps = {
     }
   }, []);
 
+  // Re-attached on expand: the transcript moves between the page and the dialog,
+  // so the node observed on one side is gone on the other.
+  // biome-ignore lint/correctness/useExhaustiveDependencies: intentional trigger on isExpanded change
   useEffect(() => {
     const container = messagesContentRef.current;
     if (!container) return;
@@ -165,7 +168,7 @@ export default function Chatbot({ greeting, suggestedPrompts }: ChatbotProps = {
     });
 
     return () => observer.disconnect();
-  }, [scrollToBottom]);
+  }, [scrollToBottom, isExpanded]);
 
   // Scroll to bottom when expanded state changes (after transition)
   // biome-ignore lint/correctness/useExhaustiveDependencies: intentional trigger on isExpanded change
