@@ -1,6 +1,6 @@
 {
   "schemaVersion": 2,
-  "generatedAt": "2026-11-04T21:32:32Z",
+  "generatedAt": "2026-11-04T22:50:45Z",
   "title": "Design System: blakebauman.com",
   "extensions": {
     "colorMeta": {
@@ -304,10 +304,6 @@
         "value": "100"
       },
       {
-        "name": "--z-modal-backdrop",
-        "value": "200"
-      },
-      {
         "name": "--z-modal",
         "value": "300"
       }
@@ -389,7 +385,7 @@
       "kind": "card",
       "refersTo": "figure-well",
       "description": "The case-study diagram container: the same well as the chat, without the dot grid, scrolling horizontally below a 660px floor. An ordinary node is filled with the ground itself, so it reads by its --ink-3 stroke alone (3.22:1).",
-      "html": "<figure class=\"ds-fig\"><div class=\"ds-fig-scroll\"><svg viewBox=\"0 0 320 96\" width=\"320\" height=\"96\"><rect x=\"8\" y=\"16\" width=\"140\" height=\"56\" fill=\"var(--well)\" stroke=\"var(--ink-3)\" stroke-width=\"1\"/><text x=\"22\" y=\"40\" fill=\"var(--ink)\" font-family=\"var(--font-display)\" font-size=\"14\" font-weight=\"650\">Worker</text><text x=\"22\" y=\"58\" fill=\"var(--ink-2)\" font-family=\"var(--font-mono)\" font-size=\"12\">workers/app.ts</text><line x1=\"148\" y1=\"44\" x2=\"196\" y2=\"44\" stroke=\"var(--ink-3)\"/><rect x=\"196\" y=\"16\" width=\"116\" height=\"56\" fill=\"var(--ember)\" stroke=\"var(--ember-lift)\" stroke-width=\"1\"/><text x=\"210\" y=\"49\" fill=\"var(--ink)\" font-family=\"var(--font-display)\" font-size=\"14\" font-weight=\"650\">Vectorize</text></svg></div><figcaption>Retrieval path, one hop.</figcaption></figure>",
+      "html": "<figure class=\"ds-fig\"><div class=\"ds-fig-scroll\"><svg viewBox=\"0 0 320 96\" width=\"320\" height=\"96\"><rect x=\"8\" y=\"16\" width=\"140\" height=\"56\" fill=\"var(--well)\" stroke=\"var(--ink-3)\" stroke-width=\"1\"/><text x=\"22\" y=\"40\" fill=\"var(--ink)\" font-family=\"var(--font-display)\" font-size=\"14\" font-weight=\"500\">Worker</text><text x=\"22\" y=\"58\" fill=\"var(--ink-2)\" font-family=\"var(--font-mono)\" font-size=\"12\">workers/app.ts</text><line x1=\"148\" y1=\"44\" x2=\"196\" y2=\"44\" stroke=\"var(--ink-3)\"/><rect x=\"196\" y=\"16\" width=\"116\" height=\"56\" fill=\"var(--ember)\" stroke=\"var(--ember-lift)\" stroke-width=\"1\"/><text x=\"210\" y=\"49\" fill=\"var(--ink)\" font-family=\"var(--font-display)\" font-size=\"14\" font-weight=\"500\">Vectorize</text></svg></div><figcaption>Retrieval path, one hop.</figcaption></figure>",
       "css": ".ds-fig{margin:0}.ds-fig-scroll{overflow-x:auto;overscroll-behavior-x:contain;border:1px solid var(--ink-3);background:var(--well);border-radius:0;padding:clamp(18px,3vw,30px)}.ds-fig figcaption{margin-top:14px;font-family:var(--font-display);font-size:var(--fs-label);font-weight:var(--wt);line-height:1.6;letter-spacing:var(--tr-ui);color:var(--ink-2);max-width:62ch}"
     },
     {
@@ -474,7 +470,7 @@
       "Do use `--hair` (14%) for structure and `--hair-strong` (26%) for emphasis and resting interactive borders; those are the only two hairline weights.",
       "Do keep type on night, the well or ember only; ink on all three measures 11:1 or better. Basalt carries one 11px label (the copy chip) and is not a surface for prose.",
       "Do re-measure contrast against the rendered DOM after any palette change, and re-measure the Archivo/Helvetica metrics if the font package or the weight moves.",
-      "Do set every stamp, key and chip at the 11px label stop, uppercase, `0.1em`, tabular numerals.",
+      "Do set every stamp, key and chip at the 11px label stop, uppercase, `0.1em`, tabular numerals. Role years, figure captions and the chat's send button take `--fs-label`, an alias of the 14px UI stop, because they are read rather than scanned.",
       "Do put any container that holds its own content — conversation, diagram, code — on `--well` with a 1px `--ink-3` stroke, and add the dot grid only on the chat surfaces.",
       "Do give `.btn` and `.btn-ghost` the same box: `inline-flex`, centred, `min-height: 48px`, `padding: 13px 24px`. Agreement is declared, not inherited from whatever row happens to hold them.",
       "Do re-declare `color` inside any rule that changes a control's background on hover.",

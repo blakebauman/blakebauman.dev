@@ -166,7 +166,7 @@ Watch list — second-order reflexes that are easy to slip into when the first s
 ## Design Principles
 
 *(Legacy section, kept as written. Principles 1, 4 and 5 are visual and are now
-implemented and enforced in `docs/DESIGN.md` — the Body-Serif Rule, the Two-Hue
+implemented and enforced in `docs/DESIGN.md` — the One Hue
 Rule, the width ladder and the motion budget. Treat DESIGN.md as authoritative
 where the two overlap; the strategic half has moved up into Product Principles.)*
 
@@ -193,8 +193,8 @@ Verified and recorded in `docs/DESIGN.md`:
 - Pointer targets meet 2.5.8 where the inline-link exception does not apply.
 - `prefers-reduced-motion` removes the motion budget entirely, and the width-axis
   signature falls back to weight and colour rather than being gutted.
-- Type floors at 11px; body copy sets at 17px with a 420 weight carrying
-  dark-ground compensation, and zoom and user font settings are preserved.
+- Type floors at 11px and body copy sets at 20px at weight 500. Every size is
+  a rem token, so zoom and the reader's browser font size are both honoured.
 - Diagrams carry `<title>` and `<desc>`, scroll rather than scaling below 660px,
   and the chat frame is a labelled region.
 

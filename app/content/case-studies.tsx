@@ -77,7 +77,7 @@ function Box({
         fill={labelFill}
         fontFamily={F_DISPLAY}
         fontSize="14"
-        fontWeight="650"
+        fontWeight="500"
       >
         {label}
       </text>
@@ -396,7 +396,7 @@ const foldDiagram = (
             fill="var(--ink)"
             fontFamily={F_DISPLAY}
             fontSize="15"
-            fontWeight="650"
+            fontWeight="500"
           >
             {name}
           </text>
@@ -417,7 +417,7 @@ const foldDiagram = (
       strokeWidth="1"
     />
     <rect x="14" y="564" width="13" height="13" fill="var(--red)" />
-    <text x="46" y={576} fill="var(--ink)" fontFamily={F_DISPLAY} fontSize="15" fontWeight="650">
+    <text x="46" y={576} fill="var(--ink)" fontFamily={F_DISPLAY} fontSize="15" fontWeight="500">
       audit
     </text>
     <text x="110" y={576} fill="var(--ink-2)" fontFamily={F_MONO} fontSize="12.5">

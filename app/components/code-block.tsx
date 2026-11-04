@@ -29,12 +29,13 @@ export function CodeBlock({ children, className }: CodeBlockProps) {
   return (
     <div style={{ position: 'relative' }} className="group">
       <div
-        className="opacity-0 group-hover:opacity-100"
+        className="opacity-0 group-hover:opacity-100 group-focus-within:opacity-100 [@media(hover:none)]:opacity-100"
         style={{ transition: 'opacity 120ms ease' }}
       >
         <CopyButton text={textContent} />
       </div>
-      <pre>
+      {/* biome-ignore lint/a11y/noNoninteractiveTabindex: a scroll region needs a tab stop */}
+      <pre role="region" aria-label="Code" tabIndex={0}>
         <code className={className} style={{ display: 'block', paddingRight: 64 }}>
           {children}
         </code>
