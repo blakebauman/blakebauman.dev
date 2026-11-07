@@ -39,6 +39,13 @@ function Section({ section }: { section: CaseStudySection }) {
         <p key={p.slice(0, 48)}>{p}</p>
       ))}
 
+      {/* Hidden from assistive tech: the same sentence is already in the prose. */}
+      {section.pull && (
+        <p className="bb-cs-pull" aria-hidden="true">
+          {section.pull}
+        </p>
+      )}
+
       {section.list && (
         <ul className="bb-cs-list">
           {section.list.map(item => (

@@ -209,7 +209,7 @@ components:
 
 **Creative North Star: "The Plateau at Night"**
 
-The page is a black field with very large type on it. One grotesque — Archivo — carries display, heading, UI and body alike, at a single weight, and rank is expressed by size, by width on the variable font's `wdth` axis, and by which column a thing occupies. There is no second family in the reading band, no case change inside prose, no shadow, no gradient, no rounded corner, and no accent but one red. What remains has to do the work, which is the point: a record whose claim is that the implementation is part of the work cannot afford decoration standing in for structure.
+The page is a black field with very large type on it. One grotesque — Archivo — carries display, heading, UI and body alike, at a single weight, and rank is expressed by size, by width on the variable font's `wdth` axis, and by which column a thing occupies. There is no second family in the reading band, no case change inside prose, no shadow, no gradient, no rounded corner, and no accent but one red. Italic appears as one quiet voice in the same family. What remains has to do the work, which is the point: a record whose claim is that the implementation is part of the work cannot afford decoration standing in for structure.
 
 The page is fluid. `--shell` is `100%` and the gutter (`clamp(20px, 4vw, 96px)`) is the margin, so the edge of the viewport is the edge of the sheet at every width rather than a fixed card floating in a dark room. Fluidity has exactly one cost — a row composed on twelve columns at 2560px puts a name at one edge and its action at the other with nothing trackable between — and the system pays it with `--row-max: 1240px`, the content width at 1440 where the composition was measured, so nothing at or below that width moves.
 
@@ -260,6 +260,7 @@ A near-neutral dark field carrying one accent hue at two lightnesses — a signa
 
 **Display Font:** Archivo Variable (self-hosted; fallback "Archivo Fallback" → Helvetica → Arial)
 **Body Font:** Archivo Variable — the same face. `--font-body` is an alias of `--font-display`.
+**Italic:** Archivo Variable Italic, the same family (`@fontsource-variable/archivo/wdth-italic.css`). It sets the one emphasised phrase in the masthead statement, the case-study pull lines and chat blockquotes.
 **Label/Mono Font:** JetBrains Mono Variable (code, timestamps, source chips, the MCP endpoint)
 
 **Body copy sets in Archivo, a sans.** An earlier iteration of this site set body in a serif (Literata); that face is not in this build and no serif is loaded anywhere. Any instruction elsewhere in the repo asserting a serif body, or naming Literata, IBM Plex or Helvetica Neue as a family here, is stale. Helvetica appears only as the metric source for the fallback `@font-face`: Archivo at wght 500 / wdth 100 was measured with fontTools against the shipped woff2 at 0.66% wider than Helvetica and Arial, x-height 0.526 against 0.523, which is what `size-adjust: 100.66%` and the ascent/descent overrides encode. Self-hosting removed a real split — Helvetica Neue is Monotype-licensed and resolves only on Apple platforms, so every other visitor was previously served Arial, a different face at a different weight.
@@ -271,7 +272,7 @@ Every size is a rem token, so a reader's browser font size reaches the whole ram
 
 - **Display** (500, `clamp(min(4.5rem, (100vw - 2 * var(--gutter)) / 4.75), 13vw, 12.5rem)`, 0.86, wdth 110): The masthead name, uppercase, and nothing else. `display-long` (`clamp(min(3.75rem, (100vw - 2 * var(--gutter)) / 5), 11vw, 10.625rem)`, 0.88) is the case-study title.
 - **Lead** (500, `clamp(min(2.75rem, 13.75vw), 8vw, 7.25rem)`, 0.96, wdth 104): Featured project names in the work list.
-- **Headline** (500, `clamp(min(2.125rem, 10.6vw), 5vw, 4.25rem)`, 1.0, wdth 104): Section heads. **Sub** (`clamp(min(1.625rem, 8.1vw), 3.2vw, 2.5rem)`, 1.12) is the case-study section head.
+- **Headline** (500, `clamp(min(2.125rem, 10.6vw), 5vw, 4.25rem)`, 1.0, wdth 104): Section heads and the masthead statement. **Sub** (`clamp(min(1.625rem, 8.1vw), 3.2vw, 2.5rem)`, 1.12) is the case-study section head; the pull line takes the same size in italic at 1.2.
 - **Title** (500, 29px, 1.2, wdth 104): Role names in the record.
 - **Lede** (500, `clamp(1.25rem, 2.4vw, 1.5rem)`, 1.38, `opsz` 24, capped 48–58ch): The masthead subhead, case-study one-liner, colophon and section openers.
 - **Body** (500, 20px, 1.6, `opsz` 16, max 65ch): Running prose. **Body small** (17px) carries descriptors, role descriptions and chat answers.
@@ -283,6 +284,8 @@ Painted ramp, in px: 11 / 14 / 17 / 20 / 24 / 29 / 40 / 68 / 116 / 170 / 200. `-
 
 ### Named Rules
 **The Width Ladder Rule.** Archivo's `wdth` axis encodes rank, and there are exactly four stops: 110% display, 104% heading, 100% UI, 88% metadata. No fifth value, no interpolation between them. This exists because size would otherwise be the only hierarchy device — one family, one weight, no case change in the reading band — and an audit of the previous build found nine of thirteen adjacent size steps too close to read apart. The ladder only exists if the Fontsource `wdth` entrypoint is imported (`@fontsource-variable/archivo/wdth.css`); import the `wght` entrypoint instead and every `font-stretch` in the sheet silently does nothing while the build stays green.
+
+**The One Italic Rule.** Italic is a voice, not a rank. On a page of the site it appears once as display emphasis: one phrase in the masthead statement, or one pull line in a case study. It keeps the width and weight of the role it sits in, and a pull line repeats a sentence from its own section word for word. The `wdth-italic` entrypoint has to stay imported, or the browser fakes the slant and the build stays green.
 
 **The 1.15x Rule.** Adjacent stops on the type ramp are at least 1.15x apart. Two stops closer than that are two names for one role, not two roles; collapse the newer one onto the existing stop as an alias.
 

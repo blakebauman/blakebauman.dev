@@ -13,6 +13,8 @@ import type { ReactNode } from 'react';
 
 export interface CaseStudySection {
   heading: string;
+  /** A sentence repeated from this section, set large in italic. One per case study. */
+  pull?: string;
   paragraphs?: string[];
   list?: Array<{ term: string; detail: string }>;
   figure?: { node: ReactNode; caption: string };
@@ -453,6 +455,7 @@ export const CASE_STUDIES: CaseStudy[] = [
     sections: [
       {
         heading: 'What it is',
+        pull: 'Changing what an agent does is a config change.',
         paragraphs: [
           'An agent is authored as a felix/v1 YAML manifest and compiled into a running, governed agent: durable fibers, memory, skills, evaluation, approvals and sandboxes, all declared rather than wired. Changing what an agent does is a config change.',
           'The same agent is served over four surfaces at once. A REST and SSE endpoint, an OpenAI-compatible /v1 where the manifest name is the model id, A2A JSON-RPC for agent-to-agent calls, and MCP. A client that already speaks any one of those needs no adapter.',
@@ -636,6 +639,7 @@ export const CASE_STUDIES: CaseStudy[] = [
       },
       {
         heading: 'The decisions worth defending',
+        pull: 'A Doris stall should cost freshness, not the caller’s data.',
         list: [
           {
             term: 'The ack is early and that is the point.',
@@ -690,6 +694,7 @@ export const CASE_STUDIES: CaseStudy[] = [
     sections: [
       {
         heading: 'What it is',
+        pull: 'Nobody rewrites anything to get behind it.',
         paragraphs: [
           'A gateway that sits in front of any number of upstream MCP servers, in any language, on any SDK, from any team or vendor, and presents them as one virtual server with namespaced tools. Nobody rewrites anything to get behind it.',
           'It is built on the official MCP Go SDK, so the wire protocol is the SDK’s own implementation on both the client-facing and upstream-facing sides rather than a reimplementation that drifts.',
