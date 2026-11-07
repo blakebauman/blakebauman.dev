@@ -116,7 +116,8 @@ index permanently — retrievable, stale, and invisible to every later populate.
 - **Styling**: Tailwind CSS v4, plus a hand-written design system in `app/app.css`
 - **Type**: Archivo Variable for display, UI *and* body (`--font-body` aliases
   `--font-display`), JetBrains Mono Variable for code. Self-hosted via
-  `@fontsource-variable/*`. No serif is loaded anywhere.
+  `@fontsource-variable/*`, including real Archivo Italic for the one italic
+  voice (see DESIGN.md). No serif is loaded anywhere.
 - **Deployment**: Cloudflare Workers
 - **AI Services**: Workers AI (embeddings + LLM), Vectorize (vector search)
 - **Validation**: Zod v4 for runtime schema validation

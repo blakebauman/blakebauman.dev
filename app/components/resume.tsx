@@ -43,6 +43,18 @@ const PROJECT_SITES = new Map<string, string>(
 
 const PROJECT_MENTION = new RegExp(`\\b(${[...PROJECT_SITES.keys()].join('|')})\\b`, 'gi');
 
+function emphasize(text: string, phrase?: string) {
+  const at = phrase ? text.indexOf(phrase) : -1;
+  if (!phrase || at < 0) return text;
+  return (
+    <>
+      {text.slice(0, at)}
+      <em>{phrase}</em>
+      {text.slice(at + phrase.length)}
+    </>
+  );
+}
+
 function linkifyProjectMentions(text: string) {
   if (PROJECT_SITES.size === 0) return text;
   return text.split(PROJECT_MENTION).map((part, index) => {
@@ -132,7 +144,9 @@ export function Resume({ chatEnabled, persona, chatGreeting, suggestedPrompts }:
 
           <div className="bb-rule" aria-hidden="true" />
 
-          <p className="subhead">{linkifyProjectMentions(resumeData.copy.subhead)}</p>
+          <p className="statement">
+            {emphasize(resumeData.hero.headline, resumeData.hero.emphasis)}
+          </p>
 
           <dl className="bb-masthead-meta">
             <dt>Based</dt>
@@ -152,6 +166,8 @@ export function Resume({ chatEnabled, persona, chatGreeting, suggestedPrompts }:
               )}
             </dd>
           </dl>
+
+          <p className="subhead">{linkifyProjectMentions(resumeData.copy.subhead)}</p>
         </section>
 
         <section className="bb-wrap bb-sec" id="work" aria-labelledby="work-label">

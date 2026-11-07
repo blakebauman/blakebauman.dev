@@ -13,6 +13,7 @@
    readouts. */
 
 @import "@fontsource-variable/archivo/wdth.css";
+@import "@fontsource-variable/archivo/wdth-italic.css";
 @import "@fontsource-variable/jetbrains-mono/wght.css";
 
 @import "tailwindcss";
@@ -869,12 +870,12 @@ main:focus {
 }
 
 
-/* The name and the rule each span the full grid; the subhead and the meta list
-   share the row beneath, which is the order FIRST VIEWPORT specifies. Nested
+/* The name and the rule each span the full grid. Nested
    inside a column the rule rendered at the prose measure, about 40% of the
    width the contract asks for. */
 .bb-masthead > h1,
-.bb-masthead > .bb-rule {
+.bb-masthead > .bb-rule,
+.bb-masthead > .statement {
   grid-column: 1 / -1;
 }
 
@@ -902,6 +903,63 @@ main:focus {
     max(10px, var(--fs-display) * 0.1) - var(--fs-display) * 0.096 - var(--mast-gap)
   );
   text-transform: uppercase;
+}
+
+/* What the name is known for, at the headline stop. The <em> inside it is the
+   page's one italic: the italic file carries the same wdth axis, so it holds the
+   104% stop and only the slant changes. */
+.bb-masthead .statement {
+  font-family: var(--font-display);
+  font-stretch: var(--w-head);
+  font-size: var(--fs-head);
+  font-weight: var(--wt);
+  line-height: var(--lh-head);
+  letter-spacing: var(--tr-head);
+  max-width: 17em;
+  margin-top: clamp(10px, 1.6vh, 18px);
+  text-wrap: balance;
+}
+
+/* A phrase split across two lines reads as two emphases. */
+.bb-masthead .statement em {
+  white-space: nowrap;
+}
+
+/* The subhead and the meta list share a row under the statement, until the width
+   allows better. The meta list comes first in the source for the wide layout, so
+   the row is pinned rather than left to auto-placement. */
+@media (min-width: 900px) {
+  .bb-masthead .subhead,
+  .bb-masthead .bb-masthead-meta {
+    grid-row: 4;
+  }
+
+  /* Top of the row, or the subhead's height carries the email below the fold. */
+  .bb-masthead .bb-masthead-meta {
+    align-self: start;
+    margin-top: clamp(20px, 3vh, 30px);
+  }
+}
+
+/* The meta list moves up beside the statement. Stacked, the statement pushed the
+   email below the fold at 1440x900. Eight columns is what holds the sentence to
+   two lines, and four are only safe for the email from here up: at 900px they
+   clear it by 2px. */
+@media (min-width: 1100px) {
+  .bb-masthead > .statement {
+    grid-column: 1 / span 8;
+  }
+
+  .bb-masthead .bb-masthead-meta {
+    grid-column: 9 / span 4;
+    grid-row: 3;
+    align-self: end;
+    margin-top: 0;
+  }
+
+  .bb-masthead .subhead {
+    grid-row: auto;
+  }
 }
 
 .bb-masthead .subhead {
@@ -1691,6 +1749,18 @@ main:focus {
 
 .bb-cs-sec p + p {
   margin-top: 1.1em;
+}
+
+/* One sentence per case study, lifted verbatim from the prose around it. */
+.bb-cs-sec .bb-cs-pull {
+  font-family: var(--font-display);
+  font-stretch: var(--w-head);
+  font-size: var(--fs-sub);
+  font-style: italic;
+  line-height: 1.2;
+  letter-spacing: var(--tr-sub);
+  margin-block: 1em;
+  text-wrap: balance;
 }
 
 /* Five facts, two columns each, ending on the line that closes column 10. It

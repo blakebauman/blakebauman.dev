@@ -99,6 +99,8 @@ export const BlockquoteSchema = z.object({
  */
 export const HeroSchema = z.object({
   headline: z.string(),
+  /** The phrase inside `headline` that sets in italic. */
+  emphasis: z.string().optional(),
   subheadline: z.string(),
 });
 
